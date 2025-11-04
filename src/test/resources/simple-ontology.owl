@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://example.org/simple#"
+     xml:base="http://example.org/simple"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:obo="http://purl.obolibrary.org/obo/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="http://example.org/simple"/>
+
+    <!-- Simple class hierarchy for testing -->
+    <owl:Class rdf:about="http://example.org/simple#Thing">
+        <rdfs:label>Thing</rdfs:label>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://example.org/simple#Entity">
+        <rdfs:label>Entity</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://example.org/simple#Thing"/>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://example.org/simple#Person">
+        <rdfs:label>Person</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://example.org/simple#Entity"/>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://example.org/simple#Organization">
+        <rdfs:label>Organization</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://example.org/simple#Entity"/>
+    </owl:Class>
+</rdf:RDF>
