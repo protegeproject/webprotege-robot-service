@@ -9,7 +9,7 @@ Spring Boot microservice that wraps [ROBOT](https://robot.obolibrary.org/) (an O
 | **Annotate** | ✅ Implemented | Add metadata to ontologies (title, description, license, version IRI) |
 | **Extract** | ✅ Implemented | Create focused modules using SLME, MIREOT, or Subset methods |
 | **Collapse** | ✅ Implemented | Streamline class hierarchies by removing intermediate classes |
-| **Convert** | 🚧 Not Yet Implemented | Convert between ontology formats (OWL, OBO, TTL) |
+| **Convert** | ✅ Implemented | Transform ontologies between formats (JSON, OBO, OWL, Turtle, etc.) |
 | **Diff** | 🚧 Not Yet Implemented | Compare ontology versions |
 | **Expand** | 🚧 Not Yet Implemented | Expand ontology macros |
 | **Export** | 🚧 Not Yet Implemented | Export ontology in various formats |
@@ -119,6 +119,25 @@ var command = new RobotCollapseCommand(
     3,
     List.of("GO:0008150", "GO:0003674")  // terms to protect
 );
+```
+
+### Convert Command
+
+```java
+// Explicit format conversion to JSON
+var command = new RobotConvertCommand(
+    ConvertFormat.json,
+    null,
+    null,
+    null);
+
+// OBO with custom prefixes and cleaning options
+var command = new RobotConvertCommand(
+    ConvertFormat.obo,
+    true,
+    List.of(CleanOboOption.drop_extra_labels, CleanOboOption.merge_comments),
+    Map.of("FOO", IRI.create("http://example.org/foo#")), 
+           "BAR", IRI.create("http://example.org/bar#"));
 ```
 
 ## Development
