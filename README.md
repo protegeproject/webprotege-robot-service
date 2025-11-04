@@ -10,8 +10,8 @@ Spring Boot microservice that wraps [ROBOT](https://robot.obolibrary.org/) (an O
 | **Extract** | ✅ Implemented | Create focused modules using SLME, MIREOT, or Subset methods |
 | **Collapse** | ✅ Implemented | Streamline class hierarchies by removing intermediate classes |
 | **Convert** | ✅ Implemented | Transform ontologies between formats (JSON, OBO, OWL, Turtle, etc.) |
+| **Expand** | ✅ Implemented | Convert shortcut annotation properties (macros) into OWL axioms |
 | **Diff** | 🚧 Not Yet Implemented | Compare ontology versions |
-| **Expand** | 🚧 Not Yet Implemented | Expand ontology macros |
 | **Export** | 🚧 Not Yet Implemented | Export ontology in various formats |
 | **Filter** | 🚧 Not Yet Implemented | Remove axioms/terms based on criteria |
 | **Materialize** | 🚧 Not Yet Implemented | Materialize class expressions |
@@ -136,8 +136,26 @@ var command = new RobotConvertCommand(
     ConvertFormat.obo,
     true,
     List.of(CleanOboOption.drop_extra_labels, CleanOboOption.merge_comments),
-    Map.of("FOO", IRI.create("http://example.org/foo#")), 
+    Map.of("FOO", IRI.create("http://example.org/foo#"),
            "BAR", IRI.create("http://example.org/bar#"));
+```
+
+### Expand Command
+
+```java
+// Expand all macros with source annotations
+var command = new RobotExpandCommand(
+    List.of(),   // expand all terms
+    List.of(),   // don't exclude any
+    true         // annotate expansion axioms with dct:source
+);
+
+// Exclude specific terms from expansion
+var command = new RobotExpandCommand(
+    List.of(),                             // expand all
+    List.of("GO:0005575", "GO:0008150"),  // except these terms
+    false                                  // don't annotate
+);
 ```
 
 ## Development
