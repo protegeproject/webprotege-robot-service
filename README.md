@@ -8,7 +8,7 @@ Spring Boot microservice that wraps [ROBOT](https://robot.obolibrary.org/) (an O
 |---------|--------|-------------|
 | **Annotate** | ✅ Implemented | Add metadata to ontologies (title, description, license, version IRI) |
 | **Extract** | ✅ Implemented | Create focused modules using SLME, MIREOT, or Subset methods |
-| **Collapse** | 🚧 Not Yet Implemented | Collapse ontology class hierarchy |
+| **Collapse** | ✅ Implemented | Streamline class hierarchies by removing intermediate classes |
 | **Convert** | 🚧 Not Yet Implemented | Convert between ontology formats (OWL, OBO, TTL) |
 | **Diff** | 🚧 Not Yet Implemented | Compare ontology versions |
 | **Expand** | 🚧 Not Yet Implemented | Expand ontology macros |
@@ -103,6 +103,22 @@ var strategy = new MireotExtractStrategy(
     List.of()               // branch-from terms
 );
 var command = new RobotExtractCommand(strategy, null, null, true);
+```
+
+### Collapse Command
+
+```java
+// Collapse with custom threshold
+var command = new RobotCollapseCommand(
+    5,  // minimum subclass count to preserve intermediate classes
+    List.of()
+);
+
+// Collapse with precious terms (protected from removal)
+var command = new RobotCollapseCommand(
+    3,
+    List.of("GO:0008150", "GO:0003674")  // terms to protect
+);
 ```
 
 ## Development
