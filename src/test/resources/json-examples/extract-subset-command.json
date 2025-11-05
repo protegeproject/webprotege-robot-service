@@ -1,0 +1,16 @@
+{
+  "@type": "ExtractCommand",
+  "extractStrategy": {
+    "@type": "Subset",
+    "terms": [
+      "GO:0008150",
+      "GO:0003674",
+      "GO:0005575",
+      "GO:0008152",
+      "GO:0009987"
+    ]
+  },
+  "extractIntermediates": "none",
+  "handlingImports": "include",
+  "copyOntologyAnnotations": true
+}

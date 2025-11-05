@@ -1,0 +1,19 @@
+{
+  "inputOntologyPath": "/path/to/input.owl",
+  "outputOntologyPath": "/path/to/output.owl",
+  "commands": [
+    {
+      "@type": "AnnotateCommand",
+      "ontologyIri": "http://example.org/my-ontology",
+      "versionIri": null,
+      "annotations": [
+        {
+          "@type": "PlainAnnotation",
+          "property": "rdfs:label",
+          "value": "My Simple Ontology"
+        }
+      ],
+      "flags": []
+    }
+  ]
+}

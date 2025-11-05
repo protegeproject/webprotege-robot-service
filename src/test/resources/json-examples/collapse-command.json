@@ -1,0 +1,9 @@
+{
+  "@type": "CollapseCommand",
+  "threshold": 5,
+  "preciousTerms": [
+    "GO:0008150",
+    "GO:0003674",
+    "GO:0005575"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "@type": "ExtractCommand",
+  "extractStrategy": {
+    "@type": "MIREOT",
+    "upperTerms": [
+      "GO:0008150"
+    ],
+    "lowerTerms": [
+      "GO:0009987"
+    ],
+    "branchFromTerms": [
+      "GO:0008152"
+    ]
+  },
+  "extractIntermediates": "all",
+  "handlingImports": "exclude",
+  "copyOntologyAnnotations": false
+}

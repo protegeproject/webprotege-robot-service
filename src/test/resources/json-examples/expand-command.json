@@ -1,0 +1,11 @@
+{
+  "@type": "ExpandCommand",
+  "expandTerms": [
+    "UBERON:0000001",
+    "UBERON:0000002"
+  ],
+  "noExpandTerms": [
+    "UBERON:9999999"
+  ],
+  "annotateExpansionAxioms": true
+}

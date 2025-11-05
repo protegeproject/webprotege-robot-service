@@ -1,0 +1,58 @@
+{
+  "@type": "AnnotateCommand",
+  "ontologyIri": "http://example.org/my-ontology",
+  "versionIri": "http://example.org/my-ontology/v1.0.0",
+  "annotations": [
+    {
+      "@type": "PlainAnnotation",
+      "property": "rdfs:label",
+      "value": "My Ontology"
+    },
+    {
+      "@type": "PlainAnnotation",
+      "property": "rdfs:comment",
+      "value": "This ontology describes example domain concepts"
+    },
+    {
+      "@type": "LanguageAnnotation",
+      "property": "dc:title",
+      "value": "My Ontology",
+      "lang": "en"
+    },
+    {
+      "@type": "LanguageAnnotation",
+      "property": "dc:title",
+      "value": "Mon Ontologie",
+      "lang": "fr"
+    },
+    {
+      "@type": "LanguageAnnotation",
+      "property": "dc:description",
+      "value": "Una ontología de ejemplo",
+      "lang": "es"
+    },
+    {
+      "@type": "TypedAnnotation",
+      "property": "dc:date",
+      "value": "2025-11-04",
+      "type": "xsd:date"
+    },
+    {
+      "@type": "TypedAnnotation",
+      "property": "owl:versionInfo",
+      "value": "1.0.0",
+      "type": "xsd:string"
+    },
+    {
+      "@type": "LinkAnnotation",
+      "property": "dc:license",
+      "value": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    {
+      "@type": "LinkAnnotation",
+      "property": "dc:creator",
+      "value": "https://orcid.org/0000-0000-0000-0000"
+    }
+  ],
+  "flags": ["INTERPOLATE", "ANNOTATE_DERIVED_FROM"]
+}

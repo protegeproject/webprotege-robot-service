@@ -1,0 +1,15 @@
+{
+  "@type": "ExtractCommand",
+  "extractStrategy": {
+    "@type": "SLME",
+    "method": "BOT",
+    "terms": [
+      "GO:0008150",
+      "GO:0003674",
+      "GO:0005575"
+    ]
+  },
+  "extractIntermediates": "minimal",
+  "handlingImports": "include",
+  "copyOntologyAnnotations": true
+}
