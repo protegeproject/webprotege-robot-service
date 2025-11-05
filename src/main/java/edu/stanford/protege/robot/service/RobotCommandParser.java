@@ -3,6 +3,7 @@ package edu.stanford.protege.robot.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.stanford.protege.RobotCommand;
+import edu.stanford.protege.robot.service.exception.RobotServiceException;
 import java.util.List;
 import javax.annotation.Nonnull;
 import org.springframework.stereotype.Component;
@@ -58,12 +59,16 @@ public class RobotCommandParser {
    * @param commandJson
    *          JSON string representing a single ROBOT command
    * @return deserialized RobotCommand object
-   * @throws JsonProcessingException
+   * @throws RobotServiceException
    *           if JSON is malformed or cannot be deserialized to RobotCommand
    *
    */
-  public RobotCommand parseCommand(String commandJson) throws JsonProcessingException {
-    return objectMapper.readValue(commandJson, RobotCommand.class);
+  public RobotCommand parseCommand(String commandJson) throws RobotServiceException {
+    try {
+      return objectMapper.readValue(commandJson, RobotCommand.class);
+    } catch (JsonProcessingException e) {
+      throw new RobotServiceException("Error parsing command: " + e.getMessage(), e);
+    }
   }
 
   /**
@@ -76,11 +81,15 @@ public class RobotCommandParser {
    * @param commandsJson
    *          JSON array string containing ROBOT commands
    * @return a list of deserialized RobotCommand objects
-   * @throws JsonProcessingException
+   * @throws RobotServiceException
    *           if JSON is malformed or cannot be deserialized to RobotCommand objects
    */
-  public List<RobotCommand> parseCommands(String commandsJson) throws JsonProcessingException {
-    var valueType = objectMapper.getTypeFactory().constructCollectionType(List.class, RobotCommand.class);
-    return objectMapper.readValue(commandsJson, valueType);
+  public List<RobotCommand> parseCommands(String commandsJson) throws RobotServiceException {
+    try {
+      var valueType = objectMapper.getTypeFactory().constructCollectionType(List.class, RobotCommand.class);
+      return objectMapper.readValue(commandsJson, valueType);
+    } catch (JsonProcessingException e) {
+      throw new RobotServiceException("Error parsing commands: " + e.getMessage(), e);
+    }
   }
 }

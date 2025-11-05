@@ -2,26 +2,28 @@ package edu.stanford.protege.robot.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edu.stanford.protege.robot.annotate.AnnotateFlags;
-import edu.stanford.protege.robot.annotate.LanguageAnnotation;
-import edu.stanford.protege.robot.annotate.LinkAnnotation;
-import edu.stanford.protege.robot.annotate.PlainAnnotation;
-import edu.stanford.protege.robot.annotate.RobotAnnotateCommand;
-import edu.stanford.protege.robot.annotate.TypedAnnotation;
-import edu.stanford.protege.robot.collapse.RobotCollapseCommand;
-import edu.stanford.protege.robot.convert.ConvertFormat;
-import edu.stanford.protege.robot.convert.RobotConvertCommand;
-import edu.stanford.protege.robot.expand.RobotExpandCommand;
-import edu.stanford.protege.robot.extract.ExtractIntermediates;
-import edu.stanford.protege.robot.extract.HandlingImports;
-import edu.stanford.protege.robot.extract.MireotExtractStrategy;
-import edu.stanford.protege.robot.extract.RobotExtractCommand;
-import edu.stanford.protege.robot.extract.SlmeExtractMethod;
-import edu.stanford.protege.robot.extract.SlmeExtractStrategy;
-import edu.stanford.protege.robot.extract.SubsetExtractStrategy;
+import edu.stanford.protege.robot.command.annotate.AnnotateFlags;
+import edu.stanford.protege.robot.command.annotate.LanguageAnnotation;
+import edu.stanford.protege.robot.command.annotate.LinkAnnotation;
+import edu.stanford.protege.robot.command.annotate.PlainAnnotation;
+import edu.stanford.protege.robot.command.annotate.RobotAnnotateCommand;
+import edu.stanford.protege.robot.command.annotate.TypedAnnotation;
+import edu.stanford.protege.robot.command.collapse.RobotCollapseCommand;
+import edu.stanford.protege.robot.command.convert.ConvertFormat;
+import edu.stanford.protege.robot.command.convert.RobotConvertCommand;
+import edu.stanford.protege.robot.command.expand.RobotExpandCommand;
+import edu.stanford.protege.robot.command.extract.ExtractIntermediates;
+import edu.stanford.protege.robot.command.extract.HandlingImports;
+import edu.stanford.protege.robot.command.extract.MireotExtractStrategy;
+import edu.stanford.protege.robot.command.extract.RobotExtractCommand;
+import edu.stanford.protege.robot.command.extract.SlmeExtractMethod;
+import edu.stanford.protege.robot.command.extract.SlmeExtractStrategy;
+import edu.stanford.protege.robot.command.extract.SubsetExtractStrategy;
 import edu.stanford.protege.robot.service.config.JacksonConfiguration;
+import edu.stanford.protege.robot.service.exception.RobotServiceException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.Objects;
 import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.model.IRI;
@@ -47,7 +49,7 @@ class RobotCommandParserTest {
    * Tests parsing annotate command with all 4 annotation types.
    */
   @Test
-  void testParseAnnotateCommand() throws IOException {
+  void testParseAnnotateCommand() throws IOException, RobotServiceException {
     // Load JSON from file
     var json = getJsonContent("/json-examples/annotate-command.json");
 
@@ -58,7 +60,7 @@ class RobotCommandParserTest {
     assertThat(command.annotations()).hasSize(9);
 
     // Verify plain annotations
-    var plainAnnotation1 = (PlainAnnotation) command.annotations().get(0);
+    var plainAnnotation1 = (PlainAnnotation) command.annotations().getFirst();
     assertThat(plainAnnotation1.property()).isEqualTo("rdfs:label");
     assertThat(plainAnnotation1.value()).isEqualTo("My Ontology");
 
@@ -93,7 +95,7 @@ class RobotCommandParserTest {
    * Tests parsing expand command.
    */
   @Test
-  void testParseExpandCommand() throws IOException {
+  void testParseExpandCommand() throws IOException, RobotServiceException {
     // Load JSON from file
     var json = getJsonContent("/json-examples/expand-command.json");
 
@@ -110,7 +112,7 @@ class RobotCommandParserTest {
    * Tests parsing convert command with OBO format and cleaning options.
    */
   @Test
-  void testParseConvertOboCommand() throws IOException {
+  void testParseConvertOboCommand() throws IOException, RobotServiceException {
     // Load JSON from file
     var json = getJsonContent("/json-examples/convert-obo-command.json");
 
@@ -130,7 +132,7 @@ class RobotCommandParserTest {
    * Tests parsing convert command with OWL format.
    */
   @Test
-  void testParseConvertOwlCommand() throws IOException {
+  void testParseConvertOwlCommand() throws IOException, RobotServiceException {
     // Load JSON from file
     var json = getJsonContent("/json-examples/convert-owl-command.json");
 
@@ -148,7 +150,7 @@ class RobotCommandParserTest {
    * Tests parsing collapse command.
    */
   @Test
-  void testParseCollapseCommand() throws IOException {
+  void testParseCollapseCommand() throws IOException, RobotServiceException {
     // Load JSON from file
     var json = getJsonContent("/json-examples/collapse-command.json");
 
@@ -164,7 +166,7 @@ class RobotCommandParserTest {
    * Tests parsing extract command with MIREOT strategy.
    */
   @Test
-  void testParseExtractMireotCommand() throws IOException {
+  void testParseExtractMireotCommand() throws IOException, RobotServiceException {
     // Load JSON from file
     var json = getJsonContent("/json-examples/extract-mireot-command.json");
 
@@ -186,7 +188,7 @@ class RobotCommandParserTest {
    * Tests parsing extract command with SLME strategy.
    */
   @Test
-  void testParseExtractSlmeCommand() throws IOException {
+  void testParseExtractSlmeCommand() throws IOException, RobotServiceException {
     // Load JSON from file
     var json = getJsonContent("/json-examples/extract-slme-command.json");
 
@@ -207,7 +209,7 @@ class RobotCommandParserTest {
    * Tests parsing extract command with subset strategy.
    */
   @Test
-  void testParseExtractSubsetCommand() throws IOException {
+  void testParseExtractSubsetCommand() throws IOException, RobotServiceException {
     // Load JSON from file
     var json = getJsonContent("/json-examples/extract-subset-command.json");
 

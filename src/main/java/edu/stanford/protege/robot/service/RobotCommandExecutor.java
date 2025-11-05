@@ -1,6 +1,8 @@
 package edu.stanford.protege.robot.service;
 
 import edu.stanford.protege.RobotCommand;
+import edu.stanford.protege.robot.service.exception.RobotServiceException;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
@@ -87,7 +89,7 @@ public class RobotCommandExecutor {
    */
   public CommandState executeChain(@Nonnull Path ontologyFilePath,
       @Nonnull List<RobotCommand> commands,
-      @Nonnull Path outputPath) throws Exception {
+      @Nonnull Path outputPath) throws RobotServiceException {
 
     // Validate inputs
     Objects.requireNonNull(ontologyFilePath, "ontologyFilePath cannot be null");
@@ -101,25 +103,36 @@ public class RobotCommandExecutor {
     var state = commandStateProvider.get();
 
     // Load input ontology
-    var ontology = ioHelper.loadOntology(ontologyFilePath.toFile());
-    state.setOntology(ontology);
-    state.setOntologyPath(ontologyFilePath.toString());
+    try {
+      var ontology = ioHelper.loadOntology(ontologyFilePath.toFile());
+      state.setOntology(ontology);
+      state.setOntologyPath(ontologyFilePath.toString());
+    } catch (IOException e) {
+      throw new RobotServiceException("Error loading ontology: " + e.getMessage(), e);
+    }
 
     // Execute each command sequentially, threading state between them
     for (RobotCommand robotCommand : commands) {
       var command = robotCommand.getCommand();
       var args = robotCommand.getArgsArray();
-      state = command.execute(state, args);
+      try {
+        state = command.execute(state, args);
+      } catch (Exception e) {
+        throw new RobotServiceException("Error executing command: " + e.getMessage(), e);
+      }
 
       // Verify state is not null after execution
       if (state == null) {
-        throw new IllegalStateException(
-            "Command " + command.getName() + " returned null state");
+        throw new RobotServiceException("Command " + command.getName() + " returned null state");
       }
     }
 
     // Save output
-    ioHelper.saveOntology(state.getOntology(), outputPath.toString());
+    try {
+      ioHelper.saveOntology(state.getOntology(), outputPath.toString());
+    } catch (IOException e) {
+      throw new RobotServiceException("Error saving ontology: " + e.getMessage(), e);
+    }
 
     return state;
   }
