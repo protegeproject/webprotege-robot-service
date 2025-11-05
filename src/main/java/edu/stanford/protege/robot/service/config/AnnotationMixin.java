@@ -3,15 +3,16 @@ package edu.stanford.protege.robot.service.config;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import edu.stanford.protege.robot.annotate.LanguageAnnotation;
-import edu.stanford.protege.robot.annotate.LinkAnnotation;
-import edu.stanford.protege.robot.annotate.PlainAnnotation;
-import edu.stanford.protege.robot.annotate.TypedAnnotation;
+import edu.stanford.protege.robot.command.annotate.LanguageAnnotation;
+import edu.stanford.protege.robot.command.annotate.LinkAnnotation;
+import edu.stanford.protege.robot.command.annotate.Annotation;
+import edu.stanford.protege.robot.command.annotate.PlainAnnotation;
+import edu.stanford.protege.robot.command.annotate.TypedAnnotation;
 import java.util.List;
 
 /**
  * Jackson mix-in for polymorphic deserialization of
- * {@link edu.stanford.protege.robot.annotate.Annotation}
+ * {@link Annotation}
  * interface.
  *
  * <p>

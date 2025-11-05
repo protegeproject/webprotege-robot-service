@@ -3,14 +3,15 @@ package edu.stanford.protege.robot.service.config;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import edu.stanford.protege.robot.extract.MireotExtractStrategy;
-import edu.stanford.protege.robot.extract.SlmeExtractStrategy;
-import edu.stanford.protege.robot.extract.SubsetExtractStrategy;
+import edu.stanford.protege.robot.command.extract.ExtractStrategy;
+import edu.stanford.protege.robot.command.extract.MireotExtractStrategy;
+import edu.stanford.protege.robot.command.extract.SlmeExtractStrategy;
+import edu.stanford.protege.robot.command.extract.SubsetExtractStrategy;
 import java.util.List;
 
 /**
  * Jackson mix-in for polymorphic deserialization of
- * {@link edu.stanford.protege.robot.extract.ExtractStrategy}
+ * {@link ExtractStrategy}
  * interface.
  *
  * <p>

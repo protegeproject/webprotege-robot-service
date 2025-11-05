@@ -6,11 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.stanford.protege.robot.extract.ExtractStrategy;
-import edu.stanford.protege.robot.extract.MireotExtractStrategy;
-import edu.stanford.protege.robot.extract.SlmeExtractMethod;
-import edu.stanford.protege.robot.extract.SlmeExtractStrategy;
-import edu.stanford.protege.robot.extract.SubsetExtractStrategy;
+import edu.stanford.protege.robot.command.extract.ExtractStrategy;
+import edu.stanford.protege.robot.command.extract.MireotExtractStrategy;
+import edu.stanford.protege.robot.command.extract.SlmeExtractMethod;
+import edu.stanford.protege.robot.command.extract.SlmeExtractStrategy;
+import edu.stanford.protege.robot.command.extract.SubsetExtractStrategy;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

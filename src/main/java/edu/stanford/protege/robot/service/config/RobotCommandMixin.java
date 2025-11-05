@@ -3,11 +3,11 @@ package edu.stanford.protege.robot.service.config;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import edu.stanford.protege.robot.annotate.RobotAnnotateCommand;
-import edu.stanford.protege.robot.collapse.RobotCollapseCommand;
-import edu.stanford.protege.robot.convert.RobotConvertCommand;
-import edu.stanford.protege.robot.expand.RobotExpandCommand;
-import edu.stanford.protege.robot.extract.RobotExtractCommand;
+import edu.stanford.protege.robot.command.annotate.RobotAnnotateCommand;
+import edu.stanford.protege.robot.command.collapse.RobotCollapseCommand;
+import edu.stanford.protege.robot.command.convert.RobotConvertCommand;
+import edu.stanford.protege.robot.command.expand.RobotExpandCommand;
+import edu.stanford.protege.robot.command.extract.RobotExtractCommand;
 import java.util.List;
 import org.obolibrary.robot.Command;
 

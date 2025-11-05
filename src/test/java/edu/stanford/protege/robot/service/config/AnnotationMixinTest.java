@@ -6,11 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.stanford.protege.robot.annotate.Annotation;
-import edu.stanford.protege.robot.annotate.LanguageAnnotation;
-import edu.stanford.protege.robot.annotate.LinkAnnotation;
-import edu.stanford.protege.robot.annotate.PlainAnnotation;
-import edu.stanford.protege.robot.annotate.TypedAnnotation;
+import edu.stanford.protege.robot.command.annotate.Annotation;
+import edu.stanford.protege.robot.command.annotate.LanguageAnnotation;
+import edu.stanford.protege.robot.command.annotate.LinkAnnotation;
+import edu.stanford.protege.robot.command.annotate.PlainAnnotation;
+import edu.stanford.protege.robot.command.annotate.TypedAnnotation;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
