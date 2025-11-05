@@ -3,8 +3,6 @@ package edu.stanford.protege.robot.command.annotate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-
-import edu.stanford.protege.robot.command.annotate.*;
 import org.junit.jupiter.api.Test;
 import org.obolibrary.robot.AnnotateCommand;
 import org.semanticweb.owlapi.model.IRI;

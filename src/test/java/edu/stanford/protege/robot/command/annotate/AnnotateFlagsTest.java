@@ -2,7 +2,6 @@ package edu.stanford.protege.robot.command.annotate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edu.stanford.protege.robot.command.annotate.AnnotateFlags;
 import org.junit.jupiter.api.Test;
 
 class AnnotateFlagsTest {

@@ -2,7 +2,6 @@ package edu.stanford.protege.robot.command.convert;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edu.stanford.protege.robot.command.convert.CleanOboOption;
 import org.junit.jupiter.api.Test;
 
 class CleanOboOptionTest {

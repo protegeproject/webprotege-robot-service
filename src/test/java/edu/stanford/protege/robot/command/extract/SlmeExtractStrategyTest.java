@@ -3,9 +3,6 @@ package edu.stanford.protege.robot.command.extract;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-
-import edu.stanford.protege.robot.command.extract.SlmeExtractMethod;
-import edu.stanford.protege.robot.command.extract.SlmeExtractStrategy;
 import org.junit.jupiter.api.Test;
 
 class SlmeExtractStrategyTest {

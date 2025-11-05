@@ -4,10 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.Map;
-
-import edu.stanford.protege.robot.command.convert.CleanOboOption;
-import edu.stanford.protege.robot.command.convert.ConvertFormat;
-import edu.stanford.protege.robot.command.convert.RobotConvertCommand;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.obolibrary.robot.ConvertCommand;

@@ -3,8 +3,6 @@ package edu.stanford.protege.robot.command.extract;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-
-import edu.stanford.protege.robot.command.extract.SubsetExtractStrategy;
 import org.junit.jupiter.api.Test;
 
 class SubsetExtractStrategyTest {

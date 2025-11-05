@@ -3,8 +3,6 @@ package edu.stanford.protege.robot.command.collapse;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-
-import edu.stanford.protege.robot.command.collapse.RobotCollapseCommand;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.obolibrary.robot.CollapseCommand;
