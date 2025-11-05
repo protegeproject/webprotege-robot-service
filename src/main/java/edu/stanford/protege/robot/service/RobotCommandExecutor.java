@@ -84,7 +84,7 @@ public class RobotCommandExecutor {
    * @return the final CommandState after all commands have executed
    * @throws IllegalArgumentException
    *           if ontologyFilePath is null, commands is null or empty
-   * @throws Exception
+   * @throws RobotServiceException
    *           if any command fails or I/O error occurs
    */
   public CommandState executeChain(@Nonnull Path ontologyFilePath,
