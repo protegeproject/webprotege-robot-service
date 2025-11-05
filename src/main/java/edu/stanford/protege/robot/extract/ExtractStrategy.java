@@ -1,5 +1,6 @@
 package edu.stanford.protege.robot.extract;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 
 /**
@@ -26,7 +27,7 @@ public interface ExtractStrategy {
   /**
    * Converts this extraction strategy to command-line arguments for ROBOT.
    *
-   * @return immutable list of command-line arguments representing this extraction strategy
+   * @return a list of command-line arguments representing this extraction strategy
    */
   List<String> getArgs();
 }
