@@ -1,7 +1,7 @@
 package edu.stanford.protege.robot.command.extract;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.protege.RobotCommand;
+import edu.stanford.protege.robot.command.RobotCommand;
 import java.util.List;
 import javax.annotation.Nullable;
 import org.obolibrary.robot.Command;

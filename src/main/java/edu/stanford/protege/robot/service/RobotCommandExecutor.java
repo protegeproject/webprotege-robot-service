@@ -1,6 +1,6 @@
 package edu.stanford.protege.robot.service;
 
-import edu.stanford.protege.RobotCommand;
+import edu.stanford.protege.robot.command.RobotCommand;
 import edu.stanford.protege.robot.service.exception.RobotServiceException;
 import java.io.IOException;
 import java.nio.file.Path;

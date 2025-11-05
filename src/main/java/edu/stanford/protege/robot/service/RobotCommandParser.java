@@ -2,7 +2,7 @@ package edu.stanford.protege.robot.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.stanford.protege.RobotCommand;
+import edu.stanford.protege.robot.command.RobotCommand;
 import edu.stanford.protege.robot.service.exception.RobotServiceException;
 import java.util.List;
 import javax.annotation.Nonnull;

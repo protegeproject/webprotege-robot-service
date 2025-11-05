@@ -2,7 +2,7 @@ package edu.stanford.protege.robot.service.config;
 
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import edu.stanford.protege.RobotCommand;
+import edu.stanford.protege.robot.command.RobotCommand;
 import edu.stanford.protege.robot.command.annotate.Annotation;
 import edu.stanford.protege.robot.command.extract.ExtractStrategy;
 import org.semanticweb.owlapi.model.IRI;

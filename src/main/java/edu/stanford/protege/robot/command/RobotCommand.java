@@ -1,6 +1,7 @@
-package edu.stanford.protege;
+package edu.stanford.protege.robot.command;
 
 import java.util.List;
+
 import org.obolibrary.robot.Command;
 
 public interface RobotCommand {

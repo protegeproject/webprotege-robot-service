@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.stanford.protege.RobotCommand;
+import edu.stanford.protege.robot.command.RobotCommand;
 import edu.stanford.protege.robot.command.annotate.AnnotateFlags;
 import edu.stanford.protege.robot.command.annotate.PlainAnnotation;
 import edu.stanford.protege.robot.command.annotate.RobotAnnotateCommand;

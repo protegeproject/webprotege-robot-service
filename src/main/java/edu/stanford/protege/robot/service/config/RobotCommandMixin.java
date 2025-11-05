@@ -3,6 +3,7 @@ package edu.stanford.protege.robot.service.config;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import edu.stanford.protege.robot.command.RobotCommand;
 import edu.stanford.protege.robot.command.annotate.RobotAnnotateCommand;
 import edu.stanford.protege.robot.command.collapse.RobotCollapseCommand;
 import edu.stanford.protege.robot.command.convert.RobotConvertCommand;
@@ -12,7 +13,7 @@ import java.util.List;
 import org.obolibrary.robot.Command;
 
 /**
- * Jackson mix-in for polymorphic deserialization of {@link edu.stanford.protege.RobotCommand}
+ * Jackson mix-in for polymorphic deserialization of {@link RobotCommand}
  * interface.
  *
  * <p>

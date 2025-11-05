@@ -1,7 +1,7 @@
 package edu.stanford.protege.robot.command.annotate;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.protege.RobotCommand;
+import edu.stanford.protege.robot.command.RobotCommand;
 import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nullable;

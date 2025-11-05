@@ -1,7 +1,7 @@
 package edu.stanford.protege.robot.command.convert;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.protege.RobotCommand;
+import edu.stanford.protege.robot.command.RobotCommand;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
