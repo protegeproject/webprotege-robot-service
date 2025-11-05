@@ -1,4 +1,4 @@
-package edu.stanford.protege.robot;
+package edu.stanford.protege.robot.service.config;
 
 import org.obolibrary.robot.CommandState;
 import org.obolibrary.robot.IOHelper;
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Scope;
  * Spring configuration for ROBOT command execution components.
  */
 @Configuration
-public class RobotServiceConfiguration {
+public class ExecutorConfiguration {
 
   /**
    * Provides a prototype-scoped CommandState bean.
