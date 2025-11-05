@@ -1,4 +1,4 @@
-package edu.stanford.protege.robot;
+package edu.stanford.protege.robot.service;
 
 import edu.stanford.protege.RobotCommand;
 import java.nio.file.Path;
