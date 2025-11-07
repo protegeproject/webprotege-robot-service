@@ -1,5 +1,6 @@
 package edu.stanford.protege.robot.command.annotate;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import java.util.List;
  * @param type
  *          the XSD datatype IRI or prefixed name
  */
+@JsonTypeName("TypedAnnotation")
 public record TypedAnnotation(String property, String value, String type) implements Annotation, HasType {
 
   public static final String ANNOTATION = "--typed-annotation";

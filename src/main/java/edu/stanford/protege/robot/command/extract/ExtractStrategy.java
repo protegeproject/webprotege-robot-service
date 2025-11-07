@@ -1,5 +1,8 @@
 package edu.stanford.protege.robot.command.extract;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.util.List;
 
 /**
@@ -18,9 +21,12 @@ import java.util.List;
  * <li>{@link SubsetExtractStrategy} - Subset method using relation-graph to materialize
  * existential relations</li>
  * </ul>
- *
- * @see <a href="https://robot.obolibrary.org/extract">ROBOT Extract Documentation</a>
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "@type")
+@JsonSubTypes({
+    @JsonSubTypes.Type(SlmeExtractStrategy.class),
+    @JsonSubTypes.Type(MireotExtractStrategy.class),
+    @JsonSubTypes.Type(SubsetExtractStrategy.class)})
 public interface ExtractStrategy {
 
   /**
@@ -28,5 +34,6 @@ public interface ExtractStrategy {
    *
    * @return a list of command-line arguments representing this extraction strategy
    */
+  @JsonIgnore
   List<String> getArgs();
 }

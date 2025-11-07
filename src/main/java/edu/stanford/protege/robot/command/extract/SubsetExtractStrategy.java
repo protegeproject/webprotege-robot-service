@@ -1,5 +1,6 @@
 package edu.stanford.protege.robot.command.extract;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 
@@ -31,6 +32,7 @@ import java.util.List;
  *
  * @see <a href="https://robot.obolibrary.org/extract#subset">ROBOT Subset Documentation</a>
  */
+@JsonTypeName("Subset")
 public record SubsetExtractStrategy(List<String> terms) implements ExtractStrategy {
 
   /**

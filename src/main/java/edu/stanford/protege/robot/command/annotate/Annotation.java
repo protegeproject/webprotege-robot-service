@@ -1,5 +1,8 @@
 package edu.stanford.protege.robot.command.annotate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.util.List;
 
 /**
@@ -9,6 +12,12 @@ import java.util.List;
  * Annotations add metadata to ontologies using property-value pairs. Each implementation
  * converts to specific ROBOT command-line arguments.
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "@type")
+@JsonSubTypes({
+    @JsonSubTypes.Type(PlainAnnotation.class),
+    @JsonSubTypes.Type(TypedAnnotation.class),
+    @JsonSubTypes.Type(LanguageAnnotation.class),
+    @JsonSubTypes.Type(LinkAnnotation.class)})
 public interface Annotation {
 
   /**
@@ -16,6 +25,7 @@ public interface Annotation {
    *
    * @return the flag (e.g., {@code "--annotation"}, {@code "--typed-annotation"})
    */
+  @JsonIgnore
   String getArgName();
 
   /**
@@ -39,5 +49,6 @@ public interface Annotation {
    * @return ordered list of CLI arguments including flag, property, value, and any additional
    *         parameters
    */
+  @JsonIgnore
   List<String> getArgs();
 }

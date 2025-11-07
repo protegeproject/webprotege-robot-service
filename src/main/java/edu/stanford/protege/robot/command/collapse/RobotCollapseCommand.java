@@ -1,5 +1,6 @@
 package edu.stanford.protege.robot.command.collapse;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.protege.robot.command.RobotCommand;
 import java.util.List;
@@ -40,6 +41,7 @@ import org.obolibrary.robot.Command;
  *
  * @see <a href="https://robot.obolibrary.org/collapse">ROBOT Collapse Documentation</a>
  */
+@JsonTypeName("CollapseCommand")
 public record RobotCollapseCommand(@Nullable Integer threshold, List<String> preciousTerms)
     implements
       RobotCommand {

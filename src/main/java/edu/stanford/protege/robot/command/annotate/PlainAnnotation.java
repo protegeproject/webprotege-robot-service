@@ -1,5 +1,6 @@
 package edu.stanford.protege.robot.command.annotate;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
  * @param value
  *          the annotation value
  */
+@JsonTypeName("PlainAnnotation")
 public record PlainAnnotation(String property, String value) implements Annotation {
 
   public static final String ANNOTATION = "--annotation";

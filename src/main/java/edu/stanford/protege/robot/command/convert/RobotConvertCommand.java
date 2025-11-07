@@ -1,5 +1,6 @@
 package edu.stanford.protege.robot.command.convert;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import edu.stanford.protege.robot.command.RobotCommand;
 import java.util.List;
 import org.obolibrary.robot.Command;
@@ -32,6 +33,7 @@ import org.obolibrary.robot.ConvertCommand;
  *
  * @see <a href="https://robot.obolibrary.org/convert">ROBOT Convert Documentation</a>
  */
+@JsonTypeName("ConvertCommand")
 public record RobotConvertCommand(ConvertStrategy convertStrategy) implements RobotCommand {
 
   /**

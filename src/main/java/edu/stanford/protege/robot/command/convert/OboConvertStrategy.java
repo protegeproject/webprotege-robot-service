@@ -1,5 +1,6 @@
 package edu.stanford.protege.robot.command.convert;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,7 @@ import org.semanticweb.owlapi.model.IRI;
  *          custom namespace prefixes as map of prefix name to IRI (optional; requires
  *          cleanOboOptions)
  */
+@JsonTypeName("OBO")
 public record OboConvertStrategy(
     @Nullable Boolean check,
     @Nullable List<CleanOboOption> cleanOboOptions,

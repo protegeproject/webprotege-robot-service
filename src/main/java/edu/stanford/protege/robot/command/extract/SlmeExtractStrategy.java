@@ -1,5 +1,6 @@
 package edu.stanford.protege.robot.command.extract;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 
@@ -36,6 +37,7 @@ import java.util.List;
  *          seed terms to extract (as CURIEs or full IRIs)
  * @see <a href="https://robot.obolibrary.org/extract#slme">ROBOT SLME Documentation</a>
  */
+@JsonTypeName("SLME")
 public record SlmeExtractStrategy(SlmeExtractMethod method, List<String> terms) implements ExtractStrategy {
 
   /**

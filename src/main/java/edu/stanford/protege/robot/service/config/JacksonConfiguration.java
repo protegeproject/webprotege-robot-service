@@ -2,10 +2,6 @@ package edu.stanford.protege.robot.service.config;
 
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import edu.stanford.protege.robot.command.RobotCommand;
-import edu.stanford.protege.robot.command.annotate.Annotation;
-import edu.stanford.protege.robot.command.convert.ConvertStrategy;
-import edu.stanford.protege.robot.command.extract.ExtractStrategy;
 import org.semanticweb.owlapi.model.IRI;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,26 +10,21 @@ import org.springframework.context.annotation.Configuration;
  * Spring Boot configuration for customizing Jackson JSON serialization/deserialization.
  *
  * <p>
- * This configuration provides a custom Jackson {@link Module} that registers mix-in annotations
- * for polymorphic type handling. Spring Boot automatically detects and registers any Module beans
- * with the application's ObjectMapper, enabling transparent JSON conversion for ROBOT command
- * objects.
+ * This configuration provides a custom Jackson {@link Module} that registers custom
+ * serializers/deserializers for OWL API types. Spring Boot automatically detects and registers
+ * any Module beans with the application's ObjectMapper.
  *
  * <p>
- * The configuration handles four key polymorphic type hierarchies:
+ * Currently handles:
  *
  * <ul>
- * <li>{@link RobotCommand} - 5 command implementations (annotate, extract, collapse, convert,
- * expand)</li>
- * <li>{@link Annotation} - 4 annotation types (plain, typed, language, link)</li>
- * <li>{@link ExtractStrategy} - 3 extraction strategies (slme, mireot, subset)</li>
- * <li>{@link ConvertStrategy} - 7 conversion strategies (obo, json, ofn, omn, owl, owx, ttl)</li>
+ * <li>{@link IRI} - Custom serialization/deserialization for OWL API IRIs</li>
  * </ul>
  *
  * <p>
- * Mix-ins use Jackson's {@code @JsonTypeInfo} and {@code @JsonSubTypes} annotations to enable
- * type discrimination during deserialization. The {@code type} field in JSON determines which
- * concrete class to instantiate.
+ * Polymorphic type handling for ROBOT commands is achieved through {@code @JsonTypeInfo} and
+ * {@code @JsonTypeName} annotations directly on the domain classes, eliminating the need for
+ * mix-in classes.
  *
  * <p>
  * Example usage in a Spring service:
@@ -57,24 +48,16 @@ import org.springframework.context.annotation.Configuration;
 public class JacksonConfiguration {
 
   /**
-   * Creates a Jackson module with mix-in annotations for ROBOT command polymorphism.
+   * Creates a Jackson module with custom serializers/deserializers for OWL API types.
    *
    * <p>
-   * Spring Boot automatically registers this module with the application's ObjectMapper. Mix-ins
-   * provide type discrimination without modifying the original domain model classes, maintaining
-   * separation of concerns between domain logic and JSON serialization.
+   * Spring Boot automatically registers this module with the application's ObjectMapper.
    *
-   * @return Jackson module configured with ROBOT command mix-ins
+   * @return Jackson module configured with custom serializers/deserializers
    */
   @Bean
   public Module robotJacksonModule() {
     SimpleModule module = new SimpleModule("RobotCommandModule");
-
-    // Register mix-ins for polymorphic type handling
-    module.setMixInAnnotation(RobotCommand.class, RobotCommandMixin.class);
-    module.setMixInAnnotation(Annotation.class, AnnotationMixin.class);
-    module.setMixInAnnotation(ExtractStrategy.class, ExtractStrategyMixin.class);
-    module.setMixInAnnotation(ConvertStrategy.class, ConvertStrategyMixin.class);
 
     // Register custom serializers/deserializers for IRI
     module.addSerializer(IRI.class, new IriSerializeDeserializeHandler.Serializer());

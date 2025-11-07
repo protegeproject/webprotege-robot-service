@@ -1,5 +1,6 @@
 package edu.stanford.protege.robot.command.annotate;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
  * @param value
  *          the IRI value
  */
+@JsonTypeName("LinkAnnotation")
 public record LinkAnnotation(String property, String value) implements Annotation {
 
   public static final String LINK_ANNOTATION = "--link-annotation";

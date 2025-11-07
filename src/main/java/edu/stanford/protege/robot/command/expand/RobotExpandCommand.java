@@ -1,5 +1,6 @@
 package edu.stanford.protege.robot.command.expand;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.protege.robot.command.RobotCommand;
 import java.util.List;
@@ -31,6 +32,7 @@ import org.obolibrary.robot.ExpandCommand;
  *          (optional, defaults to false in ROBOT if null)
  * @see <a href="https://robot.obolibrary.org/expand">ROBOT Expand Documentation</a>
  */
+@JsonTypeName("ExpandCommand")
 public record RobotExpandCommand(
     List<String> expandTerms,
     List<String> noExpandTerms,

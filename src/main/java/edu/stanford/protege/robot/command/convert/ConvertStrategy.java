@@ -1,5 +1,8 @@
 package edu.stanford.protege.robot.command.convert;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.util.List;
 
 /**
@@ -21,9 +24,16 @@ import java.util.List;
  * <li>{@link OwxConvertStrategy} - OWL/XML format</li>
  * <li>{@link TtlConvertStrategy} - Turtle format</li>
  * </ul>
- *
- * @see <a href="https://robot.obolibrary.org/convert">ROBOT Convert Documentation</a>
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "@type")
+@JsonSubTypes({
+    @JsonSubTypes.Type(OboConvertStrategy.class),
+    @JsonSubTypes.Type(JsonConvertStrategy.class),
+    @JsonSubTypes.Type(OfnConvertStrategy.class),
+    @JsonSubTypes.Type(OmnConvertStrategy.class),
+    @JsonSubTypes.Type(OwlConvertStrategy.class),
+    @JsonSubTypes.Type(OwxConvertStrategy.class),
+    @JsonSubTypes.Type(TtlConvertStrategy.class)})
 public interface ConvertStrategy {
 
   /**
@@ -31,5 +41,6 @@ public interface ConvertStrategy {
    *
    * @return immutable list of CLI arguments for this conversion format
    */
+  @JsonIgnore
   List<String> getArgs();
 }

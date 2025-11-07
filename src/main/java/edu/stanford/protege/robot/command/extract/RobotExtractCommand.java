@@ -1,5 +1,6 @@
 package edu.stanford.protege.robot.command.extract;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.protege.robot.command.RobotCommand;
 import java.util.List;
@@ -56,6 +57,7 @@ import org.obolibrary.robot.ExtractCommand;
  *
  * @see <a href="https://robot.obolibrary.org/extract">ROBOT Extract Documentation</a>
  */
+@JsonTypeName("ExtractCommand")
 public record RobotExtractCommand(
     ExtractStrategy extractStrategy,
     @Nullable ExtractIntermediates extractIntermediates,

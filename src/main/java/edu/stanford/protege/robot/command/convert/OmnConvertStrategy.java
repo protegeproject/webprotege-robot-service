@@ -1,5 +1,6 @@
 package edu.stanford.protege.robot.command.convert;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
  * The Manchester Syntax format has no format-specific parameters and simply requires the format
  * flag.
  */
+@JsonTypeName("OMN")
 public record OmnConvertStrategy() implements ConvertStrategy {
 
   public static final String FORMAT_FLAG = "--format";

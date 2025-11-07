@@ -1,5 +1,6 @@
 package edu.stanford.protege.robot.command.annotate;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.protege.robot.command.RobotCommand;
 import java.util.Arrays;
@@ -38,6 +39,7 @@ import org.semanticweb.owlapi.model.IRI;
  * @param flags
  *          optional behavior flags (INTERPOLATE, ANNOTATE_DERIVED_FROM, etc.)
  */
+@JsonTypeName("AnnotateCommand")
 public record RobotAnnotateCommand(
     @Nullable IRI ontologyIri,
     @Nullable IRI versionIri,

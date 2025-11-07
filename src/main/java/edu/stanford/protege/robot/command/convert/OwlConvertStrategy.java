@@ -1,5 +1,6 @@
 package edu.stanford.protege.robot.command.convert;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
  * <p>
  * The RDF/XML format has no format-specific parameters and simply requires the format flag.
  */
+@JsonTypeName("OWL")
 public record OwlConvertStrategy() implements ConvertStrategy {
 
   public static final String FORMAT_FLAG = "--format";

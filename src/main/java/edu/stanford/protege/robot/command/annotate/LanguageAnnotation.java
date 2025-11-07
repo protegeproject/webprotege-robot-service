@@ -1,5 +1,6 @@
 package edu.stanford.protege.robot.command.annotate;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import java.util.List;
  * @param lang
  *          the ISO 639-1 language code (e.g., "en", "fr", "de")
  */
+@JsonTypeName("LanguageAnnotation")
 public record LanguageAnnotation(String property, String value, String lang) implements Annotation, HasLang {
 
   public static final String LANGUAGE_ANNOTATION = "--language-annotation";
