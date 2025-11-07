@@ -23,7 +23,6 @@ import edu.stanford.protege.robot.service.config.JacksonConfiguration;
 import edu.stanford.protege.robot.service.exception.RobotServiceException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.util.Objects;
 import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.model.IRI;
