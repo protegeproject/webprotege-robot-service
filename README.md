@@ -124,20 +124,20 @@ var command = new RobotCollapseCommand(
 ### Convert Command
 
 ```java
-// Explicit format conversion to JSON
-var command = new RobotConvertCommand(
-    ConvertFormat.json,
-    null,
-    null,
-    null);
+// Simple format conversion to JSON
+var command = new RobotConvertCommand(new JsonConvertStrategy());
 
-// OBO with custom prefixes and cleaning options
-var command = new RobotConvertCommand(
-    ConvertFormat.obo,
-    true,
+// Convert to OWL (RDF/XML)
+var command = new RobotConvertCommand(new OwlConvertStrategy());
+
+// OBO with validation disabled, cleaning options, and custom prefixes
+var strategy = new OboConvertStrategy(
+    false,  // disable document structure validation
     List.of(CleanOboOption.drop_extra_labels, CleanOboOption.merge_comments),
     Map.of("FOO", IRI.create("http://example.org/foo#"),
-           "BAR", IRI.create("http://example.org/bar#"));
+           "BAR", IRI.create("http://example.org/bar#"))
+);
+var command = new RobotConvertCommand(strategy);
 ```
 
 ### Expand Command
