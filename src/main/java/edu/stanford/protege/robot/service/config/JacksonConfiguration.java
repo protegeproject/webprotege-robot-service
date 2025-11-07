@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import edu.stanford.protege.robot.command.RobotCommand;
 import edu.stanford.protege.robot.command.annotate.Annotation;
+import edu.stanford.protege.robot.command.convert.ConvertStrategy;
 import edu.stanford.protege.robot.command.extract.ExtractStrategy;
 import org.semanticweb.owlapi.model.IRI;
 import org.springframework.context.annotation.Bean;
@@ -19,13 +20,14 @@ import org.springframework.context.annotation.Configuration;
  * objects.
  *
  * <p>
- * The configuration handles three key polymorphic type hierarchies:
+ * The configuration handles four key polymorphic type hierarchies:
  *
  * <ul>
  * <li>{@link RobotCommand} - 5 command implementations (annotate, extract, collapse, convert,
  * expand)</li>
  * <li>{@link Annotation} - 4 annotation types (plain, typed, language, link)</li>
  * <li>{@link ExtractStrategy} - 3 extraction strategies (slme, mireot, subset)</li>
+ * <li>{@link ConvertStrategy} - 7 conversion strategies (obo, json, ofn, omn, owl, owx, ttl)</li>
  * </ul>
  *
  * <p>
@@ -72,6 +74,7 @@ public class JacksonConfiguration {
     module.setMixInAnnotation(RobotCommand.class, RobotCommandMixin.class);
     module.setMixInAnnotation(Annotation.class, AnnotationMixin.class);
     module.setMixInAnnotation(ExtractStrategy.class, ExtractStrategyMixin.class);
+    module.setMixInAnnotation(ConvertStrategy.class, ConvertStrategyMixin.class);
 
     // Register custom serializers/deserializers for IRI
     module.addSerializer(IRI.class, new IriSerializeDeserializeHandler.Serializer());

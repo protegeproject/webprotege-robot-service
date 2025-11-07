@@ -1,10 +1,12 @@
 {
   "@type": "ConvertCommand",
-  "format": "obo",
-  "check": false,
-  "cleanOboOptions": ["strict", "simple"],
-  "addPrefixes": {
-    "CUSTOM": "http://example.org/custom#",
-    "MY": "http://example.org/my-ontology#"
+  "convertStrategy": {
+    "@type": "OBO",
+    "check": false,
+    "cleanOboOptions": ["strict", "simple"],
+    "addPrefixes": {
+      "CUSTOM": "http://example.org/custom#",
+      "MY": "http://example.org/my-ontology#"
+    }
   }
 }

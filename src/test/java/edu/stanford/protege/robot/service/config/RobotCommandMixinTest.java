@@ -11,7 +11,8 @@ import edu.stanford.protege.robot.command.annotate.AnnotateFlags;
 import edu.stanford.protege.robot.command.annotate.PlainAnnotation;
 import edu.stanford.protege.robot.command.annotate.RobotAnnotateCommand;
 import edu.stanford.protege.robot.command.collapse.RobotCollapseCommand;
-import edu.stanford.protege.robot.command.convert.ConvertFormat;
+import edu.stanford.protege.robot.command.convert.JsonConvertStrategy;
+import edu.stanford.protege.robot.command.convert.OwlConvertStrategy;
 import edu.stanford.protege.robot.command.convert.RobotConvertCommand;
 import edu.stanford.protege.robot.command.expand.RobotExpandCommand;
 import edu.stanford.protege.robot.command.extract.ExtractIntermediates;
@@ -165,13 +166,12 @@ class RobotCommandMixinTest {
    */
   @Test
   void testConvertCommandSerialization() throws Exception {
-    RobotConvertCommand command = new RobotConvertCommand(ConvertFormat.json, false, null, null);
+    RobotConvertCommand command = new RobotConvertCommand(new JsonConvertStrategy());
     String json = objectMapper.writeValueAsString(command);
 
     assertNotNull(json);
     assertTrue(json.contains("\"@type\":\"ConvertCommand\""));
-    assertTrue(json.contains("\"format\":\"json\""));
-    assertTrue(json.contains("\"check\":false"));
+    assertTrue(json.contains("\"convertStrategy\""));
   }
 
   /**
@@ -181,18 +181,14 @@ class RobotCommandMixinTest {
   void testConvertCommandDeserialization() throws Exception {
     String json = "{"
         + "\"@type\":\"ConvertCommand\","
-        + "\"format\":\"json\","
-        + "\"check\":false,"
-        + "\"cleanOboOptions\":null,"
-        + "\"addPrefixes\":null"
+        + "\"convertStrategy\":{\"@type\":\"JSON\"}"
         + "}";
     RobotCommand command = objectMapper.readValue(json, RobotCommand.class);
 
     assertNotNull(command);
     assertInstanceOf(RobotConvertCommand.class, command);
     RobotConvertCommand convertCmd = (RobotConvertCommand) command;
-    assertEquals(ConvertFormat.json, convertCmd.format());
-    assertEquals(false, convertCmd.check());
+    assertInstanceOf(JsonConvertStrategy.class, convertCmd.convertStrategy());
   }
 
   /**
@@ -243,7 +239,7 @@ class RobotCommandMixinTest {
             new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150")), null, null,
             null),
         new RobotCollapseCommand(5, List.of("GO:0008150")),
-        new RobotConvertCommand(ConvertFormat.owl, null, null, null),
+        new RobotConvertCommand(new OwlConvertStrategy()),
         new RobotExpandCommand(List.of(), List.of(), null)};
 
     for (RobotCommand original : commands) {

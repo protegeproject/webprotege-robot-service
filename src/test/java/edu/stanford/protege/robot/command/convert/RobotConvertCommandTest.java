@@ -16,7 +16,7 @@ class RobotConvertCommandTest {
 
     @Test
     void shouldReturnConvertCommandInstance() {
-      var command = new RobotConvertCommand(null, null, null, null);
+      var command = new RobotConvertCommand(new JsonConvertStrategy());
 
       var result = command.getCommand();
 
@@ -29,7 +29,7 @@ class RobotConvertCommandTest {
 
     @Test
     void shouldIncludeJsonFormat() {
-      var command = new RobotConvertCommand(ConvertFormat.json, null, null, null);
+      var command = new RobotConvertCommand(new JsonConvertStrategy());
 
       var args = command.getArgs();
 
@@ -38,7 +38,7 @@ class RobotConvertCommandTest {
 
     @Test
     void shouldIncludeOboFormat() {
-      var command = new RobotConvertCommand(ConvertFormat.obo, null, null, null);
+      var command = new RobotConvertCommand(new OboConvertStrategy(null, null, null));
 
       var args = command.getArgs();
 
@@ -47,7 +47,7 @@ class RobotConvertCommandTest {
 
     @Test
     void shouldIncludeOfnFormat() {
-      var command = new RobotConvertCommand(ConvertFormat.ofn, null, null, null);
+      var command = new RobotConvertCommand(new OfnConvertStrategy());
 
       var args = command.getArgs();
 
@@ -56,7 +56,7 @@ class RobotConvertCommandTest {
 
     @Test
     void shouldIncludeOmnFormat() {
-      var command = new RobotConvertCommand(ConvertFormat.omn, null, null, null);
+      var command = new RobotConvertCommand(new OmnConvertStrategy());
 
       var args = command.getArgs();
 
@@ -65,7 +65,7 @@ class RobotConvertCommandTest {
 
     @Test
     void shouldIncludeOwlFormat() {
-      var command = new RobotConvertCommand(ConvertFormat.owl, null, null, null);
+      var command = new RobotConvertCommand(new OwlConvertStrategy());
 
       var args = command.getArgs();
 
@@ -74,7 +74,7 @@ class RobotConvertCommandTest {
 
     @Test
     void shouldIncludeOwxFormat() {
-      var command = new RobotConvertCommand(ConvertFormat.owx, null, null, null);
+      var command = new RobotConvertCommand(new OwxConvertStrategy());
 
       var args = command.getArgs();
 
@@ -83,7 +83,7 @@ class RobotConvertCommandTest {
 
     @Test
     void shouldIncludeTtlFormat() {
-      var command = new RobotConvertCommand(ConvertFormat.ttl, null, null, null);
+      var command = new RobotConvertCommand(new TtlConvertStrategy());
 
       var args = command.getArgs();
 
@@ -96,20 +96,22 @@ class RobotConvertCommandTest {
 
     @Test
     void shouldIncludeCheckTrue() {
-      var command = new RobotConvertCommand(null, true, null, null);
+      var strategy = new OboConvertStrategy(true, null, null);
+      var command = new RobotConvertCommand(strategy);
 
       var args = command.getArgs();
 
-      assertThat(args).containsExactly("--check", "true");
+      assertThat(args).containsExactly("--format", "obo", "--check", "true");
     }
 
     @Test
     void shouldIncludeCheckFalse() {
-      var command = new RobotConvertCommand(null, false, null, null);
+      var strategy = new OboConvertStrategy(false, null, null);
+      var command = new RobotConvertCommand(strategy);
 
       var args = command.getArgs();
 
-      assertThat(args).containsExactly("--check", "false");
+      assertThat(args).containsExactly("--format", "obo", "--check", "false");
     }
   }
 
@@ -118,39 +120,43 @@ class RobotConvertCommandTest {
 
     @Test
     void shouldOmitCleanOboWhenListIsEmpty() {
-      var command = new RobotConvertCommand(null, null, List.of(), null);
+      var strategy = new OboConvertStrategy(null, List.of(), null);
+      var command = new RobotConvertCommand(strategy);
 
       var args = command.getArgs();
 
-      assertThat(args).doesNotContain("--clean-obo");
+      assertThat(args).containsExactly("--format", "obo").doesNotContain("--clean-obo");
     }
 
     @Test
     void shouldIncludeSingleCleanOboOption() {
-      var command = new RobotConvertCommand(
-          null, null, List.of(CleanOboOption.drop_extra_labels), null);
+      var strategy = new OboConvertStrategy(null, List.of(CleanOboOption.drop_extra_labels), null);
+      var command = new RobotConvertCommand(strategy);
 
       var args = command.getArgs();
 
-      assertThat(args).containsExactly("--clean-obo", "drop-extra-labels");
+      assertThat(args).containsExactly("--format", "obo", "--clean-obo", "drop-extra-labels");
     }
 
     @Test
     void shouldCombineMultipleCleanOboOptionsWithSpaces() {
-      var command = new RobotConvertCommand(
-          null,
+      var strategy = new OboConvertStrategy(
           null,
           List.of(
               CleanOboOption.drop_extra_labels,
               CleanOboOption.drop_extra_definitions,
               CleanOboOption.merge_comments),
           null);
+      var command = new RobotConvertCommand(strategy);
 
       var args = command.getArgs();
 
       assertThat(args)
           .containsExactly(
-              "--clean-obo", "drop-extra-labels drop-extra-definitions merge-comments");
+              "--format",
+              "obo",
+              "--clean-obo",
+              "drop-extra-labels drop-extra-definitions merge-comments");
     }
   }
 
@@ -159,41 +165,49 @@ class RobotConvertCommandTest {
 
     @Test
     void shouldOmitAddPrefixWhenMapIsEmpty() {
-      var command = new RobotConvertCommand(null, null, null, Map.of());
+      var strategy = new OboConvertStrategy(null, null, Map.of());
+      var command = new RobotConvertCommand(strategy);
 
       var args = command.getArgs();
 
-      assertThat(args).doesNotContain("--add-prefix");
+      assertThat(args).containsExactly("--format", "obo").doesNotContain("--add-prefix");
     }
 
     @Test
     void shouldIncludeSinglePrefix() {
-      var command = new RobotConvertCommand(
-          null, null, null, Map.of("CUSTOM", IRI.create("http://example.org/custom#")));
+      var strategy = new OboConvertStrategy(
+          null, null, Map.of("CUSTOM", IRI.create("http://example.org/custom#")));
+      var command = new RobotConvertCommand(strategy);
 
       var args = command.getArgs();
 
-      assertThat(args).containsExactly("--add-prefix", "CUSTOM: http://example.org/custom#");
+      assertThat(args)
+          .containsExactly("--format", "obo", "--add-prefix", "CUSTOM: http://example.org/custom#");
     }
 
     @Test
     void shouldIncludeMultiplePrefixes() {
-      var command = new RobotConvertCommand(
-          null,
+      var strategy = new OboConvertStrategy(
           null,
           null,
           Map.of(
               "CUSTOM", IRI.create("http://example.org/custom#"),
               "FOO", IRI.create("http://example.org/foo#"),
               "BAR", IRI.create("http://example.org/bar#")));
+      var command = new RobotConvertCommand(strategy);
 
       var args = command.getArgs();
 
       assertThat(args)
           .contains(
-              "--add-prefix", "CUSTOM: http://example.org/custom#",
-              "--add-prefix", "FOO: http://example.org/foo#",
-              "--add-prefix", "BAR: http://example.org/bar#");
+              "--format",
+              "obo",
+              "--add-prefix",
+              "CUSTOM: http://example.org/custom#",
+              "--add-prefix",
+              "FOO: http://example.org/foo#",
+              "--add-prefix",
+              "BAR: http://example.org/bar#");
     }
   }
 
@@ -202,70 +216,86 @@ class RobotConvertCommandTest {
 
     @Test
     void shouldCombineFormatCheckAndCleanObo() {
-      var command = new RobotConvertCommand(
-          ConvertFormat.obo, false, List.of(CleanOboOption.strict), null);
+      var strategy = new OboConvertStrategy(false, List.of(CleanOboOption.strict), null);
+      var command = new RobotConvertCommand(strategy);
 
       var args = command.getArgs();
 
-      assertThat(args).containsExactly("--format", "obo", "--check", "false", "--clean-obo",
-          "strict");
+      assertThat(args)
+          .containsExactly("--format", "obo", "--check", "false", "--clean-obo", "strict");
     }
 
     @Test
     void shouldCombineCleanOboAndAddPrefix() {
-      var command = new RobotConvertCommand(
-          null,
+      var strategy = new OboConvertStrategy(
           null,
           List.of(CleanOboOption.simple),
           Map.of("CUSTOM", IRI.create("http://example.org/custom#")));
+      var command = new RobotConvertCommand(strategy);
 
       var args = command.getArgs();
 
       assertThat(args)
           .containsExactly(
-              "--clean-obo", "simple",
-              "--add-prefix", "CUSTOM: http://example.org/custom#");
+              "--format",
+              "obo",
+              "--clean-obo",
+              "simple",
+              "--add-prefix",
+              "CUSTOM: http://example.org/custom#");
     }
 
     @Test
     void shouldCombineAllParameters() {
-      var command = new RobotConvertCommand(
-          ConvertFormat.obo,
+      var strategy = new OboConvertStrategy(
           true,
           List.of(CleanOboOption.drop_extra_labels, CleanOboOption.merge_comments),
-          Map.of("CUSTOM", IRI.create("http://example.org/custom#"), "FOO", IRI.create("http://example.org/foo#")));
+          Map.of(
+              "CUSTOM",
+              IRI.create("http://example.org/custom#"),
+              "FOO",
+              IRI.create("http://example.org/foo#")));
+      var command = new RobotConvertCommand(strategy);
 
       var args = command.getArgs();
 
       assertThat(args)
           .contains(
-              "--format", "obo",
-              "--check", "true",
-              "--clean-obo", "drop-extra-labels merge-comments",
-              "--add-prefix", "CUSTOM: http://example.org/custom#",
-              "--add-prefix", "FOO: http://example.org/foo#");
+              "--format",
+              "obo",
+              "--check",
+              "true",
+              "--clean-obo",
+              "drop-extra-labels merge-comments",
+              "--add-prefix",
+              "CUSTOM: http://example.org/custom#",
+              "--add-prefix",
+              "FOO: http://example.org/foo#");
     }
 
     @Test
     void shouldHandleComplexOboConversion() {
-      var command = new RobotConvertCommand(
-          ConvertFormat.obo,
+      var strategy = new OboConvertStrategy(
           false,
           List.of(
               CleanOboOption.drop_extra_labels,
               CleanOboOption.drop_extra_definitions,
               CleanOboOption.drop_untranslatable_axioms),
           Map.of("EX", IRI.create("http://example.org#")));
+      var command = new RobotConvertCommand(strategy);
 
       var args = command.getArgs();
 
       assertThat(args)
           .containsExactly(
-              "--format", "obo",
-              "--check", "false",
+              "--format",
+              "obo",
+              "--check",
+              "false",
               "--clean-obo",
               "drop-extra-labels drop-extra-definitions drop-untranslatable-axioms",
-              "--add-prefix", "EX: http://example.org#");
+              "--add-prefix",
+              "EX: http://example.org#");
     }
   }
 }

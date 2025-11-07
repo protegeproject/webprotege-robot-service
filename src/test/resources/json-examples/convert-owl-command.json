@@ -1,7 +1,6 @@
 {
   "@type": "ConvertCommand",
-  "format": "owl",
-  "check": true,
-  "cleanOboOptions": null,
-  "addPrefixes": null
+  "convertStrategy": {
+    "@type": "OWL"
+  }
 }

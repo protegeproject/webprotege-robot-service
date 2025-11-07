@@ -9,7 +9,8 @@ import edu.stanford.protege.robot.command.annotate.PlainAnnotation;
 import edu.stanford.protege.robot.command.annotate.RobotAnnotateCommand;
 import edu.stanford.protege.robot.command.annotate.TypedAnnotation;
 import edu.stanford.protege.robot.command.collapse.RobotCollapseCommand;
-import edu.stanford.protege.robot.command.convert.ConvertFormat;
+import edu.stanford.protege.robot.command.convert.OboConvertStrategy;
+import edu.stanford.protege.robot.command.convert.OwlConvertStrategy;
 import edu.stanford.protege.robot.command.convert.RobotConvertCommand;
 import edu.stanford.protege.robot.command.expand.RobotExpandCommand;
 import edu.stanford.protege.robot.command.extract.ExtractIntermediates;
@@ -118,11 +119,13 @@ class RobotCommandParserTest {
     // Parse single command
     var command = (RobotConvertCommand) parser.parseCommand(json);
 
-    // Verify convert parameters
-    assertThat(command.format()).isEqualTo(ConvertFormat.obo);
-    assertThat(command.check()).isFalse();
-    assertThat(command.cleanOboOptions()).hasSize(2);
-    assertThat(command.addPrefixes()).hasSize(2)
+    // Verify convert convertStrategy is OboConvertStrategy
+    assertThat(command.convertStrategy()).isInstanceOf(OboConvertStrategy.class);
+    var oboStrategy = (OboConvertStrategy) command.convertStrategy();
+    assertThat(oboStrategy.check()).isFalse();
+    assertThat(oboStrategy.cleanOboOptions()).hasSize(2);
+    assertThat(oboStrategy.addPrefixes())
+        .hasSize(2)
         .containsEntry("CUSTOM", IRI.create("http://example.org/custom#"))
         .containsEntry("MY", IRI.create("http://example.org/my-ontology#"));
   }
@@ -138,11 +141,8 @@ class RobotCommandParserTest {
     // Parse single command
     var command = (RobotConvertCommand) parser.parseCommand(json);
 
-    // Verify convert parameters
-    assertThat(command.format()).isEqualTo(ConvertFormat.owl);
-    assertThat(command.check()).isTrue();
-    assertThat(command.cleanOboOptions()).isNull();
-    assertThat(command.addPrefixes()).isNull();
+    // Verify convert convertStrategy is OwlConvertStrategy
+    assertThat(command.convertStrategy()).isInstanceOf(OwlConvertStrategy.class);
   }
 
   /**
