@@ -11,6 +11,7 @@ Spring Boot microservice that wraps [ROBOT](https://robot.obolibrary.org/) (an O
 | **Collapse** | ✅ Implemented | Streamline class hierarchies by removing intermediate classes |
 | **Convert** | ✅ Implemented | Transform ontologies between formats (JSON, OBO, OWL, Turtle, etc.) |
 | **Expand** | ✅ Implemented | Convert shortcut annotation properties (macros) into OWL axioms |
+| **Remove** | ✅ Implemented | Eliminate selected axioms from ontologies |
 | **Diff** | 🚧 Not Yet Implemented | Compare ontology versions |
 | **Export** | 🚧 Not Yet Implemented | Export ontology in various formats |
 | **Filter** | 🚧 Not Yet Implemented | Remove axioms/terms based on criteria |
@@ -19,7 +20,6 @@ Spring Boot microservice that wraps [ROBOT](https://robot.obolibrary.org/) (an O
 | **Merge** | 🚧 Not Yet Implemented | Combine multiple ontologies |
 | **Reduce** | 🚧 Not Yet Implemented | Remove redundant axioms |
 | **Relax** | 🚧 Not Yet Implemented | Convert strict axioms to approximate equivalents |
-| **Remove** | 🚧 Not Yet Implemented | Remove axioms from ontology |
 | **Repair** | 🚧 Not Yet Implemented | Fix common ontology issues |
 | **Unmerge** | 🚧 Not Yet Implemented | Reverse a merge operation |
 
@@ -155,6 +155,33 @@ var command = new RobotExpandCommand(
     List.of(),                             // expand all
     List.of("GO:0005575", "GO:0008150"),  // except these terms
     false                                  // don't annotate
+);
+```
+
+### Remove Command
+
+```java
+// Remove class hierarchy
+var command = new RobotRemoveCommand(
+    null,                            // baseIri
+    List.of("UBERON:0000062"),       // terms to remove
+    List.of(),                       // excludeTerms
+    List.of(),                       // includeTerms
+    List.of("self", "descendants"),  // selectors
+    null,                            // axioms
+    List.of(),                       // dropAxiomAnnotations
+    RemoveFlags.SIGNATURE            // flags
+);
+
+// Remove deprecated classes using pattern selector
+var command = new RobotRemoveCommand(
+    null,                            // baseIri
+    null,                            // terms
+    List.of(),                       // excludeTerms
+    List.of(),                       // includeTerms
+    List.of("owl:deprecated='true'^^xsd:boolean"),  // selectors (pattern selector)
+    null,                            // axioms
+    List.of()                        // dropAxiomAnnotations
 );
 ```
 

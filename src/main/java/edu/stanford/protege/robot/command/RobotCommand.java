@@ -8,6 +8,7 @@ import edu.stanford.protege.robot.command.collapse.RobotCollapseCommand;
 import edu.stanford.protege.robot.command.convert.RobotConvertCommand;
 import edu.stanford.protege.robot.command.expand.RobotExpandCommand;
 import edu.stanford.protege.robot.command.extract.RobotExtractCommand;
+import edu.stanford.protege.robot.command.remove.RobotRemoveCommand;
 import java.util.List;
 import org.obolibrary.robot.Command;
 
@@ -20,7 +21,8 @@ import org.obolibrary.robot.Command;
     @JsonSubTypes.Type(RobotExtractCommand.class),
     @JsonSubTypes.Type(RobotCollapseCommand.class),
     @JsonSubTypes.Type(RobotConvertCommand.class),
-    @JsonSubTypes.Type(RobotExpandCommand.class)})
+    @JsonSubTypes.Type(RobotExpandCommand.class),
+    @JsonSubTypes.Type(RobotRemoveCommand.class)})
 public interface RobotCommand {
 
   @JsonIgnore
