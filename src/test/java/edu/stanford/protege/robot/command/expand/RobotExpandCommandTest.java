@@ -14,7 +14,7 @@ class RobotExpandCommandTest {
 
     @Test
     void shouldReturnExpandCommandInstance() {
-      var command = new RobotExpandCommand(List.of(), List.of(), null);
+      var command = new RobotExpandCommand(List.of(), List.of());
 
       var result = command.getCommand();
 
@@ -26,8 +26,8 @@ class RobotExpandCommandTest {
   class GetArgsWithAnnotateExpansionAxioms {
 
     @Test
-    void shouldOmitAnnotateExpansionAxiomsWhenNull() {
-      var command = new RobotExpandCommand(List.of(), List.of(), null);
+    void shouldOmitAnnotateExpansionAxiomsWhenFlagNotProvided() {
+      var command = new RobotExpandCommand(List.of(), List.of());
 
       var args = command.getArgs();
 
@@ -35,21 +35,13 @@ class RobotExpandCommandTest {
     }
 
     @Test
-    void shouldIncludeAnnotateExpansionAxiomsTrue() {
-      var command = new RobotExpandCommand(List.of(), List.of(), true);
+    void shouldIncludeAnnotateExpansionAxiomsWhenFlagProvided() {
+      var command = new RobotExpandCommand(
+          List.of(), List.of(), ExpandFlags.ANNOTATE_EXPANSION_AXIOMS);
 
       var args = command.getArgs();
 
       assertThat(args).containsExactly("--annotate-expansion-axioms", "true");
-    }
-
-    @Test
-    void shouldIncludeAnnotateExpansionAxiomsFalse() {
-      var command = new RobotExpandCommand(List.of(), List.of(), false);
-
-      var args = command.getArgs();
-
-      assertThat(args).containsExactly("--annotate-expansion-axioms", "false");
     }
   }
 
@@ -58,7 +50,7 @@ class RobotExpandCommandTest {
 
     @Test
     void shouldNotIncludeExpandTermWhenListIsEmpty() {
-      var command = new RobotExpandCommand(List.of(), List.of(), null);
+      var command = new RobotExpandCommand(List.of(), List.of());
 
       var args = command.getArgs();
 
@@ -67,7 +59,7 @@ class RobotExpandCommandTest {
 
     @Test
     void shouldIncludeSingleExpandTermWithCurie() {
-      var command = new RobotExpandCommand(List.of("GO:0008150"), List.of(), null);
+      var command = new RobotExpandCommand(List.of("GO:0008150"), List.of());
 
       var args = command.getArgs();
 
@@ -77,7 +69,7 @@ class RobotExpandCommandTest {
     @Test
     void shouldIncludeSingleExpandTermWithFullIri() {
       var command = new RobotExpandCommand(
-          List.of("http://purl.obolibrary.org/obo/GO_0003674"), List.of(), null);
+          List.of("http://purl.obolibrary.org/obo/GO_0003674"), List.of());
 
       var args = command.getArgs();
 
@@ -88,7 +80,7 @@ class RobotExpandCommandTest {
     @Test
     void shouldIncludeMultipleExpandTerms() {
       var command = new RobotExpandCommand(
-          List.of("GO:0008150", "GO:0003674", "GO:0005575"), List.of(), null);
+          List.of("GO:0008150", "GO:0003674", "GO:0005575"), List.of());
 
       var args = command.getArgs();
 
@@ -106,7 +98,7 @@ class RobotExpandCommandTest {
               "GO:0008150",
               "http://purl.obolibrary.org/obo/CHEBI_24431",
               "CHEBI:24431"),
-          List.of(), null);
+          List.of());
 
       var args = command.getArgs();
 
@@ -123,7 +115,7 @@ class RobotExpandCommandTest {
 
     @Test
     void shouldNotIncludeNoExpandTermWhenListIsEmpty() {
-      var command = new RobotExpandCommand(List.of(), List.of(), null);
+      var command = new RobotExpandCommand(List.of(), List.of());
 
       var args = command.getArgs();
 
@@ -132,7 +124,7 @@ class RobotExpandCommandTest {
 
     @Test
     void shouldIncludeSingleNoExpandTermWithCurie() {
-      var command = new RobotExpandCommand(List.of(), List.of("GO:0005575"), null);
+      var command = new RobotExpandCommand(List.of(), List.of("GO:0005575"));
 
       var args = command.getArgs();
 
@@ -142,7 +134,7 @@ class RobotExpandCommandTest {
     @Test
     void shouldIncludeSingleNoExpandTermWithFullIri() {
       var command = new RobotExpandCommand(
-          List.of(), List.of("http://purl.obolibrary.org/obo/OBI_0000070"), null);
+          List.of(), List.of("http://purl.obolibrary.org/obo/OBI_0000070"));
 
       var args = command.getArgs();
 
@@ -153,7 +145,7 @@ class RobotExpandCommandTest {
     @Test
     void shouldIncludeMultipleNoExpandTerms() {
       var command = new RobotExpandCommand(
-          List.of(), List.of("GO:0008150", "GO:0003674"), null);
+          List.of(), List.of("GO:0008150", "GO:0003674"));
 
       var args = command.getArgs();
 
@@ -169,8 +161,7 @@ class RobotExpandCommandTest {
           List.of(), List.of(
               "GO:0005575",
               "http://purl.obolibrary.org/obo/BFO_0000001",
-              "BFO:0000002"),
-          null);
+              "BFO:0000002"));
 
       var args = command.getArgs();
 
@@ -187,7 +178,7 @@ class RobotExpandCommandTest {
 
     @Test
     void shouldReturnEmptyArgsWhenAllParametersAreDefault() {
-      var command = new RobotExpandCommand(List.of(), List.of(), null);
+      var command = new RobotExpandCommand(List.of(), List.of());
 
       var args = command.getArgs();
 
@@ -195,8 +186,9 @@ class RobotExpandCommandTest {
     }
 
     @Test
-    void shouldIncludeAnnotateExpansionAxiomsWhenTrue() {
-      var command = new RobotExpandCommand(List.of(), List.of(), true);
+    void shouldIncludeAnnotateExpansionAxiomsWhenFlagProvided() {
+      var command = new RobotExpandCommand(
+          List.of(), List.of(), ExpandFlags.ANNOTATE_EXPANSION_AXIOMS);
 
       var args = command.getArgs();
 
@@ -204,18 +196,9 @@ class RobotExpandCommandTest {
     }
 
     @Test
-    void shouldIncludeAnnotateExpansionAxiomsWhenFalse() {
-      var command = new RobotExpandCommand(List.of(), List.of(), false);
-
-      var args = command.getArgs();
-
-      assertThat(args).containsExactly("--annotate-expansion-axioms", "false");
-    }
-
-    @Test
     void shouldIncludeExpandTermsOnly() {
       var command = new RobotExpandCommand(
-          List.of("GO:0008150", "GO:0003674"), List.of(), null);
+          List.of("GO:0008150", "GO:0003674"), List.of());
 
       var args = command.getArgs();
 
@@ -228,7 +211,7 @@ class RobotExpandCommandTest {
     @Test
     void shouldCombineAnnotateWithNoExpandTerms() {
       var command = new RobotExpandCommand(
-          List.of(), List.of("GO:0005575", "GO:0008150"), true);
+          List.of(), List.of("GO:0005575", "GO:0008150"), ExpandFlags.ANNOTATE_EXPANSION_AXIOMS);
 
       var args = command.getArgs();
 
@@ -242,7 +225,7 @@ class RobotExpandCommandTest {
     @Test
     void shouldCombineExpandTermsAndNoExpandTerms() {
       var command = new RobotExpandCommand(
-          List.of("GO:0008150", "GO:0003674"), List.of("GO:0005575"), null);
+          List.of("GO:0008150", "GO:0003674"), List.of("GO:0005575"));
 
       var args = command.getArgs();
 
@@ -254,9 +237,9 @@ class RobotExpandCommandTest {
     }
 
     @Test
-    void shouldCombineAllParametersWithTrue() {
+    void shouldCombineAllParametersWithFlag() {
       var command = new RobotExpandCommand(
-          List.of("GO:0008150"), List.of("GO:0005575"), true);
+          List.of("GO:0008150"), List.of("GO:0005575"), ExpandFlags.ANNOTATE_EXPANSION_AXIOMS);
 
       var args = command.getArgs();
 
@@ -268,22 +251,6 @@ class RobotExpandCommandTest {
     }
 
     @Test
-    void shouldCombineAllParametersWithFalse() {
-      var command = new RobotExpandCommand(
-          List.of("GO:0008150", "GO:0003674"), List.of("GO:0005575", "BFO:0000001"), false);
-
-      var args = command.getArgs();
-
-      assertThat(args)
-          .containsExactly(
-              "--annotate-expansion-axioms", "false",
-              "--expand-term", "GO:0008150",
-              "--expand-term", "GO:0003674",
-              "--no-expand-term", "GO:0005575",
-              "--no-expand-term", "BFO:0000001");
-    }
-
-    @Test
     void shouldHandleComplexScenarioWithMixedTermFormats() {
       var command = new RobotExpandCommand(
           List.of(
@@ -292,14 +259,12 @@ class RobotExpandCommandTest {
           List.of(
               "GO:0005575",
               "http://purl.obolibrary.org/obo/BFO_0000001",
-              "CHEBI:24431"),
-          false);
+              "CHEBI:24431"));
 
       var args = command.getArgs();
 
       assertThat(args)
           .containsExactly(
-              "--annotate-expansion-axioms", "false",
               "--expand-term", "GO:0008150",
               "--expand-term", "http://purl.obolibrary.org/obo/GO_0003674",
               "--no-expand-term", "GO:0005575",
@@ -314,7 +279,7 @@ class RobotExpandCommandTest {
     @Test
     void shouldConvertArgsListToArray() {
       var command = new RobotExpandCommand(
-          List.of("GO:0008150"), List.of("GO:0005575"), true);
+          List.of("GO:0008150"), List.of("GO:0005575"), ExpandFlags.ANNOTATE_EXPANSION_AXIOMS);
 
       var argsArray = command.getArgsArray();
 
@@ -328,7 +293,7 @@ class RobotExpandCommandTest {
 
     @Test
     void shouldReturnEmptyArrayWhenNoArgs() {
-      var command = new RobotExpandCommand(List.of(), List.of(), null);
+      var command = new RobotExpandCommand(List.of(), List.of());
 
       var argsArray = command.getArgsArray();
 
@@ -338,7 +303,7 @@ class RobotExpandCommandTest {
     @Test
     void shouldConvertArgsWithOnlyExpandTerms() {
       var command = new RobotExpandCommand(
-          List.of("GO:0008150", "GO:0003674"), List.of(), null);
+          List.of("GO:0008150", "GO:0003674"), List.of());
 
       var argsArray = command.getArgsArray();
 

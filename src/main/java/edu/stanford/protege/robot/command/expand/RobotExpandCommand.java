@@ -3,8 +3,8 @@ package edu.stanford.protege.robot.command.expand;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.protege.robot.command.RobotCommand;
+import java.util.Arrays;
 import java.util.List;
-import javax.annotation.Nullable;
 import org.obolibrary.robot.Command;
 import org.obolibrary.robot.ExpandCommand;
 
@@ -27,16 +27,14 @@ import org.obolibrary.robot.ExpandCommand;
  * @param noExpandTerms
  *          list of term CURIEs or full IRIs to exclude from expansion (empty list means exclude
  *          none)
- * @param annotateExpansionAxioms
- *          if true, adds dct:source annotations linking generated axioms to their source properties
- *          (optional, defaults to false in ROBOT if null)
+ * @param flags
+ *          optional behavior flags
+ *
  * @see <a href="https://robot.obolibrary.org/expand">ROBOT Expand Documentation</a>
  */
 @JsonTypeName("ExpandCommand")
 public record RobotExpandCommand(
-    List<String> expandTerms,
-    List<String> noExpandTerms,
-    @Nullable Boolean annotateExpansionAxioms)
+    List<String> expandTerms, List<String> noExpandTerms, ExpandFlags... flags)
     implements
       RobotCommand {
 
@@ -44,7 +42,7 @@ public record RobotExpandCommand(
    * Converts this expand command to ROBOT command-line arguments.
    *
    * <p>
-   * Generates arguments in the format: {@code [--annotate-expansion-axioms BOOL]
+   * Generates arguments in the format: {@code [--annotate-expansion-axioms true]
    * [--expand-term TERM]... [--no-expand-term TERM]...}
    *
    * @return immutable list of command-line arguments for ROBOT expand
@@ -53,10 +51,11 @@ public record RobotExpandCommand(
   public List<String> getArgs() {
     var args = ImmutableList.<String>builder();
 
-    // Add annotate-expansion-axioms flag if specified
-    if (annotateExpansionAxioms != null) {
-      args.add("--annotate-expansion-axioms");
-      args.add(String.valueOf(annotateExpansionAxioms));
+    // Process flags using Arrays.asList() for varargs
+    List<ExpandFlags> flagsList = Arrays.asList(flags);
+    if (flagsList.contains(ExpandFlags.ANNOTATE_EXPANSION_AXIOMS)) {
+      args.add(ExpandFlags.ANNOTATE_EXPANSION_AXIOMS.getFlagName());
+      args.add("true");
     }
 
     // Add expand-term flags (repeated for each term)
