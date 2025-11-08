@@ -15,7 +15,7 @@ class RobotExtractCommandTest {
     @Test
     void shouldReturnExtractCommandInstance() {
       var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(strategy, null, null, null);
+      var command = new RobotExtractCommand(strategy, null, null);
 
       var result = command.getCommand();
 
@@ -31,7 +31,7 @@ class RobotExtractCommandTest {
     @Test
     void shouldGenerateMinimalArgs() {
       var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(strategy, null, null, null);
+      var command = new RobotExtractCommand(strategy, null, null);
 
       var args = command.getArgs();
 
@@ -46,7 +46,7 @@ class RobotExtractCommandTest {
     @Test
     void shouldIncludeIntermediatesAll() {
       var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(strategy, ExtractIntermediates.all, null, null);
+      var command = new RobotExtractCommand(strategy, ExtractIntermediates.all, null);
 
       var args = command.getArgs();
 
@@ -57,7 +57,7 @@ class RobotExtractCommandTest {
     @Test
     void shouldIncludeIntermediatesMinimal() {
       var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(strategy, ExtractIntermediates.minimal, null, null);
+      var command = new RobotExtractCommand(strategy, ExtractIntermediates.minimal, null);
 
       var args = command.getArgs();
 
@@ -69,7 +69,7 @@ class RobotExtractCommandTest {
     @Test
     void shouldIncludeIntermediatesNone() {
       var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(strategy, ExtractIntermediates.none, null, null);
+      var command = new RobotExtractCommand(strategy, ExtractIntermediates.none, null);
 
       var args = command.getArgs();
 
@@ -84,7 +84,7 @@ class RobotExtractCommandTest {
     @Test
     void shouldIncludeImportsInclude() {
       var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(strategy, null, HandlingImports.include, null);
+      var command = new RobotExtractCommand(strategy, null, HandlingImports.include);
 
       var args = command.getArgs();
 
@@ -95,7 +95,7 @@ class RobotExtractCommandTest {
     @Test
     void shouldIncludeImportsExclude() {
       var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(strategy, null, HandlingImports.exclude, null);
+      var command = new RobotExtractCommand(strategy, null, HandlingImports.exclude);
 
       var args = command.getArgs();
 
@@ -108,9 +108,10 @@ class RobotExtractCommandTest {
   class GetArgsWithCopyOntologyAnnotations {
 
     @Test
-    void shouldIncludeCopyOntologyAnnotationsTrue() {
+    void shouldIncludeCopyOntologyAnnotationsWhenFlagProvided() {
       var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(strategy, null, null, true);
+      var command = new RobotExtractCommand(
+          strategy, null, null, ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS);
 
       var args = command.getArgs();
 
@@ -120,15 +121,14 @@ class RobotExtractCommandTest {
     }
 
     @Test
-    void shouldIncludeCopyOntologyAnnotationsFalse() {
+    void shouldOmitCopyOntologyAnnotationsWhenFlagNotProvided() {
       var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(strategy, null, null, false);
+      var command = new RobotExtractCommand(strategy, null, null);
 
       var args = command.getArgs();
 
       assertThat(args)
-          .containsExactly(
-              "--method", "BOT", "--term", "GO:0008150", "--copy-ontology-annotations", "false");
+          .containsExactly("--method", "BOT", "--term", "GO:0008150");
     }
   }
 
@@ -142,7 +142,7 @@ class RobotExtractCommandTest {
           strategy,
           ExtractIntermediates.minimal,
           HandlingImports.include,
-          true);
+          ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS);
 
       var args = command.getArgs();
 
@@ -164,8 +164,7 @@ class RobotExtractCommandTest {
       var command = new RobotExtractCommand(
           strategy,
           ExtractIntermediates.all,
-          HandlingImports.exclude,
-          false);
+          HandlingImports.exclude);
 
       var args = command.getArgs();
 
@@ -175,8 +174,7 @@ class RobotExtractCommandTest {
               "--upper-term", "GO:0008150",
               "--lower-term", "GO:0009987",
               "--intermediates", "all",
-              "--imports", "exclude",
-              "--copy-ontology-annotations", "false");
+              "--imports", "exclude");
     }
 
     @Test
@@ -186,7 +184,7 @@ class RobotExtractCommandTest {
           strategy,
           ExtractIntermediates.none,
           HandlingImports.include,
-          true);
+          ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS);
 
       var args = command.getArgs();
 
@@ -211,7 +209,7 @@ class RobotExtractCommandTest {
           strategy,
           ExtractIntermediates.minimal,
           null,
-          true);
+          ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS);
 
       var args = command.getArgs();
 
@@ -224,13 +222,12 @@ class RobotExtractCommandTest {
     }
 
     @Test
-    void shouldIncludeOnlyImportsAndCopyOntologyAnnotations() {
+    void shouldIncludeOnlyImports() {
       var strategy = new SlmeExtractStrategy(SlmeExtractMethod.STAR, List.of("GO:0008150"));
       var command = new RobotExtractCommand(
           strategy,
           null,
-          HandlingImports.exclude,
-          false);
+          HandlingImports.exclude);
 
       var args = command.getArgs();
 
@@ -238,8 +235,7 @@ class RobotExtractCommandTest {
           .containsExactly(
               "--method", "STAR",
               "--term", "GO:0008150",
-              "--imports", "exclude",
-              "--copy-ontology-annotations", "false");
+              "--imports", "exclude");
     }
 
     @Test
@@ -248,8 +244,7 @@ class RobotExtractCommandTest {
       var command = new RobotExtractCommand(
           strategy,
           ExtractIntermediates.all,
-          HandlingImports.include,
-          null);
+          HandlingImports.include);
 
       var args = command.getArgs();
 
@@ -272,7 +267,7 @@ class RobotExtractCommandTest {
           strategy,
           ExtractIntermediates.minimal,
           HandlingImports.include,
-          true);
+          ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS);
 
       var args = command.getArgs();
 

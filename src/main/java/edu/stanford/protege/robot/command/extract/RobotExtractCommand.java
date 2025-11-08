@@ -3,6 +3,7 @@ package edu.stanford.protege.robot.command.extract;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.protege.robot.command.RobotCommand;
+import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nullable;
 import org.obolibrary.robot.Command;
@@ -16,44 +17,14 @@ import org.obolibrary.robot.ExtractCommand;
  * creating focused modules containing selected terms and their supporting relationships while
  * preserving logical entailments or hierarchy structure depending on the chosen strategy.
  *
- * <p>
- * Example usage with SLME BOT method:
- * 
- * <pre>{@code
- * var strategy = new SlmeExtractStrategy(
- *     SlmeExtractMethod.BOT,
- *     List.of("GO:0008150", "GO:0003674"));
- * var command = new RobotExtractCommand(
- *     strategy,
- *     ExtractIntermediates.minimal,
- *     HandlingImports.include,
- *     true // copy ontology annotations
- * );
- * // Generates: --method BOT --term GO:0008150 --term GO:0003674
- * // --intermediates minimal --imports include
- * // --copy-ontology-annotations true
- * }</pre>
- *
- * <p>
- * Example usage with MIREOT method:
- * 
- * <pre>{@code
- * var strategy = new MireotExtractStrategy(
- *     List.of("GO:0008150"), // upper
- *     List.of("GO:0009987"), // lower
- *     List.of() // branch-from
- * );
- * var command = new RobotExtractCommand(strategy, null, null, true);
- * }</pre>
- *
  * @param extractStrategy
  *          the extraction method strategy (SLME, MIREOT, or Subset)
  * @param extractIntermediates
  *          how to handle intermediate classes in the hierarchy
  * @param handlingImports
  *          whether to include or exclude imported ontologies
- * @param copyOntologyAnnotations
- *          whether to preserve ontology-level annotations in the extract
+ * @param flags
+ *          optional behavior flags
  *
  * @see <a href="https://robot.obolibrary.org/extract">ROBOT Extract Documentation</a>
  */
@@ -62,7 +33,7 @@ public record RobotExtractCommand(
     ExtractStrategy extractStrategy,
     @Nullable ExtractIntermediates extractIntermediates,
     @Nullable HandlingImports handlingImports,
-    @Nullable Boolean copyOntologyAnnotations)
+    ExtractFlags... flags)
     implements
       RobotCommand {
 
@@ -87,9 +58,11 @@ public record RobotExtractCommand(
       args.add("--imports");
       args.add(handlingImports.name());
     }
-    if (copyOntologyAnnotations != null) {
-      args.add("--copy-ontology-annotations");
-      args.add(String.valueOf(copyOntologyAnnotations));
+    // Process flags using Arrays.asList() for varargs
+    List<ExtractFlags> flagsList = Arrays.asList(flags);
+    if (flagsList.contains(ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS)) {
+      args.add(ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS.getFlagName());
+      args.add("true");
     }
     return args.build();
   }
