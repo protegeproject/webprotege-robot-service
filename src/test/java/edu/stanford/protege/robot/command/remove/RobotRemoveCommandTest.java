@@ -2,6 +2,9 @@ package edu.stanford.protege.robot.command.remove;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import edu.stanford.protege.robot.command.common.AxiomType;
+import edu.stanford.protege.robot.command.common.CommandFlags;
+import edu.stanford.protege.robot.command.common.Selector;
 import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -169,7 +172,7 @@ class RobotRemoveCommandTest {
           List.of("GO:0008150"),
           null,
           null,
-          List.of(RemoveSelector.self.name(), RemoveSelector.descendants.name()),
+          List.of(Selector.self.name(), Selector.descendants.name()),
           null,
           null);
 
@@ -258,7 +261,7 @@ class RobotRemoveCommandTest {
           null,
           null,
           null,
-          List.of(RemoveAxiomType.structural_tautologies.name()),
+          List.of(AxiomType.structural_tautologies.name()),
           null);
 
       var args = command.getArgs();
@@ -274,7 +277,7 @@ class RobotRemoveCommandTest {
           null,
           null,
           null,
-          List.of(RemoveAxiomType.all.name()),
+          List.of(AxiomType.all.name()),
           null);
 
       var args = command.getArgs();
@@ -296,7 +299,7 @@ class RobotRemoveCommandTest {
           null,
           null,
           null,
-          RemoveFlags.SIGNATURE);
+          CommandFlags.SIGNATURE);
 
       var args = command.getArgs();
 
@@ -313,7 +316,7 @@ class RobotRemoveCommandTest {
           null,
           null,
           null,
-          RemoveFlags.NO_TRIM);
+          CommandFlags.NO_TRIM);
 
       var args = command.getArgs();
 
@@ -330,7 +333,7 @@ class RobotRemoveCommandTest {
           null,
           null,
           null,
-          RemoveFlags.NO_PRESERVE_STRUCTURE);
+          CommandFlags.NO_PRESERVE_STRUCTURE);
 
       var args = command.getArgs();
 
@@ -347,7 +350,7 @@ class RobotRemoveCommandTest {
           null,
           null,
           null,
-          RemoveFlags.ALLOW_PUNNING);
+          CommandFlags.ALLOW_PUNNING);
 
       var args = command.getArgs();
 
@@ -364,9 +367,9 @@ class RobotRemoveCommandTest {
           null,
           null,
           null,
-          RemoveFlags.SIGNATURE,
-          RemoveFlags.NO_TRIM,
-          RemoveFlags.NO_PRESERVE_STRUCTURE);
+          CommandFlags.SIGNATURE,
+          CommandFlags.NO_TRIM,
+          CommandFlags.NO_PRESERVE_STRUCTURE);
 
       var args = command.getArgs();
 
@@ -407,7 +410,7 @@ class RobotRemoveCommandTest {
           null,
           null,
           null,
-          List.of(RemoveAxiomType.external.name()),
+          List.of(AxiomType.external.name()),
           null);
 
       var args = command.getArgs();
@@ -470,10 +473,10 @@ class RobotRemoveCommandTest {
           List.of("self", "descendants"),
           List.of("subclass", "equivalent"),
           List.of("rdfs:comment"),
-          RemoveFlags.SIGNATURE,
-          RemoveFlags.NO_TRIM,
-          RemoveFlags.NO_PRESERVE_STRUCTURE,
-          RemoveFlags.ALLOW_PUNNING);
+          CommandFlags.SIGNATURE,
+          CommandFlags.NO_TRIM,
+          CommandFlags.NO_PRESERVE_STRUCTURE,
+          CommandFlags.ALLOW_PUNNING);
 
       var args = command.getArgs();
 
@@ -521,7 +524,7 @@ class RobotRemoveCommandTest {
           List.of("<http://purl.obolibrary.org/obo/BFO_*>"),
           null,
           null,
-          RemoveFlags.SIGNATURE);
+          CommandFlags.SIGNATURE);
 
       var args = command.getArgs();
 
@@ -575,9 +578,9 @@ class RobotRemoveCommandTest {
           List.of("self", "descendants"),
           List.of("subclass"),
           null,
-          RemoveFlags.SIGNATURE,
-          RemoveFlags.NO_TRIM,
-          RemoveFlags.NO_PRESERVE_STRUCTURE);
+          CommandFlags.SIGNATURE,
+          CommandFlags.NO_TRIM,
+          CommandFlags.NO_PRESERVE_STRUCTURE);
 
       var args = command.getArgs();
 

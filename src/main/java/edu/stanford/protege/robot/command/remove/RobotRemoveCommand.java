@@ -3,6 +3,7 @@ package edu.stanford.protege.robot.command.remove;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.protege.robot.command.RobotCommand;
+import edu.stanford.protege.robot.command.common.CommandFlags;
 import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nullable;
@@ -26,18 +27,21 @@ import org.obolibrary.robot.RemoveCommand;
  * @param includeTerms
  *          terms to force inclusion in removal set
  * @param selectors
- *          filters to expand/narrow target set (use RemoveSelector enum values via {@code .name()}
- *          or custom pattern strings)
+ *          filters to expand/narrow target set (use {@link
+ *          edu.stanford.protege.robot.command.common.Selector} enum values via {@code .name()} or
+ *          custom pattern strings)
  * @param axioms
- *          axiom types to consider (use RemoveAxiomType enum values via {@code .name()} or custom
- *          strings)
+ *          axiom types to consider (use {@link
+ *          edu.stanford.protege.robot.command.common.AxiomType} enum values via {@code .name()} or
+ *          custom strings)
  * @param dropAxiomAnnotations
  *          annotation properties to strip from axioms after removal
  * @param flags
  *          boolean flags for non-default removal behaviors. Available flags: {@link
- *          RemoveFlags#SIGNATURE}, {@link RemoveFlags#NO_TRIM}, {@link
- *          RemoveFlags#NO_PRESERVE_STRUCTURE}, {@link RemoveFlags#ALLOW_PUNNING}. If not
+ *          CommandFlags#SIGNATURE}, {@link CommandFlags#NO_TRIM}, {@link
+ *          CommandFlags#NO_PRESERVE_STRUCTURE}, {@link CommandFlags#ALLOW_PUNNING}. If not
  *          specified, ROBOT defaults are used.
+ *
  * @see <a href="https://robot.obolibrary.org/remove">ROBOT Remove Documentation</a>
  */
 @JsonTypeName("RemoveCommand")
@@ -49,7 +53,7 @@ public record RobotRemoveCommand(
     @Nullable List<String> selectors,
     @Nullable List<String> axioms,
     @Nullable List<String> dropAxiomAnnotations,
-    RemoveFlags... flags)
+    CommandFlags... flags)
     implements
       RobotCommand {
 
@@ -121,21 +125,21 @@ public record RobotRemoveCommand(
     }
 
     // Add flags (each flag sets a non-default value)
-    List<RemoveFlags> flagsList = Arrays.asList(flags);
-    if (flagsList.contains(RemoveFlags.SIGNATURE)) {
-      args.add(RemoveFlags.SIGNATURE.getFlagName());
+    List<CommandFlags> flagsList = Arrays.asList(flags);
+    if (flagsList.contains(CommandFlags.SIGNATURE)) {
+      args.add(CommandFlags.SIGNATURE.getFlagName());
       args.add("true");
     }
-    if (flagsList.contains(RemoveFlags.NO_TRIM)) {
-      args.add(RemoveFlags.NO_TRIM.getFlagName());
+    if (flagsList.contains(CommandFlags.NO_TRIM)) {
+      args.add(CommandFlags.NO_TRIM.getFlagName());
       args.add("false");
     }
-    if (flagsList.contains(RemoveFlags.NO_PRESERVE_STRUCTURE)) {
-      args.add(RemoveFlags.NO_PRESERVE_STRUCTURE.getFlagName());
+    if (flagsList.contains(CommandFlags.NO_PRESERVE_STRUCTURE)) {
+      args.add(CommandFlags.NO_PRESERVE_STRUCTURE.getFlagName());
       args.add("false");
     }
-    if (flagsList.contains(RemoveFlags.ALLOW_PUNNING)) {
-      args.add(RemoveFlags.ALLOW_PUNNING.getFlagName());
+    if (flagsList.contains(CommandFlags.ALLOW_PUNNING)) {
+      args.add(CommandFlags.ALLOW_PUNNING.getFlagName());
       args.add("true");
     }
 

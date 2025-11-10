@@ -1,17 +1,23 @@
-package edu.stanford.protege.robot.command.remove;
+package edu.stanford.protege.robot.command.common;
 
 /**
- * Axiom types for ROBOT remove command.
+ * Axiom types for ROBOT filter and remove commands.
  *
  * <p>
- * Specifies which categories of axioms to consider during removal. Common shortcuts like {@code
- * all}, {@code logical}, and {@code annotation} are provided, along with specific axiom types and
- * special selectors for advanced filtering.
+ * Specifies which categories of axioms to consider during filtering or removal. Common shortcuts
+ * like
+ * {@code all}, {@code logical}, and {@code annotation} are provided, along with specific axiom
+ * types
+ * and special selectors for advanced filtering.
+ *
+ * @see <a href="https://robot.obolibrary.org/filter">ROBOT Filter Documentation</a>
+ * @see <a href="https://robot.obolibrary.org/remove">ROBOT Remove Documentation</a>
  */
-public enum RemoveAxiomType {
+public enum AxiomType {
 
   /**
-   * All axiom types. Shortcut that selects all axioms in the ontology for potential removal.
+   * All axiom types. Shortcut that selects all axioms in the ontology for potential filtering or
+   * removal.
    */
   all,
 
@@ -93,7 +99,7 @@ public enum RemoveAxiomType {
 
   /**
    * Tautological axioms. Selects axioms that are logically tautological (always true). Warning: This
-   * may remove more
+   * may select more
    * axioms than desired as it uses broad criteria for identifying tautologies.
    */
   tautologies,

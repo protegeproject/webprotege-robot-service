@@ -1,7 +1,7 @@
-package edu.stanford.protege.robot.command.remove;
+package edu.stanford.protege.robot.command.common;
 
 /**
- * Predefined selectors for ROBOT remove command.
+ * Predefined selectors for ROBOT filter and remove commands.
  *
  * <p>
  * Selectors filter or expand the target term set. This enum provides well-defined subset and
@@ -11,8 +11,11 @@ package edu.stanford.protege.robot.command.remove;
  * <p>
  * Subset selectors filter the target set by entity type, while relation selectors navigate the
  * ontology graph to expand the target set based on relationships.
+ *
+ * @see <a href="https://robot.obolibrary.org/filter">ROBOT Filter Documentation</a>
+ * @see <a href="https://robot.obolibrary.org/remove">ROBOT Remove Documentation</a>
  */
-public enum RemoveSelector {
+public enum Selector {
 
   /**
    * Filter by OWL classes. Subset selector that restricts the target set to only include class
@@ -146,5 +149,11 @@ public enum RemoveSelector {
    * Terms from imported ontologies. Relation selector that restricts the target set to terms defined
    * in imported ontologies.
    */
-  imports;
+  imports,
+
+  /**
+   * All annotations on filtered terms. Special selector that copies all annotations on filtered terms
+   * regardless of whether annotation properties are in the term set.
+   */
+  annotations;
 }
