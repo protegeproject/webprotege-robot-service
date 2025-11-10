@@ -12,9 +12,9 @@ Spring Boot microservice that wraps [ROBOT](https://robot.obolibrary.org/) (an O
 | **Convert** | ✅ Implemented | Transform ontologies between formats (JSON, OBO, OWL, Turtle, etc.) |
 | **Expand** | ✅ Implemented | Convert shortcut annotation properties (macros) into OWL axioms |
 | **Remove** | ✅ Implemented | Eliminate selected axioms from ontologies |
+| **Filter** | ✅ Implemented | Select and retain specific axioms from ontologies (inverse of remove) |
 | **Diff** | 🚧 Not Yet Implemented | Compare ontology versions |
 | **Export** | 🚧 Not Yet Implemented | Export ontology in various formats |
-| **Filter** | 🚧 Not Yet Implemented | Remove axioms/terms based on criteria |
 | **Materialize** | 🚧 Not Yet Implemented | Materialize class expressions |
 | **Measure** | 🚧 Not Yet Implemented | Compute ontology metrics |
 | **Merge** | 🚧 Not Yet Implemented | Combine multiple ontologies |
@@ -175,7 +175,7 @@ var command = new RobotRemoveCommand(
     List.of("self", "descendants"),  // selectors
     null,                            // axioms
     List.of(),                       // dropAxiomAnnotations
-    RemoveFlags.SIGNATURE            // flags
+    CommandFlags.SIGNATURE           // flags
 );
 
 // Remove deprecated classes using pattern selector
@@ -187,6 +187,33 @@ var command = new RobotRemoveCommand(
     List.of("owl:deprecated='true'^^xsd:boolean"),  // selectors (pattern selector)
     null,                            // axioms
     List.of()                        // dropAxiomAnnotations
+);
+```
+
+### Filter Command
+
+```java
+// Filter class hierarchy with annotations
+var command = new RobotFilterCommand(
+    null,                                        // baseIri
+    List.of("GO:0008150"),                       // terms to keep
+    null,                                        // excludeTerms
+    null,                                        // includeTerms
+    List.of("self", "descendants", "annotations"), // selectors
+    null,                                        // axioms
+    null                                         // dropAxiomAnnotations
+);
+
+// Filter logical axioms with signature flag
+var command = new RobotFilterCommand(
+    null,                                // baseIri
+    List.of("GO:0008150", "GO:0003674"), // terms to keep
+    List.of("GO:0005575"),               // excludeTerms (prevent from output)
+    null,                                // includeTerms
+    List.of("self", "descendants"),      // selectors
+    List.of("logical"),                  // axioms (keep only logical axioms)
+    null,                                // dropAxiomAnnotations
+    CommandFlags.SIGNATURE               // flags (match named entities only)
 );
 ```
 

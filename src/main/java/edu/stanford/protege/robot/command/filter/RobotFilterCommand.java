@@ -1,0 +1,159 @@
+package edu.stanford.protege.robot.command.filter;
+
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.common.collect.ImmutableList;
+import edu.stanford.protege.robot.command.RobotCommand;
+import edu.stanford.protege.robot.command.common.CommandFlags;
+import java.util.Arrays;
+import java.util.List;
+import javax.annotation.Nullable;
+import org.obolibrary.robot.Command;
+import org.obolibrary.robot.FilterCommand;
+
+/**
+ * ROBOT filter command for selecting and retaining specific axioms from ontologies.
+ *
+ * <p>
+ * The filter command is the inverse of remove, enabling precise axiom selection through a four-step
+ * process: term selection, selector expansion, axiom type specification, and matching/retention.
+ * Unlike remove which deletes matching axioms, filter keeps them and discards non-matching axioms.
+ *
+ * @param baseIri
+ *          base namespace for internal/external axiom classification (required for {@code internal}
+ *          and {@code external} axiom types)
+ * @param terms
+ *          list of target terms to filter (CURIEs or IRIs)
+ * @param excludeTerms
+ *          terms to prevent from appearing in output
+ * @param includeTerms
+ *          terms to force inclusion in filtered output
+ * @param selectors
+ *          filters to expand/narrow target set (use {@link
+ *          edu.stanford.protege.robot.command.common.Selector} enum values via {@code .name()} or
+ *          custom pattern strings)
+ * @param axioms
+ *          axiom types to consider (use {@link
+ *          edu.stanford.protege.robot.command.common.AxiomType} enum values via {@code .name()} or
+ *          custom strings)
+ * @param dropAxiomAnnotations
+ *          annotation properties to strip from axioms after filtering
+ * @param flags
+ *          boolean flags for non-default filtering behaviors. Available flags: {@link
+ *          CommandFlags#SIGNATURE}, {@link CommandFlags#NO_TRIM}, {@link
+ *          CommandFlags#NO_PRESERVE_STRUCTURE}, {@link CommandFlags#ALLOW_PUNNING}. If not
+ *          specified, ROBOT defaults are used.
+ *
+ * @see <a href="https://robot.obolibrary.org/filter">ROBOT Filter Documentation</a>
+ */
+@JsonTypeName("FilterCommand")
+public record RobotFilterCommand(
+    @Nullable String baseIri,
+    @Nullable List<String> terms,
+    @Nullable List<String> excludeTerms,
+    @Nullable List<String> includeTerms,
+    @Nullable List<String> selectors,
+    @Nullable List<String> axioms,
+    @Nullable List<String> dropAxiomAnnotations,
+    CommandFlags... flags)
+    implements
+      RobotCommand {
+
+  /**
+   * Converts this filter command to ROBOT command-line arguments.
+   *
+   * <p>
+   * Generates arguments for term selection, selector expansion, axiom type filtering, and various
+   * filtering options. All parameters are optional; if none are specified, an empty list is
+   * returned.
+   *
+   * @return immutable list of command-line arguments for ROBOT filter
+   */
+  @Override
+  public List<String> getArgs() {
+    var args = ImmutableList.<String>builder();
+    // Add base IRI
+    if (baseIri != null && !baseIri.isEmpty()) {
+      args.add("--base-iri");
+      args.add(baseIri);
+    }
+    // Add terms
+    if (terms != null && !terms.isEmpty()) {
+      terms.forEach(
+          term -> {
+            args.add("--term");
+            args.add(term);
+          });
+    }
+    // Add exclude terms
+    if (excludeTerms != null && !excludeTerms.isEmpty()) {
+      excludeTerms.forEach(
+          term -> {
+            args.add("--exclude-term");
+            args.add(term);
+          });
+    }
+    // Add include terms
+    if (includeTerms != null && !includeTerms.isEmpty()) {
+      includeTerms.forEach(
+          term -> {
+            args.add("--include-term");
+            args.add(term);
+          });
+    }
+    // Add selectors
+    if (selectors != null && !selectors.isEmpty()) {
+      selectors.forEach(
+          selector -> {
+            args.add("--select");
+            args.add(selector);
+          });
+    }
+    // Add axiom types
+    if (axioms != null && !axioms.isEmpty()) {
+      axioms.forEach(
+          axiom -> {
+            args.add("--axioms");
+            args.add(axiom);
+          });
+    }
+    // Add drop-axiom-annotations
+    if (dropAxiomAnnotations != null && !dropAxiomAnnotations.isEmpty()) {
+      dropAxiomAnnotations.forEach(
+          property -> {
+            args.add("--drop-axiom-annotations");
+            args.add(property);
+          });
+    }
+
+    // Add flags (each flag sets a non-default value)
+    List<CommandFlags> flagsList = Arrays.asList(flags);
+    if (flagsList.contains(CommandFlags.SIGNATURE)) {
+      args.add(CommandFlags.SIGNATURE.getFlagName());
+      args.add("true");
+    }
+    if (flagsList.contains(CommandFlags.NO_TRIM)) {
+      args.add(CommandFlags.NO_TRIM.getFlagName());
+      args.add("false");
+    }
+    if (flagsList.contains(CommandFlags.NO_PRESERVE_STRUCTURE)) {
+      args.add(CommandFlags.NO_PRESERVE_STRUCTURE.getFlagName());
+      args.add("false");
+    }
+    if (flagsList.contains(CommandFlags.ALLOW_PUNNING)) {
+      args.add(CommandFlags.ALLOW_PUNNING.getFlagName());
+      args.add("true");
+    }
+
+    return args.build();
+  }
+
+  /**
+   * Returns the ROBOT FilterCommand instance for execution.
+   *
+   * @return a new FilterCommand instance
+   */
+  @Override
+  public Command getCommand() {
+    return new FilterCommand();
+  }
+}
