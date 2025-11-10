@@ -14,5 +14,5 @@
   },
   "extractIntermediates": "all",
   "handlingImports": "exclude",
-  "copyOntologyAnnotations": false
+  "flags": []
 }

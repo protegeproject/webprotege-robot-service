@@ -12,7 +12,9 @@ import edu.stanford.protege.robot.command.collapse.RobotCollapseCommand;
 import edu.stanford.protege.robot.command.convert.OboConvertStrategy;
 import edu.stanford.protege.robot.command.convert.OwlConvertStrategy;
 import edu.stanford.protege.robot.command.convert.RobotConvertCommand;
+import edu.stanford.protege.robot.command.expand.ExpandFlags;
 import edu.stanford.protege.robot.command.expand.RobotExpandCommand;
+import edu.stanford.protege.robot.command.extract.ExtractFlags;
 import edu.stanford.protege.robot.command.extract.ExtractIntermediates;
 import edu.stanford.protege.robot.command.extract.HandlingImports;
 import edu.stanford.protege.robot.command.extract.MireotExtractStrategy;
@@ -105,7 +107,7 @@ class RobotCommandParserTest {
     // Verify expand parameters
     assertThat(command.expandTerms()).containsExactly("UBERON:0000001", "UBERON:0000002");
     assertThat(command.noExpandTerms()).containsExactly("UBERON:9999999");
-    assertThat(command.annotateExpansionAxioms()).isTrue();
+    assertThat(command.flags()).containsExactly(ExpandFlags.ANNOTATE_EXPANSION_AXIOMS);
   }
 
   /**
@@ -180,7 +182,7 @@ class RobotCommandParserTest {
     assertThat(mireotStrategy.branchFromTerms()).containsExactly("GO:0008152");
     assertThat(command.extractIntermediates()).isEqualTo(ExtractIntermediates.all);
     assertThat(command.handlingImports()).isEqualTo(HandlingImports.exclude);
-    assertThat(command.copyOntologyAnnotations()).isFalse();
+    assertThat(command.flags()).isEmpty();
   }
 
   /**
@@ -201,7 +203,7 @@ class RobotCommandParserTest {
     assertThat(slmeStrategy.terms()).containsExactly("GO:0008150", "GO:0003674", "GO:0005575");
     assertThat(command.extractIntermediates()).isEqualTo(ExtractIntermediates.minimal);
     assertThat(command.handlingImports()).isEqualTo(HandlingImports.include);
-    assertThat(command.copyOntologyAnnotations()).isTrue();
+    assertThat(command.flags()).containsExactly(ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS);
   }
 
   /**
@@ -222,7 +224,7 @@ class RobotCommandParserTest {
         "GO:0008152", "GO:0009987");
     assertThat(command.extractIntermediates()).isEqualTo(ExtractIntermediates.none);
     assertThat(command.handlingImports()).isEqualTo(HandlingImports.include);
-    assertThat(command.copyOntologyAnnotations()).isTrue();
+    assertThat(command.flags()).containsExactly(ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS);
   }
 
   String getJsonContent(String path) throws IOException {

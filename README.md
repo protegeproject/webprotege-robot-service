@@ -90,7 +90,7 @@ var command = new RobotExtractCommand(
     strategy,
     ExtractIntermediates.minimal,
     HandlingImports.include,
-    true  // copy ontology annotations
+    ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS
 );
 ```
 
@@ -102,7 +102,12 @@ var strategy = new MireotExtractStrategy(
     List.of("GO:0009987"),  // lower terms
     List.of()               // branch-from terms
 );
-var command = new RobotExtractCommand(strategy, null, null, true);
+var command = new RobotExtractCommand(
+    strategy,
+    null,
+    null,
+    ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS
+);
 ```
 
 ### Collapse Command
@@ -147,14 +152,14 @@ var command = new RobotConvertCommand(strategy);
 var command = new RobotExpandCommand(
     List.of(),   // expand all terms
     List.of(),   // don't exclude any
-    true         // annotate expansion axioms with dct:source
+    ExpandFlags.ANNOTATE_EXPANSION_AXIOMS  // annotate expansion axioms with dct:source
 );
 
 // Exclude specific terms from expansion
 var command = new RobotExpandCommand(
     List.of(),                             // expand all
-    List.of("GO:0005575", "GO:0008150"),  // except these terms
-    false                                  // don't annotate
+    List.of("GO:0005575", "GO:0008150")   // except these terms
+    // no flags - don't annotate
 );
 ```
 

@@ -12,5 +12,7 @@
   },
   "extractIntermediates": "none",
   "handlingImports": "include",
-  "copyOntologyAnnotations": true
+  "flags": [
+    "COPY_ONTOLOGY_ANNOTATIONS"
+  ]
 }

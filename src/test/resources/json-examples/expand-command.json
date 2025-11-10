@@ -7,5 +7,7 @@
   "noExpandTerms": [
     "UBERON:9999999"
   ],
-  "annotateExpansionAxioms": true
+  "flags": [
+    "ANNOTATE_EXPANSION_AXIOMS"
+  ]
 }
