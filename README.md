@@ -14,13 +14,13 @@ Spring Boot microservice that wraps [ROBOT](https://robot.obolibrary.org/) (an O
 | **Remove** | ✅ Implemented | Eliminate selected axioms from ontologies |
 | **Filter** | ✅ Implemented | Select and retain specific axioms from ontologies (inverse of remove) |
 | **Relax** | ✅ Implemented | Convert equivalence axioms into weaker SubClassOf axioms |
+| **Repair** | ✅ Implemented | Fix common ontology issues (deprecated references, axiom annotations) |
 | **Diff** | 🚧 Not Yet Implemented | Compare ontology versions |
 | **Export** | 🚧 Not Yet Implemented | Export ontology in various formats |
 | **Materialize** | 🚧 Not Yet Implemented | Materialize class expressions |
 | **Measure** | 🚧 Not Yet Implemented | Compute ontology metrics |
 | **Merge** | 🚧 Not Yet Implemented | Combine multiple ontologies |
 | **Reduce** | 🚧 Not Yet Implemented | Remove redundant axioms |
-| **Repair** | 🚧 Not Yet Implemented | Fix common ontology issues |
 | **Unmerge** | 🚧 Not Yet Implemented | Reverse a merge operation |
 
 ## Quick Start
@@ -228,6 +228,22 @@ var command = new RobotRelaxCommand(
     RelaxFlags.INCLUDE_NAMED_CLASSES,
     RelaxFlags.INCLUDE_SUBCLASS_OF,
     RelaxFlags.ENFORCE_OBO_FORMAT
+);
+```
+
+### Repair Command
+
+```java
+// Fix deprecated class references
+var command = new RobotRepairCommand(
+    List.of(),                     // no annotation properties to migrate
+    RepairFlags.INVALID_REFERENCES // fix deprecated class references
+);
+
+// Migrate annotation properties when fixing deprecated classes
+var command = new RobotRepairCommand(
+    List.of("oboInOwl:hasDbXref", "rdfs:seeAlso"),  // migrate these properties
+    RepairFlags.INVALID_REFERENCES
 );
 ```
 
