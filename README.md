@@ -13,13 +13,13 @@ Spring Boot microservice that wraps [ROBOT](https://robot.obolibrary.org/) (an O
 | **Expand** | ✅ Implemented | Convert shortcut annotation properties (macros) into OWL axioms |
 | **Remove** | ✅ Implemented | Eliminate selected axioms from ontologies |
 | **Filter** | ✅ Implemented | Select and retain specific axioms from ontologies (inverse of remove) |
+| **Relax** | ✅ Implemented | Convert equivalence axioms into weaker SubClassOf axioms |
 | **Diff** | 🚧 Not Yet Implemented | Compare ontology versions |
 | **Export** | 🚧 Not Yet Implemented | Export ontology in various formats |
 | **Materialize** | 🚧 Not Yet Implemented | Materialize class expressions |
 | **Measure** | 🚧 Not Yet Implemented | Compute ontology metrics |
 | **Merge** | 🚧 Not Yet Implemented | Combine multiple ontologies |
 | **Reduce** | 🚧 Not Yet Implemented | Remove redundant axioms |
-| **Relax** | 🚧 Not Yet Implemented | Convert strict axioms to approximate equivalents |
 | **Repair** | 🚧 Not Yet Implemented | Fix common ontology issues |
 | **Unmerge** | 🚧 Not Yet Implemented | Reverse a merge operation |
 
@@ -214,6 +214,20 @@ var command = new RobotFilterCommand(
     List.of("logical"),                  // axioms (keep only logical axioms)
     null,                                // dropAxiomAnnotations
     CommandFlags.SIGNATURE               // flags (match named entities only)
+);
+```
+
+### Relax Command
+
+```java
+// Relax SubClassOf axioms with conjunctive expressions
+var command = new RobotRelaxCommand(RelaxFlags.INCLUDE_SUBCLASS_OF);
+
+// Complete OBO workflow
+var command = new RobotRelaxCommand(
+    RelaxFlags.INCLUDE_NAMED_CLASSES,
+    RelaxFlags.INCLUDE_SUBCLASS_OF,
+    RelaxFlags.ENFORCE_OBO_FORMAT
 );
 ```
 
