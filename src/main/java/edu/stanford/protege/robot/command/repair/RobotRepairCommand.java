@@ -52,6 +52,12 @@ public record RobotRepairCommand(List<String> annotationProperties, RepairFlags.
     // Process flags using Arrays.asList() for varargs
     List<RepairFlags> flagsList = Arrays.asList(flags);
 
+    // Add invalid-references flag if present
+    if (flagsList.contains(RepairFlags.INVALID_REFERENCES)) {
+      args.add(RepairFlags.INVALID_REFERENCES.getFlagName());
+      args.add("true");
+    }
+
     // Add annotation properties (repeated --annotation-property flag)
     annotationProperties.forEach(
         property -> {
@@ -59,11 +65,6 @@ public record RobotRepairCommand(List<String> annotationProperties, RepairFlags.
           args.add(property);
         });
 
-    // Add invalid-references flag if present
-    if (flagsList.contains(RepairFlags.INVALID_REFERENCES)) {
-      args.add(RepairFlags.INVALID_REFERENCES.getFlagName());
-      args.add("true");
-    }
     // Add merge-axiom-annotations flag if present
     if (flagsList.contains(RepairFlags.MERGE_AXIOM_ANNOTATIONS)) {
       args.add(RepairFlags.MERGE_AXIOM_ANNOTATIONS.getFlagName());

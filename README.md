@@ -15,8 +15,8 @@ Spring Boot microservice that wraps [ROBOT](https://robot.obolibrary.org/) (an O
 | **Filter** | ✅ Implemented | Select and retain specific axioms from ontologies (inverse of remove) |
 | **Relax** | ✅ Implemented | Convert equivalence axioms into weaker SubClassOf axioms |
 | **Repair** | ✅ Implemented | Fix common ontology issues (deprecated references, axiom annotations) |
+| **Export** | ✅ Implemented | Generate tabular representations of ontology entities |
 | **Diff** | 🚧 Not Yet Implemented | Compare ontology versions |
-| **Export** | 🚧 Not Yet Implemented | Export ontology in various formats |
 | **Materialize** | 🚧 Not Yet Implemented | Materialize class expressions |
 | **Measure** | 🚧 Not Yet Implemented | Compute ontology metrics |
 | **Merge** | 🚧 Not Yet Implemented | Combine multiple ontologies |
@@ -240,10 +240,37 @@ var command = new RobotRepairCommand(
     RepairFlags.INVALID_REFERENCES // fix deprecated class references
 );
 
-// Migrate annotation properties when fixing deprecated classes
+// Comprehensive repair: fix references, migrate properties, merge axioms
 var command = new RobotRepairCommand(
-    List.of("oboInOwl:hasDbXref", "rdfs:seeAlso"),  // migrate these properties
-    RepairFlags.INVALID_REFERENCES
+    List.of("oboInOwl:hasDbXref", "rdfs:seeAlso", "rdfs:isDefinedBy"),
+    RepairFlags.INVALID_REFERENCES,
+    RepairFlags.MERGE_AXIOM_ANNOTATIONS
+);
+```
+
+### Export Command
+
+```java
+// HTML export with entity filtering
+var command = new RobotExportCommand(
+    "ID|LABEL|SubClass Of",
+    ExportFormat.html,
+    List.of("LABEL"),
+    "|",                           // multi-value delimiter
+    List.of("classes"),            // only export classes
+    EntitySelect.NAMED,            // only named entities
+    EntityFormat.LABEL             // render as labels
+);
+
+// JSON export for programmatic use
+var command = new RobotExportCommand(
+    "IRI|LABEL|SubClass Of",
+    ExportFormat.json,
+    List.of(),
+    null,
+    List.of("classes"),
+    EntitySelect.NAMED,
+    EntityFormat.IRI               // use full IRIs
 );
 ```
 
