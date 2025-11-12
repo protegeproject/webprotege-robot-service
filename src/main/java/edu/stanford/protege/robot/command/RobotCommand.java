@@ -7,8 +7,12 @@ import edu.stanford.protege.robot.command.annotate.RobotAnnotateCommand;
 import edu.stanford.protege.robot.command.collapse.RobotCollapseCommand;
 import edu.stanford.protege.robot.command.convert.RobotConvertCommand;
 import edu.stanford.protege.robot.command.expand.RobotExpandCommand;
+import edu.stanford.protege.robot.command.export.RobotExportCommand;
 import edu.stanford.protege.robot.command.extract.RobotExtractCommand;
+import edu.stanford.protege.robot.command.filter.RobotFilterCommand;
+import edu.stanford.protege.robot.command.relax.RobotRelaxCommand;
 import edu.stanford.protege.robot.command.remove.RobotRemoveCommand;
+import edu.stanford.protege.robot.command.repair.RobotRepairCommand;
 import java.util.List;
 import org.obolibrary.robot.Command;
 
@@ -22,7 +26,11 @@ import org.obolibrary.robot.Command;
     @JsonSubTypes.Type(RobotCollapseCommand.class),
     @JsonSubTypes.Type(RobotConvertCommand.class),
     @JsonSubTypes.Type(RobotExpandCommand.class),
-    @JsonSubTypes.Type(RobotRemoveCommand.class)})
+    @JsonSubTypes.Type(RobotExportCommand.class),
+    @JsonSubTypes.Type(RobotFilterCommand.class),
+    @JsonSubTypes.Type(RobotRelaxCommand.class),
+    @JsonSubTypes.Type(RobotRemoveCommand.class),
+    @JsonSubTypes.Type(RobotRepairCommand.class)})
 public interface RobotCommand {
 
   @JsonIgnore
