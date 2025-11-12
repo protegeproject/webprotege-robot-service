@@ -1,9 +1,11 @@
 package edu.stanford.protege.robot.pipeline;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import edu.stanford.protege.robot.command.RobotCommand;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 
+@JsonTypeName("RobotPipelineStage")
 public record RobotPipelineStage(
     @Nonnull String label,
     @Nonnull String description,
