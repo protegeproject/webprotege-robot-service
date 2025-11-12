@@ -13,10 +13,8 @@ import org.springframework.context.annotation.Import;
 public class ApplicationBeansConfiguration {
 
   @Bean
-  ExecuteRobotCommandsHandler createExecuteRobotCommandsHandler(
-      RobotPipelineExecutor executor,
-      PipelineLogger pipelineLogger) {
-    return new ExecuteRobotCommandsHandler(executor, pipelineLogger);
+  ExecuteRobotCommandsHandler createExecuteRobotCommandsHandler(RobotPipelineExecutor executor) {
+    return new ExecuteRobotCommandsHandler(executor);
   }
 
   @Bean

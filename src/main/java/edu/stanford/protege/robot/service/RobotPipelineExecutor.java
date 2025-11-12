@@ -27,6 +27,7 @@ public class RobotPipelineExecutor {
 
   private final Provider<CommandState> commandStateProvider;
   private final IOHelper ioHelper;
+  private final PipelineLogger pipelineLogger;
 
   /**
    * Creates a new RobotPipelineExecutor with Spring-injected dependencies.
@@ -35,11 +36,14 @@ public class RobotPipelineExecutor {
    *          provider for CommandState instances
    * @param ioHelper
    *          helper for ontology I/O operations
+   * @param pipelineLogger
+   *          logger for tracking pipeline execution progress and events
    */
   public RobotPipelineExecutor(
-      Provider<CommandState> commandStateProvider, IOHelper ioHelper) {
+      Provider<CommandState> commandStateProvider, IOHelper ioHelper, PipelineLogger pipelineLogger) {
     this.commandStateProvider = commandStateProvider;
     this.ioHelper = ioHelper;
+    this.pipelineLogger = pipelineLogger;
   }
 
   /**
@@ -50,29 +54,28 @@ public class RobotPipelineExecutor {
    * the loaded input ontology, and subsequent commands receive the modified ontology from their
    * predecessor.
    *
-   * @param ontologyFilePath
+   * @param projectId
+   *          the unique project identifier
+   * @param inputOntologyPath
    *          path to the input ontology file (required)
+   * @param outputOntologyPath
+   *          path to save the final ontology (required)
    * @param pipeline
    *          the ROBOT pipeline containing the sequence of commands to execute
-   * @param pipelineLogger
-   *          logger for tracking pipeline execution progress and events
-   * @param outputPath
-   *          path to save the final ontology (required)
    * @return the final CommandState after all commands have executed
    * @throws RobotServiceException
    *           if any command fails or I/O error occurs
    */
-  public CommandState executePipeline(@Nonnull Path ontologyFilePath,
-      @Nonnull ProjectId projectId,
-      @Nonnull RobotPipeline pipeline,
-      @Nonnull PipelineLogger pipelineLogger,
-      @Nonnull Path outputPath) throws RobotServiceException {
+  public CommandState executePipeline(@Nonnull ProjectId projectId,
+      @Nonnull Path inputOntologyPath,
+      @Nonnull Path outputOntologyPath,
+      @Nonnull RobotPipeline pipeline) throws RobotServiceException {
 
     // Validate inputs
-    Objects.requireNonNull(ontologyFilePath, "ontologyFilePath cannot be null");
+    Objects.requireNonNull(projectId, "projectId cannot be null");
+    Objects.requireNonNull(inputOntologyPath, "inputOntologyPath cannot be null");
+    Objects.requireNonNull(outputOntologyPath, "outputOntologyPath cannot be null");
     Objects.requireNonNull(pipeline, "pipeline cannot be null");
-    Objects.requireNonNull(pipelineLogger, "pipelineLogger cannot be null");
-    Objects.requireNonNull(outputPath, "outputPath cannot be null");
 
     var executionId = PipelineExecutionId.generate();
 
@@ -85,10 +88,10 @@ public class RobotPipelineExecutor {
       // Load input ontology
       try {
         pipelineLogger.loadingOntologyStarted(projectId, executionId, pipeline);
-        var ontology = ioHelper.loadOntology(ontologyFilePath.toFile());
+        var ontology = ioHelper.loadOntology(inputOntologyPath.toFile());
         pipelineLogger.loadingOntologySucceeded(projectId, executionId, pipeline);
         state.setOntology(ontology);
-        state.setOntologyPath(ontologyFilePath.toString());
+        state.setOntologyPath(inputOntologyPath.toString());
       } catch (Throwable t) {
         pipelineLogger.loadingOntologyFailed(projectId, executionId, pipeline, t);
         throw new RobotServiceException("Error loading ontology: " + t.getMessage(), t);
@@ -110,6 +113,8 @@ public class RobotPipelineExecutor {
 
         // Verify state is not null after execution
         if (state == null) {
+          // Log the state as empty state and failed
+          // TODO: Look into the implementation
           throw new RobotServiceException("Command " + command.getName() + " returned null state");
         }
       }
@@ -117,7 +122,7 @@ public class RobotPipelineExecutor {
       // Save output
       try {
         pipelineLogger.savingOntologyStarted(projectId, executionId, pipeline);
-        ioHelper.saveOntology(state.getOntology(), outputPath.toString());
+        ioHelper.saveOntology(state.getOntology(), outputOntologyPath.toString());
         pipelineLogger.savingOntologySucceeded(projectId, executionId, pipeline);
       } catch (Throwable t) {
         pipelineLogger.savingOntologyFailed(projectId, executionId, pipeline, t);

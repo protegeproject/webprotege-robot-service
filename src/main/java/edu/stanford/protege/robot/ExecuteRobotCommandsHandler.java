@@ -1,6 +1,5 @@
 package edu.stanford.protege.robot;
 
-import edu.stanford.protege.robot.pipeline.PipelineLogger;
 import edu.stanford.protege.robot.service.RobotPipelineExecutor;
 import edu.stanford.protege.robot.service.exception.RobotServiceRuntimeException;
 import edu.stanford.protege.robot.service.message.ExecuteRobotCommandsRequest;
@@ -22,13 +21,9 @@ public class ExecuteRobotCommandsHandler
   private static final Logger logger = LoggerFactory.getLogger(ExecuteRobotCommandsHandler.class);
 
   private final RobotPipelineExecutor executor;
-  private final PipelineLogger pipelineLogger;
 
-  public ExecuteRobotCommandsHandler(
-      @Nonnull RobotPipelineExecutor executor,
-      @Nonnull PipelineLogger pipelineLogger) {
+  public ExecuteRobotCommandsHandler(RobotPipelineExecutor executor) {
     this.executor = executor;
-    this.pipelineLogger = pipelineLogger;
   }
 
   @Nonnull
@@ -52,7 +47,7 @@ public class ExecuteRobotCommandsHandler
 
     try {
       // Execute command chain
-      executor.executePipeline(inputPath, projectId, request.pipeline(), pipelineLogger, outputPath);
+      executor.executePipeline(projectId, inputPath, outputPath, request.pipeline());
 
       // Return response with execution details
       return Mono.just(new ExecuteRobotCommandsResponse(projectId, outputPath));
