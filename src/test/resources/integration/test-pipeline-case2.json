@@ -1,9 +1,7 @@
 {
   "@type": "RobotPipeline",
   "projectId": "abcdef12-5678-5678-5678-fedcba987654",
-  "pipelineId": {
-    "id": "11111111-2222-3333-4444-555555555555"
-  },
+  "pipelineId": "11111111-2222-3333-4444-555555555555",
   "label": "Test pipeline 2",
   "description": "Test pipeline: relaxes equivalence axioms, filters to cookies, repairs issues, and adds metadata",
   "stages": [

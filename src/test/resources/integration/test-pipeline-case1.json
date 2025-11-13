@@ -1,9 +1,7 @@
 {
   "@type": "RobotPipeline",
   "projectId": "12345678-1234-1234-1234-123456789abc",
-  "pipelineId": {
-    "id": "87654321-4321-4321-4321-abcdef123456"
-  },
+  "pipelineId": "87654321-4321-4321-4321-abcdef123456",
   "label": "Test pipeline 1",
   "description": "Test pipeline: removes annotations, extracts dairy products subset, repairs issues, and adds metadata",
   "stages": [

@@ -142,8 +142,7 @@ public class PipelineRepositoryImpl implements PipelineRepository {
    * Converts a MongoDB Document to a RobotPipeline, restoring the pipelineId from _id.
    */
   private RobotPipeline convertDocumentToPipeline(Document document) {
-    var pipelineIdDoc = new Document("id", document.get(FIELD_ID));
-    document.put(FIELD_PIPELINE_ID, pipelineIdDoc);
+    document.put(FIELD_PIPELINE_ID, document.get(FIELD_ID));
     return objectMapper.convertValue(document, RobotPipeline.class);
   }
 }
