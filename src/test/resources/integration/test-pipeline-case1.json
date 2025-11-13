@@ -1,0 +1,92 @@
+{
+  "@type": "RobotPipeline",
+  "projectId": "12345678-1234-1234-1234-123456789abc",
+  "pipelineId": {
+    "id": "87654321-4321-4321-4321-abcdef123456"
+  },
+  "label": "Test pipeline 1",
+  "description": "Test pipeline: removes annotations, extracts dairy products subset, repairs issues, and adds metadata",
+  "stages": [
+    {
+      "@type": "RobotPipelineStage",
+      "label": "Remove Annotations",
+      "description": "Remove specific annotation properties from the ontology",
+      "command": {
+        "@type": "RemoveCommand",
+        "baseIri": null,
+        "terms": null,
+        "excludeTerms": null,
+        "includeTerms": null,
+        "selectors": null,
+        "axioms": ["annotation"],
+        "dropAxiomAnnotations": null,
+        "flags": []
+      }
+    },
+    {
+      "@type": "RobotPipelineStage",
+      "label": "Extract Dairy Products",
+      "description": "Extract subset focusing on dairy products using SLME BOT method",
+      "command": {
+        "@type": "ExtractCommand",
+        "extractStrategy": {
+          "@type": "SLME",
+          "method": "BOT",
+          "terms": [
+            "http://protege.stanford.edu/ontologies/groceries/DairyProduct",
+            "http://protege.stanford.edu/ontologies/groceries/Butter",
+            "http://protege.stanford.edu/ontologies/groceries/Milk"
+          ]
+        },
+        "extractIntermediates": "minimal",
+        "handlingImports": "include",
+        "flags": ["COPY_ONTOLOGY_ANNOTATIONS"]
+      }
+    },
+    {
+      "@type": "RobotPipelineStage",
+      "label": "Repair Ontology",
+      "description": "Fix any invalid references and merge duplicate axiom annotations",
+      "command": {
+        "@type": "RepairCommand",
+        "annotationProperties": [],
+        "flags": ["MERGE_AXIOM_ANNOTATIONS"]
+      }
+    },
+    {
+      "@type": "RobotPipelineStage",
+      "label": "Add Metadata",
+      "description": "Annotate the processed ontology with metadata",
+      "command": {
+        "@type": "AnnotateCommand",
+        "ontologyIri": "http://protege.stanford.edu/ontologies/groceries-dairy-subset",
+        "versionIri": "http://protege.stanford.edu/ontologies/groceries-dairy-subset/v1.0.0",
+        "annotations": [
+          {
+            "@type": "PlainAnnotation",
+            "property": "rdfs:label",
+            "value": "Grocery Ontology - Dairy Products Subset"
+          },
+          {
+            "@type": "PlainAnnotation",
+            "property": "rdfs:comment",
+            "value": "Processed subset of grocery ontology focusing on dairy products"
+          },
+          {
+            "@type": "LanguageAnnotation",
+            "property": "dc:title",
+            "value": "Dairy Products Ontology",
+            "lang": "en"
+          },
+          {
+            "@type": "TypedAnnotation",
+            "property": "dc:date",
+            "value": "2025-11-12",
+            "type": "xsd:date"
+          }
+        ],
+        "flags": []
+      }
+    }
+  ]
+}

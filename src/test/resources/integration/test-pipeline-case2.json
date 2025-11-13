@@ -1,0 +1,90 @@
+{
+  "@type": "RobotPipeline",
+  "projectId": "abcdef12-5678-5678-5678-fedcba987654",
+  "pipelineId": {
+    "id": "11111111-2222-3333-4444-555555555555"
+  },
+  "label": "Test pipeline 2",
+  "description": "Test pipeline: relaxes equivalence axioms, filters to cookies, repairs issues, and adds metadata",
+  "stages": [
+    {
+      "@type": "RobotPipelineStage",
+      "label": "Relax Equivalences",
+      "description": "Convert equivalence axioms to SubClassOf relationships",
+      "command": {
+        "@type": "RelaxCommand",
+        "flags": []
+      }
+    },
+    {
+      "@type": "RobotPipelineStage",
+      "label": "Filter Cookie Classes",
+      "description": "Keep only cookie-related classes and their dependencies",
+      "command": {
+        "@type": "FilterCommand",
+        "baseIri": null,
+        "terms": [
+          "http://protege.stanford.edu/ontologies/groceries/Cookie",
+          "http://protege.stanford.edu/ontologies/groceries/Shortbread"
+        ],
+        "excludeTerms": null,
+        "includeTerms": null,
+        "selectors": ["self", "ancestors", "descendants"],
+        "axioms": null,
+        "dropAxiomAnnotations": null,
+        "flags": []
+      }
+    },
+    {
+      "@type": "RobotPipelineStage",
+      "label": "Repair Ontology",
+      "description": "Fix any invalid references after filtering",
+      "command": {
+        "@type": "RepairCommand",
+        "annotationProperties": ["rdfs:label", "rdfs:comment"],
+        "flags": ["INVALID_REFERENCES"]
+      }
+    },
+    {
+      "@type": "RobotPipelineStage",
+      "label": "Add Final Metadata",
+      "description": "Annotate the filtered ontology with comprehensive metadata",
+      "command": {
+        "@type": "AnnotateCommand",
+        "ontologyIri": "http://protege.stanford.edu/ontologies/groceries-cookies-subset",
+        "versionIri": "http://protege.stanford.edu/ontologies/groceries-cookies-subset/v2.0.0",
+        "annotations": [
+          {
+            "@type": "PlainAnnotation",
+            "property": "rdfs:label",
+            "value": "Grocery Ontology - Cookies Subset"
+          },
+          {
+            "@type": "LanguageAnnotation",
+            "property": "dc:title",
+            "value": "Cookies Ontology",
+            "lang": "en"
+          },
+          {
+            "@type": "LanguageAnnotation",
+            "property": "dc:title",
+            "value": "Ontología de Galletas",
+            "lang": "es"
+          },
+          {
+            "@type": "TypedAnnotation",
+            "property": "dc:date",
+            "value": "2025-11-12",
+            "type": "xsd:date"
+          },
+          {
+            "@type": "LinkAnnotation",
+            "property": "dc:license",
+            "value": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        ],
+        "flags": ["INTERPOLATE"]
+      }
+    }
+  ]
+}
