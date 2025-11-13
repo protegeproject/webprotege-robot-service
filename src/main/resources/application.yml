@@ -1,3 +1,9 @@
 spring:
   application:
     name: webprotege-robot-service
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: webprotege
+      auto-index-creation: true
