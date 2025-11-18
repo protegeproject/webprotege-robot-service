@@ -7,3 +7,9 @@ spring:
       port: 27017
       database: webprotege
       auto-index-creation: true
+webprotege:
+  minio:
+    access-key: webprotege
+    end-point: http://localhost:9000
+    secret-key: webprotege
+    robot-output-documents-bucket-name: webprotege-robot-output-documents

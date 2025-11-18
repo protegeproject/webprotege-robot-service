@@ -350,8 +350,8 @@ class PipelineRepositoryIntegrationTest {
         IRI.create("http://example.org/ontology/v1.0"),
         List.of(new PlainAnnotation("rdfs:label", "Test Ontology")));
 
-    var stage1 = new RobotPipelineStage("Extract", "Extract subset", extractCommand);
-    var stage2 = new RobotPipelineStage("Annotate", "Add metadata", annotateCommand);
+    var stage1 = new RobotPipelineStage("Extract", "Extract subset", extractCommand, null);
+    var stage2 = new RobotPipelineStage("Annotate", "Add metadata", annotateCommand, null);
 
     var pipeline = new RobotPipeline(projectId, pipelineId, "Complex Pipeline",
         "Pipeline with multiple command types", List.of(stage1, stage2));
@@ -377,7 +377,7 @@ class PipelineRepositoryIntegrationTest {
         null,
         List.of(new PlainAnnotation("rdfs:label", "Test")));
 
-    var stage = new RobotPipelineStage("Test Stage", "A test stage", annotateCommand);
+    var stage = new RobotPipelineStage("Test Stage", "A test stage", annotateCommand, null);
 
     return new RobotPipeline(projectId, pipelineId, label, description, List.of(stage));
   }

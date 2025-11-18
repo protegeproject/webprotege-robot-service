@@ -1,12 +1,10 @@
 {
-  "@type": "RobotPipeline",
   "projectId": "abcdef12-5678-5678-5678-fedcba987654",
   "pipelineId": "11111111-2222-3333-4444-555555555555",
   "label": "Test pipeline 2",
   "description": "Test pipeline: relaxes equivalence axioms, filters to cookies, repairs issues, and adds metadata",
   "stages": [
     {
-      "@type": "RobotPipelineStage",
       "label": "Relax Equivalences",
       "description": "Convert equivalence axioms to SubClassOf relationships",
       "command": {
@@ -15,7 +13,6 @@
       }
     },
     {
-      "@type": "RobotPipelineStage",
       "label": "Filter Cookie Classes",
       "description": "Keep only cookie-related classes and their dependencies",
       "command": {
@@ -31,10 +28,10 @@
         "axioms": null,
         "dropAxiomAnnotations": null,
         "flags": []
-      }
+      },
+      "outputPath": "target/test-output/pipeline-case2-filter-output.owl"
     },
     {
-      "@type": "RobotPipelineStage",
       "label": "Repair Ontology",
       "description": "Fix any invalid references after filtering",
       "command": {
@@ -44,7 +41,6 @@
       }
     },
     {
-      "@type": "RobotPipelineStage",
       "label": "Add Final Metadata",
       "description": "Annotate the filtered ontology with comprehensive metadata",
       "command": {
@@ -82,7 +78,8 @@
           }
         ],
         "flags": ["INTERPOLATE"]
-      }
+      },
+      "outputPath": "target/test-output/pipeline-case2-final-output.owl"
     }
   ]
 }

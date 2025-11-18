@@ -43,13 +43,14 @@ public class ExecuteRobotCommandsHandler
 
     var projectId = request.projectId();
     var inputPath = Path.of("foo"); // TODO: Get the input path from the project ID
-    var outputPath = Path.of("bar"); // TODO: Get the output path from modifying the input path
+    var revisionNumber = 0L; // TODO: Get the revision number from the request or context
 
     try {
       // Execute command chain
-      executor.executePipeline(projectId, inputPath, outputPath, request.pipeline());
+      var executionId = executor.executePipeline(projectId, inputPath, revisionNumber, request.pipeline());
 
       // Return response with execution details
+      var outputPath = Path.of("bar"); // TODO: Get the output path based on execution result
       return Mono.just(new ExecuteRobotCommandsResponse(projectId, outputPath));
     } catch (Exception e) {
       logger.info("{} Error executing command request: {}", projectId, e.getMessage(), e);

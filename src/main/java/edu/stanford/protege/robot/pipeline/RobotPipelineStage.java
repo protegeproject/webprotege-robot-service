@@ -1,19 +1,21 @@
 package edu.stanford.protege.robot.pipeline;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import edu.stanford.protege.robot.command.RobotCommand;
 import java.util.Objects;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-@JsonTypeName("RobotPipelineStage")
 public record RobotPipelineStage(
-    @Nonnull String label,
-    @Nonnull String description,
-    @Nonnull RobotCommand command) {
+    @Nullable String label,
+    @Nullable String description,
+    @Nonnull RobotCommand command,
+    @Nullable RelativePath outputPath) {
 
   public RobotPipelineStage {
-    Objects.requireNonNull(label, "label should not be null");
-    Objects.requireNonNull(description, "description should not be null");
     Objects.requireNonNull(command, "command should not be null");
+  }
+
+  public boolean producedOutput() {
+    return outputPath != null;
   }
 }

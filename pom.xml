@@ -37,6 +37,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <guava.version>33.5.0-jre</guava.version>
+        <minio.version>8.5.17</minio.version>
         <robot.version>1.9.8</robot.version>
     </properties>
 
@@ -88,6 +89,13 @@
                     <artifactId>slf4j-simple</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <!-- MinIO -->
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>${minio.version}</version>
         </dependency>
 
         <!-- Google Guava -->
