@@ -5,16 +5,19 @@ import edu.stanford.protege.webprotege.common.ProjectId;
 import java.time.Instant;
 import java.util.Map;
 
-public record PipelineSuccessResult(ProjectId projectId,
+public record PipelineSuccessResult(PipelineExecutionId pipelineExecutionId,
+    ProjectId projectId,
     long revisionNumber,
     RobotPipeline executedPipeline,
     Instant startTimestamp,
     Instant endTimestamp,
     Map<RelativePath, BlobLocation> outputFiles) {
 
-  public static PipelineSuccessResult create(ProjectId projectId, long revisionNumber, RobotPipeline executedPipeline,
+  public static PipelineSuccessResult create(PipelineExecutionId executionId, ProjectId projectId, long revisionNumber,
+      RobotPipeline executedPipeline,
       Instant startTimestamp, Instant endTimestamp, Map<RelativePath, BlobLocation> outputFiles) {
-    return new PipelineSuccessResult(projectId, revisionNumber, executedPipeline, startTimestamp, endTimestamp,
+    return new PipelineSuccessResult(executionId, projectId, revisionNumber, executedPipeline, startTimestamp,
+        endTimestamp,
         outputFiles);
   }
 }

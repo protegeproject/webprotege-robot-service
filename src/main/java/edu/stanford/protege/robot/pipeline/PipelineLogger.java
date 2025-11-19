@@ -4,6 +4,7 @@ import edu.stanford.protege.robot.pipeline.event.*;
 import edu.stanford.protege.webprotege.common.EventId;
 import edu.stanford.protege.webprotege.common.ProjectId;
 import edu.stanford.protege.webprotege.ipc.EventDispatcher;
+import org.obolibrary.robot.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,16 +49,15 @@ public class PipelineLogger {
   }
 
   public void pipelineStageRunStarted(ProjectId projectId, PipelineExecutionId executionId, PipelineId pipelineId,
-      RobotPipelineStage pipelineStage) {
-    logger.info("{} {} {} ROBOT pipeline stage started: {}", projectId, executionId, pipelineId, pipelineStage.label());
+      Command command) {
+    logger.info("{} {} {} ROBOT pipeline stage started: {}", projectId, executionId, pipelineId, command.getName());
     eventDispatcher
         .dispatchEvent(new RunPipelineStageStartedEvent(projectId, executionId, pipelineId, EventId.generate()));
   }
 
   public void pipelineStageRunFinished(ProjectId projectId, PipelineExecutionId executionId, PipelineId pipelineId,
-      RobotPipelineStage pipelineStage) {
-    logger.info("{} {} {} ROBOT pipeline stage finished: {}", projectId, executionId, pipelineId,
-        pipelineStage.label());
+      Command command) {
+    logger.info("{} {} {} ROBOT pipeline stage finished: {}", projectId, executionId, pipelineId, command.getName());
     eventDispatcher
         .dispatchEvent(new RunPipelineStageFinishedEvent(projectId, executionId, pipelineId, EventId.generate()));
   }

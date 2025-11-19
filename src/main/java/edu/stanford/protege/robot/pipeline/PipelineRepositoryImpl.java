@@ -130,7 +130,7 @@ public class PipelineRepositoryImpl implements PipelineRepository {
   public void savePipelines(@Nonnull List<RobotPipeline> pipelines) {
     Objects.requireNonNull(pipelines, "pipelines cannot be null");
 
-    for (RobotPipeline pipeline : pipelines) {
+    for (var pipeline : pipelines) {
       var document = objectMapper.convertValue(pipeline, Document.class);
       document.put(FIELD_ID, pipeline.pipelineId().id());
       document.remove(FIELD_PIPELINE_ID);

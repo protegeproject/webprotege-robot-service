@@ -5,14 +5,15 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.stanford.protege.robot.pipeline.PipelineExecutionId;
 import edu.stanford.protege.robot.pipeline.PipelineLogger;
+import edu.stanford.protege.robot.pipeline.PipelineSuccessResultRepository;
 import edu.stanford.protege.robot.pipeline.RobotPipeline;
-import edu.stanford.protege.robot.pipeline.RobotPipelineStage;
 import edu.stanford.protege.robot.service.config.JacksonConfiguration;
 import edu.stanford.protege.robot.service.storer.MinioDocumentStorer;
 import edu.stanford.protege.webprotege.common.ProjectId;
@@ -28,6 +29,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.obolibrary.robot.Command;
 import org.obolibrary.robot.CommandState;
 import org.obolibrary.robot.IOHelper;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -66,12 +68,16 @@ class RobotPipelineExecutorIntegrationTest {
   @Mock
   private MinioDocumentStorer minioDocumentStorer;
 
+  @Mock
+  private PipelineSuccessResultRepository successResultRepository;
+
   private RobotPipelineExecutor executor;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    executor = new RobotPipelineExecutor(commandStateProvider, ioHelper, minioDocumentStorer, pipelineLogger);
+    executor = new RobotPipelineExecutor(commandStateProvider, ioHelper, minioDocumentStorer, successResultRepository,
+        pipelineLogger);
   }
 
   /**
@@ -131,14 +137,13 @@ class RobotPipelineExecutorIntegrationTest {
 
     // Execute pipeline (use projectId from JSON)
     var revisionNumber = 1L;
-    var executionId = executor.executePipeline(
+    var executionId = PipelineExecutionId.generate();
+    executor.executePipeline(
         pipeline.projectId(),
+        executionId,
         inputPath,
         revisionNumber,
         pipeline);
-
-    // Verify execution ID was returned
-    assertThat(executionId).isNotNull();
 
     // Since pipeline stages may have output paths, we need to verify files were saved
     // For this test, we'll verify the IO operations were called
@@ -162,19 +167,17 @@ class RobotPipelineExecutorIntegrationTest {
         any(PipelineExecutionId.class),
         eq(pipeline.pipelineId()));
 
-    // Verify each pipeline stage was logged
-    for (RobotPipelineStage stage : pipeline.stages()) {
-      verify(pipelineLogger).pipelineStageRunStarted(
-          any(ProjectId.class),
-          any(PipelineExecutionId.class),
-          eq(pipeline.pipelineId()),
-          eq(stage));
-      verify(pipelineLogger).pipelineStageRunFinished(
-          any(ProjectId.class),
-          any(PipelineExecutionId.class),
-          eq(pipeline.pipelineId()),
-          eq(stage));
-    }
+    // Verify each pipeline stage was logged (4 stages in pipeline)
+    verify(pipelineLogger, times(4)).pipelineStageRunStarted(
+        any(ProjectId.class),
+        any(PipelineExecutionId.class),
+        eq(pipeline.pipelineId()),
+        any(Command.class));
+    verify(pipelineLogger, times(4)).pipelineStageRunFinished(
+        any(ProjectId.class),
+        any(PipelineExecutionId.class),
+        eq(pipeline.pipelineId()),
+        any(Command.class));
 
     verify(pipelineLogger, atLeastOnce()).savingOntologyStarted(
         any(ProjectId.class),
@@ -253,14 +256,13 @@ class RobotPipelineExecutorIntegrationTest {
 
     // Execute pipeline (use projectId from JSON)
     var revisionNumber = 2L;
-    var executionId = executor.executePipeline(
+    var executionId = PipelineExecutionId.generate();
+    executor.executePipeline(
         pipeline.projectId(),
+        executionId,
         inputPath,
         revisionNumber,
         pipeline);
-
-    // Verify execution ID was returned
-    assertThat(executionId).isNotNull();
 
     // Verify IOHelper interactions
     verify(ioHelper).loadOntology(any(File.class));
@@ -286,17 +288,17 @@ class RobotPipelineExecutorIntegrationTest {
         any(PipelineExecutionId.class),
         eq(pipeline.pipelineId()));
 
-    // Verify all stages were logged (start and finish for each)
-    verify(pipelineLogger, atLeastOnce()).pipelineStageRunStarted(
+    // Verify all stages were logged (start and finish for each, 4 stages in pipeline)
+    verify(pipelineLogger, times(4)).pipelineStageRunStarted(
         any(ProjectId.class),
         any(PipelineExecutionId.class),
         eq(pipeline.pipelineId()),
-        any(RobotPipelineStage.class));
-    verify(pipelineLogger, atLeastOnce()).pipelineStageRunFinished(
+        any(Command.class));
+    verify(pipelineLogger, times(4)).pipelineStageRunFinished(
         any(ProjectId.class),
         any(PipelineExecutionId.class),
         eq(pipeline.pipelineId()),
-        any(RobotPipelineStage.class));
+        any(Command.class));
 
     // Verify ontology saving was logged
     verify(pipelineLogger, atLeastOnce()).savingOntologyStarted(
