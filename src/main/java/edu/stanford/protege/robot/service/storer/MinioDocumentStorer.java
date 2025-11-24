@@ -10,6 +10,7 @@ import io.minio.errors.*;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
 import javax.annotation.Nonnull;
@@ -54,7 +55,7 @@ public class MinioDocumentStorer {
           .filename(documentPath)
           .bucket(location.bucket())
           .object(location.name())
-          .contentType("text/plain")
+          .contentType(determineContentType(documentPath))
           .build());
       return location;
     } catch (ErrorResponseException
@@ -86,6 +87,35 @@ public class MinioDocumentStorer {
   }
 
   private static String generateObjectName() {
-    return "robot-output-" + UUID.randomUUID() + ".txt";
+    return "robot-output-" + UUID.randomUUID();
+  }
+
+  private static String determineContentType(String filePath) {
+    if (filePath == null || filePath.isEmpty()) {
+      return "application/octet-stream";
+    }
+
+    var lowercasePath = filePath.toLowerCase(Locale.ROOT);
+    var extension = getFileExtension(lowercasePath);
+
+    // ROBOT convert formats
+    return switch (extension) {
+      case "json" -> "application/json";
+      case "obo" -> "text/obo";             // W3C-Specified (not IANA-registered)
+      case "ofn" -> "text/owl-functional";  // W3C-Specified (not IANA-registered)
+      case "omn" -> "text/owl-manchester";  // W3C-Specified (not IANA-registered)
+      case "owl" -> "application/rdf+xml";
+      case "owx" -> "application/owl+xml";  // W3C-Specified (not IANA-registered)
+      case "ttl" -> "text/turtle";
+      default -> "application/octet-stream";
+    };
+  }
+
+  private static String getFileExtension(String filePath) {
+    var lastDotIndex = filePath.lastIndexOf('.');
+    if (lastDotIndex == -1 || lastDotIndex == filePath.length() - 1) {
+      return "";
+    }
+    return filePath.substring(lastDotIndex + 1);
   }
 }
