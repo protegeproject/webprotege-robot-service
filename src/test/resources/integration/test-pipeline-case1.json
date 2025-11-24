@@ -5,6 +5,7 @@
   "description": "Test pipeline: removes annotations, extracts dairy products subset, repairs issues, and adds metadata",
   "stages": [
     {
+      "stageId": "11111111-1111-1111-1111-111111111111",
       "label": "Remove Annotations",
       "description": "Remove specific annotation properties from the ontology",
       "command": {
@@ -20,6 +21,7 @@
       }
     },
     {
+      "stageId": "22222222-2222-2222-2222-222222222222",
       "label": "Extract Dairy Products",
       "description": "Extract subset focusing on dairy products using SLME BOT method",
       "command": {
@@ -40,6 +42,7 @@
       "outputPath": "target/test-output/pipeline-case1-extract-output.owl"
     },
     {
+      "stageId": "33333333-3333-3333-3333-333333333333",
       "label": "Repair Ontology",
       "description": "Fix any invalid references and merge duplicate axiom annotations",
       "command": {
@@ -49,6 +52,7 @@
       }
     },
     {
+      "stageId": "44444444-4444-4444-4444-444444444444",
       "label": "Add Metadata",
       "description": "Annotate the processed ontology with metadata",
       "command": {

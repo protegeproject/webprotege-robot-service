@@ -6,13 +6,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public record RobotPipelineStage(
+    @Nonnull PipelineStageId stageId,
     @Nullable String label,
     @Nullable String description,
     @Nonnull RobotCommand command,
     @Nullable RelativePath outputPath) {
 
   public RobotPipelineStage {
-    Objects.requireNonNull(command, "command should not be null");
+    Objects.requireNonNull(stageId, "stageId must not be null");
+    Objects.requireNonNull(command, "command must not be null");
   }
 
   public boolean producedOutput() {

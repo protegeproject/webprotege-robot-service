@@ -5,6 +5,7 @@
   "description": "Test pipeline: relaxes equivalence axioms, filters to cookies, repairs issues, and adds metadata",
   "stages": [
     {
+      "stageId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
       "label": "Relax Equivalences",
       "description": "Convert equivalence axioms to SubClassOf relationships",
       "command": {
@@ -13,6 +14,7 @@
       }
     },
     {
+      "stageId": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
       "label": "Filter Cookie Classes",
       "description": "Keep only cookie-related classes and their dependencies",
       "command": {
@@ -32,6 +34,7 @@
       "outputPath": "target/test-output/pipeline-case2-filter-output.owl"
     },
     {
+      "stageId": "cccccccc-cccc-cccc-cccc-cccccccccccc",
       "label": "Repair Ontology",
       "description": "Fix any invalid references after filtering",
       "command": {
@@ -41,6 +44,7 @@
       }
     },
     {
+      "stageId": "dddddddd-dddd-dddd-dddd-dddddddddddd",
       "label": "Add Final Metadata",
       "description": "Annotate the filtered ontology with comprehensive metadata",
       "command": {
