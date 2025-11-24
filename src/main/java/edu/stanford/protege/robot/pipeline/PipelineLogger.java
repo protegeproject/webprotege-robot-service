@@ -24,10 +24,20 @@ public class PipelineLogger {
         .dispatchEvent(new ExecutePipelineStartedEvent(projectId, executionId, pipelineId, EventId.generate()));
   }
 
-  public void pipelineExecutionFinished(ProjectId projectId, PipelineExecutionId executionId, PipelineId pipelineId) {
-    logger.info("{} {} {} ROBOT pipeline execution finished", projectId, executionId, pipelineId);
+  public void pipelineExecutionFinishedWithSuccess(ProjectId projectId, PipelineExecutionId executionId,
+      PipelineId pipelineId) {
+    logger.info("{} {} {} ROBOT pipeline execution finished with success", projectId, executionId, pipelineId);
     eventDispatcher
         .dispatchEvent(new ExecutePipelineFinishedEvent(projectId, executionId, pipelineId, EventId.generate()));
+  }
+
+  public void pipelineExecutionFinishedWithError(ProjectId projectId, PipelineExecutionId executionId,
+      PipelineId pipelineId, Throwable t) {
+    logger.info("{} {} {} ROBOT pipeline execution finished with error: {}", projectId, executionId, pipelineId,
+        t.getMessage());
+    eventDispatcher
+        .dispatchEvent(
+            new ExecutePipelineFailedEvent(projectId, executionId, pipelineId, EventId.generate(), t.getMessage()));
   }
 
   public void loadingOntologyStarted(ProjectId projectId, PipelineExecutionId executionId, PipelineId pipelineId) {
@@ -48,21 +58,23 @@ public class PipelineLogger {
         new LoadOntologyFailedEvent(projectId, executionId, pipelineId, EventId.generate(), t.getMessage()));
   }
 
-  public void pipelineStageRunStarted(ProjectId projectId, PipelineExecutionId executionId, PipelineId pipelineId,
+  public void pipelineStageStarted(ProjectId projectId, PipelineExecutionId executionId, PipelineId pipelineId,
       Command command) {
     logger.info("{} {} {} ROBOT pipeline stage started: {}", projectId, executionId, pipelineId, command.getName());
     eventDispatcher
         .dispatchEvent(new RunPipelineStageStartedEvent(projectId, executionId, pipelineId, EventId.generate()));
   }
 
-  public void pipelineStageRunFinished(ProjectId projectId, PipelineExecutionId executionId, PipelineId pipelineId,
+  public void pipelineStageFinishedWithSuccess(ProjectId projectId, PipelineExecutionId executionId,
+      PipelineId pipelineId,
       Command command) {
     logger.info("{} {} {} ROBOT pipeline stage finished: {}", projectId, executionId, pipelineId, command.getName());
     eventDispatcher
         .dispatchEvent(new RunPipelineStageFinishedEvent(projectId, executionId, pipelineId, EventId.generate()));
   }
 
-  public void pipelineStageFailed(ProjectId projectId, PipelineExecutionId executionId, PipelineId pipelineId,
+  public void pipelineStageFinishedWithError(ProjectId projectId, PipelineExecutionId executionId,
+      PipelineId pipelineId,
       RobotPipelineStage pipelineStage, Throwable t) {
     logger.error("{} {} {} ROBOT pipeline stage failed: {}", projectId, executionId, pipelineId, pipelineStage, t);
     eventDispatcher

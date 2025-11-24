@@ -15,7 +15,7 @@ public class PipelineSuccessResultRepository {
 
   private static final String COLLECTION_NAME = "RobotPipelineSuccessResult";
   private static final String FIELD_ID = "_id";
-  private static final String FIELD_PIPELINE_EXECUTION_ID = "pipelineExecutionId";
+  private static final String FIELD_PIPELINE_EXECUTION_ID = "executionId";
 
   private final MongoTemplate mongoTemplate;
   private final ObjectMapper objectMapper;
@@ -46,7 +46,7 @@ public class PipelineSuccessResultRepository {
   }
 
   /**
-   * Converts a MongoDB Document to a PipelineSuccessResult, restoring the pipelineExecutionId from
+   * Converts a MongoDB Document to a PipelineSuccessResult, restoring the executionId from
    * _id.
    */
   private PipelineSuccessResult convertDocumentToPipelineSuccessResult(Document document) {

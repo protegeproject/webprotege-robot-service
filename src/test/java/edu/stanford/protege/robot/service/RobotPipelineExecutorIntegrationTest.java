@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.stanford.protege.robot.pipeline.PipelineExecutionId;
 import edu.stanford.protege.robot.pipeline.PipelineLogger;
+import edu.stanford.protege.robot.pipeline.PipelineStatusRepository;
 import edu.stanford.protege.robot.pipeline.PipelineSuccessResultRepository;
 import edu.stanford.protege.robot.pipeline.RobotPipeline;
 import edu.stanford.protege.robot.service.config.JacksonConfiguration;
@@ -69,6 +70,9 @@ class RobotPipelineExecutorIntegrationTest {
   private MinioDocumentStorer minioDocumentStorer;
 
   @Mock
+  private PipelineStatusRepository statusRepository;
+
+  @Mock
   private PipelineSuccessResultRepository successResultRepository;
 
   private RobotPipelineExecutor executor;
@@ -76,8 +80,8 @@ class RobotPipelineExecutorIntegrationTest {
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    executor = new RobotPipelineExecutor(commandStateProvider, ioHelper, minioDocumentStorer, successResultRepository,
-        pipelineLogger);
+    executor = new RobotPipelineExecutor(commandStateProvider, ioHelper, minioDocumentStorer, statusRepository,
+        successResultRepository, pipelineLogger);
   }
 
   /**
@@ -168,12 +172,12 @@ class RobotPipelineExecutorIntegrationTest {
         eq(pipeline.pipelineId()));
 
     // Verify each pipeline stage was logged (4 stages in pipeline)
-    verify(pipelineLogger, times(4)).pipelineStageRunStarted(
+    verify(pipelineLogger, times(4)).pipelineStageStarted(
         any(ProjectId.class),
         any(PipelineExecutionId.class),
         eq(pipeline.pipelineId()),
         any(Command.class));
-    verify(pipelineLogger, times(4)).pipelineStageRunFinished(
+    verify(pipelineLogger, times(4)).pipelineStageFinishedWithSuccess(
         any(ProjectId.class),
         any(PipelineExecutionId.class),
         eq(pipeline.pipelineId()),
@@ -188,7 +192,7 @@ class RobotPipelineExecutorIntegrationTest {
         any(ProjectId.class),
         any(PipelineExecutionId.class),
         eq(pipeline.pipelineId()));
-    verify(pipelineLogger).pipelineExecutionFinished(
+    verify(pipelineLogger).pipelineExecutionFinishedWithSuccess(
         any(ProjectId.class),
         any(PipelineExecutionId.class),
         eq(pipeline.pipelineId()));
@@ -273,7 +277,7 @@ class RobotPipelineExecutorIntegrationTest {
         any(ProjectId.class),
         any(PipelineExecutionId.class),
         eq(pipeline.pipelineId()));
-    verify(pipelineLogger).pipelineExecutionFinished(
+    verify(pipelineLogger).pipelineExecutionFinishedWithSuccess(
         any(ProjectId.class),
         any(PipelineExecutionId.class),
         eq(pipeline.pipelineId()));
@@ -289,12 +293,12 @@ class RobotPipelineExecutorIntegrationTest {
         eq(pipeline.pipelineId()));
 
     // Verify all stages were logged (start and finish for each, 4 stages in pipeline)
-    verify(pipelineLogger, times(4)).pipelineStageRunStarted(
+    verify(pipelineLogger, times(4)).pipelineStageStarted(
         any(ProjectId.class),
         any(PipelineExecutionId.class),
         eq(pipeline.pipelineId()),
         any(Command.class));
-    verify(pipelineLogger, times(4)).pipelineStageRunFinished(
+    verify(pipelineLogger, times(4)).pipelineStageFinishedWithSuccess(
         any(ProjectId.class),
         any(PipelineExecutionId.class),
         eq(pipeline.pipelineId()),

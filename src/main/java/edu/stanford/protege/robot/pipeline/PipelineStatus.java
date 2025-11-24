@@ -1,116 +1,157 @@
 package edu.stanford.protege.robot.pipeline;
 
+import com.google.common.collect.ImmutableList;
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Represents the status of a pipeline execution.
+ * Represents the status of a pipeline execution, including the status of each individual stage.
+ *
+ * <p>
+ * This is an immutable record that tracks the execution state of a pipeline. Each time a stage
+ * status changes, a new PipelineStatus instance is created with the updated stage information.
  */
 public record PipelineStatus(
-    @Nonnull PipelineExecutionId pipelineExecutionId,
+    @Nonnull PipelineExecutionId executionId,
     @Nonnull PipelineId pipelineId,
-    @Nonnull Instant startTimestamp,
-    @Nullable Instant endTimestamp,
-    @Nonnull Status status) {
+    @Nonnull Instant startTime,
+    @Nullable Instant endTime,
+    @Nonnull List<PipelineStageStatus> stages) {
 
   public PipelineStatus {
-    Objects.requireNonNull(pipelineExecutionId, "pipelineExecutionId cannot be null");
+    Objects.requireNonNull(executionId, "executionId cannot be null");
     Objects.requireNonNull(pipelineId, "pipelineId cannot be null");
-    Objects.requireNonNull(startTimestamp, "startTimestamp cannot be null");
-    Objects.requireNonNull(status, "status cannot be null");
+    Objects.requireNonNull(startTime, "startTime cannot be null");
+    Objects.requireNonNull(stages, "stages cannot be null");
 
-    // Validation: endTimestamp should be null only when status is RUNNING
-    if (status == Status.RUNNING && endTimestamp != null) {
-      throw new IllegalArgumentException("endTimestamp must be null when status is RUNNING");
-    }
-    if (status != Status.RUNNING && endTimestamp == null) {
-      throw new IllegalArgumentException("endTimestamp must be set when status is not RUNNING");
-    }
-    if (endTimestamp != null && endTimestamp.isBefore(startTimestamp)) {
-      throw new IllegalArgumentException("endTimestamp cannot be before startTimestamp");
+    // Make stages list immutable
+    stages = List.copyOf(stages);
+
+    // Validation: endTime cannot be before startTime
+    if (endTime != null && endTime.isBefore(startTime)) {
+      throw new IllegalArgumentException("endTime cannot be before startTime");
     }
   }
 
   /**
-   * Creates a PipelineStatus for a running pipeline.
+   * Creates an initial PipelineStatus with all stages in WAITING state.
    */
-  public static PipelineStatus running(
-      @Nonnull PipelineExecutionId pipelineExecutionId,
+  public static PipelineStatus create(
+      @Nonnull PipelineExecutionId executionId,
       @Nonnull PipelineId pipelineId,
-      @Nonnull Instant startTimestamp) {
-    return new PipelineStatus(pipelineExecutionId, pipelineId, startTimestamp, null, Status.RUNNING);
+      @Nonnull Instant startTime,
+      @Nonnull RobotPipeline pipeline) {
+    var stageStatuses = pipeline.stages().stream()
+        .map(stage -> PipelineStageStatus.waiting(stage.stageId(), stage.outputPath()))
+        .toList();
+    return new PipelineStatus(executionId, pipelineId, startTime, null, stageStatuses);
   }
 
   /**
-   * Creates a PipelineStatus for a successfully finished pipeline.
+   * Creates a new PipelineStatus with the specified stage marked as RUNNING.
    */
-  public static PipelineStatus finishedWithSuccess(
-      @Nonnull PipelineExecutionId pipelineExecutionId,
-      @Nonnull PipelineId pipelineId,
-      @Nonnull Instant startTimestamp,
-      @Nonnull Instant endTimestamp) {
-    return new PipelineStatus(pipelineExecutionId, pipelineId, startTimestamp, endTimestamp,
-        Status.FINISHED_WITH_SUCCESS);
+  public static PipelineStatus updateStageRunning(
+      @Nonnull PipelineStatus previousStatus,
+      @Nonnull PipelineStageId stageId) {
+    var stages = previousStatus.stages();
+    var updatedStages = replaceStageStatus(stages, stageId, PipelineStageStatus::running);
+    return new PipelineStatus(
+        previousStatus.executionId,
+        previousStatus.pipelineId,
+        previousStatus.startTime,
+        previousStatus.endTime,
+        updatedStages);
   }
 
   /**
-   * Creates a PipelineStatus for a failed pipeline.
+   * Creates a new PipelineStatus with the specified stage marked as FINISHED_WITH_SUCCESS.
    */
-  public static PipelineStatus finishedWithError(
-      @Nonnull PipelineExecutionId pipelineExecutionId,
-      @Nonnull PipelineId pipelineId,
-      @Nonnull Instant startTimestamp,
-      @Nonnull Instant endTimestamp) {
-    return new PipelineStatus(pipelineExecutionId, pipelineId, startTimestamp, endTimestamp,
-        Status.FINISHED_WITH_ERROR);
+  public static PipelineStatus updateStageSuccess(
+      @Nonnull PipelineStatus previousStatus,
+      @Nonnull PipelineStageId stageId) {
+    var stages = previousStatus.stages();
+    var updatedStages = replaceStageStatus(stages, stageId, PipelineStageStatus::finishedWithSuccess);
+    return new PipelineStatus(
+        previousStatus.executionId,
+        previousStatus.pipelineId,
+        previousStatus.startTime,
+        previousStatus.endTime,
+        updatedStages);
   }
 
   /**
-   * Checks if the pipeline is currently running.
-   *
-   * @return true if status is RUNNING
+   * Creates a new PipelineStatus with the specified stage marked as FINISHED_WITH_ERROR.
+   */
+  public static PipelineStatus updateStageError(
+      @Nonnull PipelineStatus previousStatus,
+      @Nonnull PipelineStageId stageId) {
+    var stages = previousStatus.stages();
+    var updatedStages = replaceStageStatus(stages, stageId, PipelineStageStatus::finishedWithError);
+    return new PipelineStatus(
+        previousStatus.executionId,
+        previousStatus.pipelineId,
+        previousStatus.startTime,
+        previousStatus.endTime,
+        updatedStages);
+  }
+
+  /**
+   * Creates a new PipelineStatus with the end time set.
+   */
+  public static PipelineStatus insertEndTime(
+      @Nonnull PipelineStatus previousStatus,
+      @Nonnull Instant endTime) {
+    return new PipelineStatus(
+        previousStatus.executionId,
+        previousStatus.pipelineId,
+        previousStatus.startTime,
+        endTime,
+        previousStatus.stages);
+  }
+
+  /**
+   * Helper method that replaces a specific stage with a new PipelineStageStatus object.
+   */
+  private static ImmutableList<PipelineStageStatus> replaceStageStatus(
+      List<PipelineStageStatus> stages,
+      PipelineStageId stageId,
+      StageStatusFactory factory) {
+    return stages.stream()
+        .map(stage -> stage.stageId().equals(stageId)
+            ? factory.create(stage.stageId(), stage.outputFile())
+            : stage)
+        .collect(ImmutableList.toImmutableList());
+  }
+
+  /**
+   * Checks if the pipeline is currently running (has at least one stage running or waiting).
    */
   public boolean isRunning() {
-    return status == Status.RUNNING;
+    return stages.stream().anyMatch(stage -> stage.isRunning() || stage.isWaiting());
   }
 
   /**
-   * Checks if the pipeline finished successfully.
-   *
-   * @return true if status is FINISHED_WITH_SUCCESS
+   * Checks if the pipeline finished successfully (all stages finished successfully).
    */
   public boolean isSuccessful() {
-    return status == Status.FINISHED_WITH_SUCCESS;
+    return !stages.isEmpty() && stages.stream().allMatch(PipelineStageStatus::isSuccessful);
   }
 
   /**
-   * Checks if the pipeline finished with failures.
-   *
-   * @return true if status is FINISHED_WITH_ERROR
+   * Checks if the pipeline finished with at least one error.
    */
   public boolean isFailed() {
-    return status == Status.FINISHED_WITH_ERROR;
+    return stages.stream().anyMatch(PipelineStageStatus::isFailed);
   }
 
   /**
-   * Represents the execution status of a pipeline.
+   * Functional interface for creating a new PipelineStageStatus with a specific status.
    */
-  public enum Status {
-    /**
-     * The pipeline is currently running.
-     */
-    RUNNING,
-
-    /**
-     * The pipeline finished successfully without errors.
-     */
-    FINISHED_WITH_SUCCESS,
-
-    /**
-     * The pipeline finished with one or more errors.
-     */
-    FINISHED_WITH_ERROR
+  @FunctionalInterface
+  private interface StageStatusFactory {
+    PipelineStageStatus create(PipelineStageId stageId, RelativePath outputFile);
   }
 }

@@ -46,13 +46,14 @@ public class ExecuteRobotCommandsHandler
       ExecutionContext executionContext) {
 
     var projectId = request.projectId();
-    var inputPath = Path.of("foo"); // TODO: Get the input path from the project ID
-    var revisionNumber = 0L; // TODO: Get the revision number from the request or context
+    var pipeline = request.pipeline();
+    var inputPath = Path.of("foo"); // TODO: Get the input path from the request of context?
+    var revisionNumber = 0L; // TODO: Get the revision number from the request or context?
 
     try {
       var executionId = PipelineExecutionId.generate();
       // Execute command chain asynchronously
-      executePipelineAsync(projectId, executionId, inputPath, revisionNumber, request.pipeline());
+      executePipelineAsync(executionId, projectId, inputPath, revisionNumber, pipeline);
       return Mono.just(new ExecuteRobotCommandsResponse(projectId, executionId));
     } catch (Exception e) {
       logger.info("{} Error executing command request: {}", projectId, e.getMessage(), e);
@@ -60,7 +61,7 @@ public class ExecuteRobotCommandsHandler
     }
   }
 
-  private void executePipelineAsync(ProjectId projectId, PipelineExecutionId executionId,
+  private void executePipelineAsync(PipelineExecutionId executionId, ProjectId projectId,
       Path inputPath, long revisionNumber, RobotPipeline pipeline) {
     CompletableFuture.runAsync(() -> {
       try {
