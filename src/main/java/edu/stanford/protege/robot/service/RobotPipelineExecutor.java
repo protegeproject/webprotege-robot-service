@@ -15,6 +15,8 @@ import javax.inject.Provider;
 import org.obolibrary.robot.CommandState;
 import org.obolibrary.robot.IOHelper;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -28,6 +30,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class RobotPipelineExecutor {
+
+  private static final Logger logger = LoggerFactory.getLogger(RobotPipelineExecutor.class);
 
   private final Provider<CommandState> commandStateProvider;
   private final IOHelper ioHelper;
@@ -87,7 +91,7 @@ public class RobotPipelineExecutor {
     try {
       // Create the initial pipeline status
       var status = PipelineStatus.create(executionId, pipelineId, startTimestamp, pipeline);
-      pipelineStatusRepository.saveStatus(status);
+      safeSaveStatus(pipelineId, status);
       pipelineLogger.pipelineExecutionStarted(projectId, executionId, pipelineId);
 
       // Get fresh CommandState
@@ -114,8 +118,8 @@ public class RobotPipelineExecutor {
         var args = robotCommand.getArgsArray();
         try {
           // Update status that a pipeline stage is running
-          status = PipelineStatus.updateStageRunning(status, stageId);
-          pipelineStatusRepository.saveStatus(status);
+          status = PipelineStatus.withStageRunning(status, stageId);
+          safeSaveStatus(pipelineId, status);
           pipelineLogger.pipelineStageStarted(projectId, executionId, pipelineId, command);
 
           // Update the state
@@ -134,13 +138,13 @@ public class RobotPipelineExecutor {
             }
           }
           // Update status that a pipeline stage is finished successfully
-          status = PipelineStatus.updateStageSuccess(status, stageId);
-          pipelineStatusRepository.saveStatus(status);
+          status = PipelineStatus.withStageSuccess(status, stageId);
+          safeSaveStatus(pipelineId, status);
           pipelineLogger.pipelineStageFinishedWithSuccess(projectId, executionId, pipelineId, command);
         } catch (Throwable t) {
           // Update status that the pipeline stage is finished but with errors
-          status = PipelineStatus.updateStageError(status, stageId);
-          pipelineStatusRepository.saveStatus(status);
+          status = PipelineStatus.withStageError(status, stageId);
+          safeSaveStatus(pipelineId, status);
           pipelineLogger.pipelineStageFinishedWithError(projectId, executionId, pipelineId, pipelineStage, t);
           throw new RobotServiceException("Pipeline stage failed: " + t.getMessage(), t);
         }
@@ -149,17 +153,33 @@ public class RobotPipelineExecutor {
       var endTimestamp = Instant.now();
 
       // Update status with the end timestamp
-      status = PipelineStatus.insertEndTime(status, endTimestamp);
-      pipelineStatusRepository.saveStatus(status);
+      status = PipelineStatus.withEndTime(status, endTimestamp);
+      safeSaveStatus(pipelineId, status);
 
       // Report the success results and save it to MongoDB
       var result = PipelineSuccessResult.create(executionId, projectId, revisionNumber, pipeline, startTimestamp,
           endTimestamp, outputFileMap);
-      successResultRepository.saveResult(result);
+      safeSaveResult(pipelineId, result);
 
       pipelineLogger.pipelineExecutionFinishedWithSuccess(projectId, executionId, pipelineId);
     } catch (Throwable t) {
       pipelineLogger.pipelineExecutionFinishedWithError(projectId, executionId, pipelineId, t);
+    }
+  }
+
+  private void safeSaveResult(PipelineId pipelineId, PipelineSuccessResult result) {
+    try {
+      successResultRepository.saveResult(result);
+    } catch (Throwable t) {
+      logger.error("{} Pipeline result failed to save in MongoDB", pipelineId, t);
+    }
+  }
+
+  private void safeSaveStatus(PipelineId pipelineId, PipelineStatus status) {
+    try {
+      pipelineStatusRepository.saveStatus(status);
+    } catch (Throwable t) {
+      logger.error("{} Pipeline progress status failed to save in MongoDB", pipelineId, t);
     }
   }
 
