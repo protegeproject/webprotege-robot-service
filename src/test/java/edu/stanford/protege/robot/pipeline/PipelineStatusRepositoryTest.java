@@ -78,7 +78,7 @@ class PipelineStatusRepositoryTest {
   }
 
   @Test
-  void testSaveStatus_updateStageRunning() {
+  void testSaveStatus_withStageRunning() {
     // Given
     var executionId = PipelineExecutionId.generate();
     var pipelineId = PipelineId.generate();
@@ -88,7 +88,7 @@ class PipelineStatusRepositoryTest {
 
     // When - mark first stage as running
     var stageId = pipeline.stages().get(0).stageId();
-    var updatedStatus = PipelineStatus.updateStageRunning(initialStatus, stageId);
+    var updatedStatus = PipelineStatus.withStageRunning(initialStatus, stageId);
     repository.saveStatus(updatedStatus);
 
     // Then
@@ -100,7 +100,7 @@ class PipelineStatusRepositoryTest {
   }
 
   @Test
-  void testSaveStatus_updateStageSuccess() {
+  void testSaveStatus_withStageSuccess() {
     // Given
     var executionId = PipelineExecutionId.generate();
     var pipelineId = PipelineId.generate();
@@ -108,10 +108,10 @@ class PipelineStatusRepositoryTest {
     var pipeline = createSamplePipeline(pipelineId);
     var initialStatus = PipelineStatus.create(executionId, pipelineId, startTime, pipeline);
     var stageId = pipeline.stages().get(0).stageId();
-    var runningStatus = PipelineStatus.updateStageRunning(initialStatus, stageId);
+    var runningStatus = PipelineStatus.withStageRunning(initialStatus, stageId);
 
     // When - mark stage as successful
-    var successStatus = PipelineStatus.updateStageSuccess(runningStatus, stageId);
+    var successStatus = PipelineStatus.withStageSuccess(runningStatus, stageId);
     repository.saveStatus(successStatus);
 
     // Then
@@ -122,7 +122,7 @@ class PipelineStatusRepositoryTest {
   }
 
   @Test
-  void testSaveStatus_updateStageError() {
+  void testSaveStatus_withStageError() {
     // Given
     var executionId = PipelineExecutionId.generate();
     var pipelineId = PipelineId.generate();
@@ -130,10 +130,10 @@ class PipelineStatusRepositoryTest {
     var pipeline = createSamplePipeline(pipelineId);
     var initialStatus = PipelineStatus.create(executionId, pipelineId, startTime, pipeline);
     var stageId = pipeline.stages().get(0).stageId();
-    var runningStatus = PipelineStatus.updateStageRunning(initialStatus, stageId);
+    var runningStatus = PipelineStatus.withStageRunning(initialStatus, stageId);
 
     // When - mark stage as failed
-    var errorStatus = PipelineStatus.updateStageError(runningStatus, stageId);
+    var errorStatus = PipelineStatus.withStageError(runningStatus, stageId);
     repository.saveStatus(errorStatus);
 
     // Then
@@ -144,7 +144,7 @@ class PipelineStatusRepositoryTest {
   }
 
   @Test
-  void testSaveStatus_insertEndTime() {
+  void testSaveStatus_withEndTime() {
     // Given
     var executionId = PipelineExecutionId.generate();
     var pipelineId = PipelineId.generate();
@@ -154,7 +154,7 @@ class PipelineStatusRepositoryTest {
 
     // When - set end time
     var endTime = Instant.now();
-    var finishedStatus = PipelineStatus.insertEndTime(status, endTime);
+    var finishedStatus = PipelineStatus.withEndTime(status, endTime);
     repository.saveStatus(finishedStatus);
 
     // Then
@@ -177,25 +177,25 @@ class PipelineStatusRepositoryTest {
 
     // Stage 1 running
     var stage1Id = pipeline.stages().get(0).stageId();
-    status = PipelineStatus.updateStageRunning(status, stage1Id);
+    status = PipelineStatus.withStageRunning(status, stage1Id);
     repository.saveStatus(status);
 
     // Stage 1 success
-    status = PipelineStatus.updateStageSuccess(status, stage1Id);
+    status = PipelineStatus.withStageSuccess(status, stage1Id);
     repository.saveStatus(status);
 
     // Stage 2 running
     var stage2Id = pipeline.stages().get(1).stageId();
-    status = PipelineStatus.updateStageRunning(status, stage2Id);
+    status = PipelineStatus.withStageRunning(status, stage2Id);
     repository.saveStatus(status);
 
     // Stage 2 success
-    status = PipelineStatus.updateStageSuccess(status, stage2Id);
+    status = PipelineStatus.withStageSuccess(status, stage2Id);
     repository.saveStatus(status);
 
     // Set end time
     var endTime = Instant.now();
-    status = PipelineStatus.insertEndTime(status, endTime);
+    status = PipelineStatus.withEndTime(status, endTime);
     repository.saveStatus(status);
 
     // Then

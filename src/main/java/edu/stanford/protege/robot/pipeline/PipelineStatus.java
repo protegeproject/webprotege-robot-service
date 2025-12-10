@@ -16,16 +16,16 @@ import javax.annotation.Nullable;
  */
 public record PipelineStatus(
     @Nonnull PipelineExecutionId executionId,
-    @Nonnull PipelineId pipelineId,
     @Nonnull Instant startTime,
     @Nullable Instant endTime,
-    @Nonnull List<PipelineStageStatus> stages) {
+    @Nonnull List<PipelineStageStatus> stages,
+    @Nonnull RobotPipeline pipeline) {
 
   public PipelineStatus {
     Objects.requireNonNull(executionId, "executionId cannot be null");
-    Objects.requireNonNull(pipelineId, "pipelineId cannot be null");
     Objects.requireNonNull(startTime, "startTime cannot be null");
     Objects.requireNonNull(stages, "stages cannot be null");
+    Objects.requireNonNull(pipeline, "pipeline cannot be null");
 
     // Make stages list immutable
     stages = List.copyOf(stages);
@@ -47,69 +47,69 @@ public record PipelineStatus(
     var stageStatuses = pipeline.stages().stream()
         .map(stage -> PipelineStageStatus.waiting(stage.stageId(), stage.outputPath()))
         .toList();
-    return new PipelineStatus(executionId, pipelineId, startTime, null, stageStatuses);
+    return new PipelineStatus(executionId, startTime, null, stageStatuses, pipeline);
   }
 
   /**
    * Creates a new PipelineStatus with the specified stage marked as RUNNING.
    */
-  public static PipelineStatus updateStageRunning(
+  public static PipelineStatus withStageRunning(
       @Nonnull PipelineStatus previousStatus,
       @Nonnull PipelineStageId stageId) {
     var stages = previousStatus.stages();
     var updatedStages = replaceStageStatus(stages, stageId, PipelineStageStatus::running);
     return new PipelineStatus(
         previousStatus.executionId,
-        previousStatus.pipelineId,
         previousStatus.startTime,
         previousStatus.endTime,
-        updatedStages);
+        updatedStages,
+        previousStatus.pipeline);
   }
 
   /**
    * Creates a new PipelineStatus with the specified stage marked as FINISHED_WITH_SUCCESS.
    */
-  public static PipelineStatus updateStageSuccess(
+  public static PipelineStatus withStageSuccess(
       @Nonnull PipelineStatus previousStatus,
       @Nonnull PipelineStageId stageId) {
     var stages = previousStatus.stages();
     var updatedStages = replaceStageStatus(stages, stageId, PipelineStageStatus::finishedWithSuccess);
     return new PipelineStatus(
         previousStatus.executionId,
-        previousStatus.pipelineId,
         previousStatus.startTime,
         previousStatus.endTime,
-        updatedStages);
+        updatedStages,
+        previousStatus.pipeline);
   }
 
   /**
    * Creates a new PipelineStatus with the specified stage marked as FINISHED_WITH_ERROR.
    */
-  public static PipelineStatus updateStageError(
+  public static PipelineStatus withStageError(
       @Nonnull PipelineStatus previousStatus,
       @Nonnull PipelineStageId stageId) {
     var stages = previousStatus.stages();
     var updatedStages = replaceStageStatus(stages, stageId, PipelineStageStatus::finishedWithError);
     return new PipelineStatus(
         previousStatus.executionId,
-        previousStatus.pipelineId,
         previousStatus.startTime,
         previousStatus.endTime,
-        updatedStages);
+        updatedStages,
+        previousStatus.pipeline);
   }
 
   /**
    * Creates a new PipelineStatus with the end time set.
    */
-  public static PipelineStatus insertEndTime(
+  public static PipelineStatus withEndTime(
       @Nonnull PipelineStatus previousStatus,
       @Nonnull Instant endTime) {
     return new PipelineStatus(
         previousStatus.executionId,
-        previousStatus.pipelineId,
         previousStatus.startTime,
         endTime,
-        previousStatus.stages);
+        previousStatus.stages,
+        previousStatus.pipeline);
   }
 
   /**
