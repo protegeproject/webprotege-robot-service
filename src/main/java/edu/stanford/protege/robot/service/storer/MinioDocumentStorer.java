@@ -101,11 +101,11 @@ public class MinioDocumentStorer {
     // ROBOT convert formats
     return switch (extension) {
       case "json" -> "application/json";
-      case "obo" -> "text/obo";             // W3C-Specified (not IANA-registered)
-      case "ofn" -> "text/owl-functional";  // W3C-Specified (not IANA-registered)
-      case "omn" -> "text/owl-manchester";  // W3C-Specified (not IANA-registered)
+      case "obo" -> "text/obo"; // W3C-Specified (not IANA-registered)
+      case "ofn" -> "text/owl-functional"; // W3C-Specified (not IANA-registered)
+      case "omn" -> "text/owl-manchester"; // W3C-Specified (not IANA-registered)
       case "owl" -> "application/rdf+xml";
-      case "owx" -> "application/owl+xml";  // W3C-Specified (not IANA-registered)
+      case "owx" -> "application/owl+xml"; // W3C-Specified (not IANA-registered)
       case "ttl" -> "text/turtle";
       default -> "application/octet-stream";
     };
