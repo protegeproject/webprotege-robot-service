@@ -18,6 +18,18 @@ public class ApplicationBeansConfiguration {
   }
 
   @Bean
+  GetRobotPipelinesHandler createGetRobotPipelinesHandler(
+      edu.stanford.protege.robot.pipeline.PipelineRepository pipelineRepository) {
+    return new GetRobotPipelinesHandler(pipelineRepository);
+  }
+
+  @Bean
+  SetRobotPipelinesHandler createSetRobotPipelinesHandler(
+      edu.stanford.protege.robot.pipeline.PipelineRepository pipelineRepository) {
+    return new SetRobotPipelinesHandler(pipelineRepository);
+  }
+
+  @Bean
   PipelineLogger pipelineLogger(EventDispatcher eventDispatcher) {
     return new PipelineLogger(eventDispatcher);
   }
