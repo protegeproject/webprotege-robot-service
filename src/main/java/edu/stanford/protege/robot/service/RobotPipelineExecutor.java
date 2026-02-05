@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.time.Instant;
 import java.util.Objects;
 import javax.annotation.Nonnull;
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 import org.obolibrary.robot.CommandState;
 import org.obolibrary.robot.IOHelper;
 import org.semanticweb.owlapi.model.OWLOntology;
