@@ -13,6 +13,8 @@ spring:
       database: webprotege
       auto-index-creation: true
 webprotege:
+  directories:
+    data: ${WEBPROTEGE_DATA_DIR}
   rabbitmq:
     requestqueue: webprotege-robot-queue
     responsequeue: webprotege-robot-response-queue
@@ -22,3 +24,11 @@ webprotege:
     end-point: http://localhost:9000
     secret-key: webprotege
     robot-output-documents-bucket-name: webprotege-robot-output-documents
+  robot:
+    executor:
+      core-pool-size: 2
+      max-pool-size: 4
+      queue-capacity: 100
+      thread-name-prefix: robot-pipeline-
+      wait-for-tasks-to-complete-on-shutdown: true
+      await-termination-seconds: 60

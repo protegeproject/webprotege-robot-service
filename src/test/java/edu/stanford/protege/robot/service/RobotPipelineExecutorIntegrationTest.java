@@ -10,7 +10,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.stanford.protege.robot.MongoTestExtension;
 import edu.stanford.protege.robot.pipeline.PipelineExecutionId;
 import edu.stanford.protege.robot.pipeline.PipelineLogger;
 import edu.stanford.protege.robot.pipeline.PipelineStatusRepository;
@@ -19,7 +18,6 @@ import edu.stanford.protege.robot.pipeline.RobotPipeline;
 import edu.stanford.protege.robot.service.config.JacksonConfiguration;
 import edu.stanford.protege.robot.service.storer.MinioDocumentStorer;
 import edu.stanford.protege.webprotege.common.ProjectId;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -29,7 +27,6 @@ import java.util.Objects;
 import jakarta.inject.Provider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.obolibrary.robot.Command;
@@ -39,6 +36,11 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * Integration tests for {@link RobotPipelineExecutor}.
@@ -54,8 +56,16 @@ import org.springframework.context.annotation.Import;
  */
 @JsonTest
 @Import({JacksonConfiguration.class})
-@ExtendWith({MongoTestExtension.class})
+@Testcontainers
 class RobotPipelineExecutorIntegrationTest {
+
+  @Container
+  static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:7.0");
+
+  @DynamicPropertySource
+  static void setProperties(DynamicPropertyRegistry registry) {
+    registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+  }
 
   @Autowired
   private ObjectMapper objectMapper;
@@ -128,11 +138,7 @@ class RobotPipelineExecutorIntegrationTest {
     // Create real IOHelper for actual loading/saving
     var realIOHelper = new IOHelper();
 
-    // Mock IOHelper to delegate to real IOHelper
-    when(ioHelper.loadOntology(any(File.class))).thenAnswer(invocation -> {
-      File file = invocation.getArgument(0);
-      return realIOHelper.loadOntology(file);
-    });
+    // Mock IOHelper to delegate to real IOHelper for saves
     when(ioHelper.saveOntology(any(OWLOntology.class), anyString())).thenAnswer(invocation -> {
       OWLOntology ontology = invocation.getArgument(0);
       String savePath = invocation.getArgument(1);
@@ -145,10 +151,11 @@ class RobotPipelineExecutorIntegrationTest {
     // Execute pipeline (use projectId from JSON)
     var revisionNumber = 1L;
     var executionId = PipelineExecutionId.generate();
+    var ontology = realIOHelper.loadOntology(inputPath.toFile());
     executor.executePipeline(
         pipeline.projectId(),
         executionId,
-        inputPath,
+        ontology,
         revisionNumber,
         pipeline);
 
@@ -156,7 +163,6 @@ class RobotPipelineExecutorIntegrationTest {
     // For this test, we'll verify the IO operations were called
 
     // Verify IOHelper interactions
-    verify(ioHelper).loadOntology(any(File.class));
     // Note: The actual output paths depend on the pipeline stages' outputPath configuration
     verify(ioHelper, atLeastOnce()).saveOntology(any(OWLOntology.class), anyString());
 
@@ -165,15 +171,6 @@ class RobotPipelineExecutorIntegrationTest {
         any(ProjectId.class),
         any(PipelineExecutionId.class),
         eq(pipeline.pipelineId()));
-    verify(pipelineLogger).loadingOntologyStarted(
-        any(ProjectId.class),
-        any(PipelineExecutionId.class),
-        eq(pipeline.pipelineId()));
-    verify(pipelineLogger).loadingOntologySucceeded(
-        any(ProjectId.class),
-        any(PipelineExecutionId.class),
-        eq(pipeline.pipelineId()));
-
     // Verify each pipeline stage was logged (4 stages in pipeline)
     verify(pipelineLogger, times(4)).pipelineStageStarted(
         any(ProjectId.class),
@@ -247,11 +244,7 @@ class RobotPipelineExecutorIntegrationTest {
     // Create real IOHelper for actual loading/saving
     var realIOHelper = new IOHelper();
 
-    // Mock IOHelper to delegate to real IOHelper
-    when(ioHelper.loadOntology(any(File.class))).thenAnswer(invocation -> {
-      File file = invocation.getArgument(0);
-      return realIOHelper.loadOntology(file);
-    });
+    // Mock IOHelper to delegate to real IOHelper for saves
     when(ioHelper.saveOntology(any(OWLOntology.class), anyString())).thenAnswer(invocation -> {
       OWLOntology ontology = invocation.getArgument(0);
       String savePath = invocation.getArgument(1);
@@ -264,15 +257,15 @@ class RobotPipelineExecutorIntegrationTest {
     // Execute pipeline (use projectId from JSON)
     var revisionNumber = 2L;
     var executionId = PipelineExecutionId.generate();
+    var ontology = realIOHelper.loadOntology(inputPath.toFile());
     executor.executePipeline(
         pipeline.projectId(),
         executionId,
-        inputPath,
+        ontology,
         revisionNumber,
         pipeline);
 
     // Verify IOHelper interactions
-    verify(ioHelper).loadOntology(any(File.class));
     verify(ioHelper, atLeastOnce()).saveOntology(any(OWLOntology.class), anyString());
 
     // Verify PipelineLogger was called for pipeline lifecycle
@@ -281,16 +274,6 @@ class RobotPipelineExecutorIntegrationTest {
         any(PipelineExecutionId.class),
         eq(pipeline.pipelineId()));
     verify(pipelineLogger).pipelineExecutionFinishedWithSuccess(
-        any(ProjectId.class),
-        any(PipelineExecutionId.class),
-        eq(pipeline.pipelineId()));
-
-    // Verify ontology loading was logged
-    verify(pipelineLogger).loadingOntologyStarted(
-        any(ProjectId.class),
-        any(PipelineExecutionId.class),
-        eq(pipeline.pipelineId()));
-    verify(pipelineLogger).loadingOntologySucceeded(
         any(ProjectId.class),
         any(PipelineExecutionId.class),
         eq(pipeline.pipelineId()));

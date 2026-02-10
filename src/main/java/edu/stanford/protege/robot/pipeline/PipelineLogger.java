@@ -58,6 +58,25 @@ public class PipelineLogger {
         new LoadOntologyFailedEvent(projectId, executionId, pipelineId, EventId.generate(), t.getMessage()));
   }
 
+  public void snapshotOntologyStarted(ProjectId projectId, PipelineExecutionId executionId, PipelineId pipelineId) {
+    logger.info("{} {} {} ROBOT pipeline snapshotting ontology", projectId, executionId, pipelineId);
+    eventDispatcher.dispatchEvent(
+        new SnapshotOntologyStartedEvent(projectId, executionId, pipelineId, EventId.generate()));
+  }
+
+  public void snapshotOntologySucceeded(ProjectId projectId, PipelineExecutionId executionId, PipelineId pipelineId) {
+    logger.info("{} {} {} ROBOT pipeline snapshotting ontology succeeded", projectId, executionId, pipelineId);
+    eventDispatcher.dispatchEvent(
+        new SnapshotOntologySucceededEvent(projectId, executionId, pipelineId, EventId.generate()));
+  }
+
+  public void snapshotOntologyFailed(ProjectId projectId, PipelineExecutionId executionId, PipelineId pipelineId,
+      Throwable t) {
+    logger.error("{} {} {} ROBOT pipeline snapshotting ontology failed", projectId, executionId, pipelineId, t);
+    eventDispatcher.dispatchEvent(
+        new SnapshotOntologyFailedEvent(projectId, executionId, pipelineId, EventId.generate(), t.getMessage()));
+  }
+
   public void pipelineStageStarted(ProjectId projectId, PipelineExecutionId executionId, PipelineId pipelineId,
       Command command) {
     logger.info("{} {} {} ROBOT pipeline stage started: {}", projectId, executionId, pipelineId, command.getName());
