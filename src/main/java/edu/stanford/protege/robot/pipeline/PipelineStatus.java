@@ -18,6 +18,7 @@ public record PipelineStatus(
     @Nonnull PipelineExecutionId executionId,
     @Nonnull Instant startTime,
     @Nullable Instant endTime,
+    @Nullable PipelinePreparationStatus preparationStatus,
     @Nonnull List<PipelineStageStatus> stages,
     @Nonnull RobotPipeline pipeline) {
 
@@ -44,10 +45,19 @@ public record PipelineStatus(
       @Nonnull PipelineId pipelineId,
       @Nonnull Instant startTime,
       @Nonnull RobotPipeline pipeline) {
+    return createWithPreparationStatus(executionId, pipelineId, startTime, pipeline, null);
+  }
+
+  public static PipelineStatus createWithPreparationStatus(
+      @Nonnull PipelineExecutionId executionId,
+      @Nonnull PipelineId pipelineId,
+      @Nonnull Instant startTime,
+      @Nonnull RobotPipeline pipeline,
+      @Nullable PipelinePreparationStatus preparationStatus) {
     var stageStatuses = pipeline.stages().stream()
         .map(stage -> PipelineStageStatus.waiting(stage.stageId(), stage.outputPath()))
         .toList();
-    return new PipelineStatus(executionId, startTime, null, stageStatuses, pipeline);
+    return new PipelineStatus(executionId, startTime, null, preparationStatus, stageStatuses, pipeline);
   }
 
   /**
@@ -62,6 +72,7 @@ public record PipelineStatus(
         previousStatus.executionId,
         previousStatus.startTime,
         previousStatus.endTime,
+        previousStatus.preparationStatus,
         updatedStages,
         previousStatus.pipeline);
   }
@@ -78,6 +89,7 @@ public record PipelineStatus(
         previousStatus.executionId,
         previousStatus.startTime,
         previousStatus.endTime,
+        previousStatus.preparationStatus,
         updatedStages,
         previousStatus.pipeline);
   }
@@ -94,7 +106,23 @@ public record PipelineStatus(
         previousStatus.executionId,
         previousStatus.startTime,
         previousStatus.endTime,
+        previousStatus.preparationStatus,
         updatedStages,
+        previousStatus.pipeline);
+  }
+
+  /**
+   * Creates a new PipelineStatus with the preparation status updated.
+   */
+  public static PipelineStatus withPreparationStatus(
+      @Nonnull PipelineStatus previousStatus,
+      @Nullable PipelinePreparationStatus preparationStatus) {
+    return new PipelineStatus(
+        previousStatus.executionId,
+        previousStatus.startTime,
+        previousStatus.endTime,
+        preparationStatus,
+        previousStatus.stages,
         previousStatus.pipeline);
   }
 
@@ -108,6 +136,7 @@ public record PipelineStatus(
         previousStatus.executionId,
         previousStatus.startTime,
         endTime,
+        previousStatus.preparationStatus,
         previousStatus.stages,
         previousStatus.pipeline);
   }
@@ -130,6 +159,9 @@ public record PipelineStatus(
    * Checks if the pipeline is currently running (has at least one stage running or waiting).
    */
   public boolean isRunning() {
+    if (preparationStatus != null && (preparationStatus.isRunning() || preparationStatus.isWaiting())) {
+      return true;
+    }
     return stages.stream().anyMatch(stage -> stage.isRunning() || stage.isWaiting());
   }
 
@@ -137,6 +169,9 @@ public record PipelineStatus(
    * Checks if the pipeline finished successfully (all stages finished successfully).
    */
   public boolean isSuccessful() {
+    if (preparationStatus != null && !preparationStatus.isSuccessful()) {
+      return false;
+    }
     return !stages.isEmpty() && stages.stream().allMatch(PipelineStageStatus::isSuccessful);
   }
 
@@ -144,6 +179,9 @@ public record PipelineStatus(
    * Checks if the pipeline finished with at least one error.
    */
   public boolean isFailed() {
+    if (preparationStatus != null && preparationStatus.isFailed()) {
+      return true;
+    }
     return stages.stream().anyMatch(PipelineStageStatus::isFailed);
   }
 

@@ -7,7 +7,6 @@ import edu.stanford.protege.robot.service.storer.MinioDocumentStorer;
 import edu.stanford.protege.webprotege.common.BlobLocation;
 import edu.stanford.protege.webprotege.common.ProjectId;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.time.Instant;
 import java.util.Objects;
 import javax.annotation.Nonnull;
@@ -67,45 +66,40 @@ public class RobotPipelineExecutor {
    *          the unique project identifier
    * @param executionId
    *          the unique pipeline execution identifier
-   * @param inputOntologyPath
-   *          path to the input ontology file (required)
+   * @param ontology
+   *          the input ontology to execute the pipeline against
    * @param revisionNumber
    *          the revision number of the input ontology
    * @param pipeline
    *          the ROBOT pipeline containing the sequence of commands to execute
    */
   public void executePipeline(@Nonnull ProjectId projectId, @Nonnull PipelineExecutionId executionId,
-      @Nonnull Path inputOntologyPath, long revisionNumber, @Nonnull RobotPipeline pipeline) {
+      @Nonnull OWLOntology ontology, long revisionNumber, @Nonnull RobotPipeline pipeline) {
 
     // Validate inputs
     Objects.requireNonNull(executionId, "executionId cannot be null");
     Objects.requireNonNull(projectId, "projectId cannot be null");
-    Objects.requireNonNull(inputOntologyPath, "inputOntologyPath cannot be null");
+    Objects.requireNonNull(ontology, "ontology cannot be null");
     Objects.requireNonNull(pipeline, "pipeline cannot be null");
 
     var pipelineId = pipeline.pipelineId();
 
-    // Start time
-    var startTimestamp = Instant.now();
+    var existingStatus = pipelineStatusRepository.findStatus(executionId).orElse(null);
+    var startTimestamp = existingStatus == null ? Instant.now() : existingStatus.startTime();
 
     try {
       // Create the initial pipeline status
-      var status = PipelineStatus.create(executionId, pipelineId, startTimestamp, pipeline);
+      var status = existingStatus == null
+          ? PipelineStatus.create(executionId, pipelineId, startTimestamp, pipeline)
+          : existingStatus;
       safeSaveStatus(pipelineId, status);
       pipelineLogger.pipelineExecutionStarted(projectId, executionId, pipelineId);
 
       // Get fresh CommandState
       var state = commandStateProvider.get();
 
-      // Load input ontology
-      try {
-        var ontology = loadOntology(projectId, executionId, pipelineId, inputOntologyPath);
-        state.setOntology(ontology);
-        state.setOntologyPath(inputOntologyPath.toString());
-      } catch (Throwable t) {
-        pipelineLogger.loadingOntologyFailed(projectId, executionId, pipelineId, t);
-        throw new RobotServiceException("Error loading ontology: " + t.getMessage(), t);
-      }
+      // Seed input ontology in state (no file roundtrip required for chained commands).
+      state.setOntology(ontology);
 
       // The map between output relative path to the blob location
       var outputFileMap = Maps.<RelativePath, BlobLocation>newHashMap();
@@ -128,9 +122,9 @@ public class RobotPipelineExecutor {
           // Check if the pipeline stage produces an output
           if (pipelineStage.producedOutput()) {
             var outputLocation = pipelineStage.outputPath();
-            var ontology = state.getOntology();
+            var outputOntology = state.getOntology();
             try {
-              var blobLocation = saveOntologyOutput(projectId, executionId, pipelineId, ontology, outputLocation);
+              var blobLocation = saveOntologyOutput(projectId, executionId, pipelineId, outputOntology, outputLocation);
               outputFileMap.put(outputLocation, blobLocation);
             } catch (Throwable t) {
               pipelineLogger.savingOntologyFailed(projectId, executionId, pipelineId, t);
@@ -181,17 +175,6 @@ public class RobotPipelineExecutor {
     } catch (Throwable t) {
       logger.error("{} Pipeline progress status failed to save in MongoDB", pipelineId, t);
     }
-  }
-
-  /**
-   * Loads an ontology from the specified file path.
-   */
-  private OWLOntology loadOntology(ProjectId projectId, PipelineExecutionId executionId, PipelineId pipelineId,
-      Path inputOntologyPath) throws IOException {
-    pipelineLogger.loadingOntologyStarted(projectId, executionId, pipelineId);
-    var ontology = ioHelper.loadOntology(inputOntologyPath.toFile());
-    pipelineLogger.loadingOntologySucceeded(projectId, executionId, pipelineId);
-    return ontology;
   }
 
   /**

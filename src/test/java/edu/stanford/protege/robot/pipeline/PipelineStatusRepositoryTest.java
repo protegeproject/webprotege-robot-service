@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.stanford.protege.robot.MongoTestExtension;
 import edu.stanford.protege.robot.command.annotate.PlainAnnotation;
 import edu.stanford.protege.robot.command.annotate.RobotAnnotateCommand;
 import edu.stanford.protege.robot.config.TestMongoConfiguration;
@@ -14,22 +13,34 @@ import java.time.Instant;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.semanticweb.owlapi.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJson;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
- * Integration tests for {@link PipelineStatusRepository} using MongoTestExtension.
+ * Integration tests for {@link PipelineStatusRepository} using Testcontainers.
  */
 @DataMongoTest
 @AutoConfigureJson
-@ExtendWith({MongoTestExtension.class})
+@Testcontainers
 @Import({JacksonConfiguration.class, TestMongoConfiguration.class})
 class PipelineStatusRepositoryTest {
+
+  @Container
+  static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:7.0");
+
+  @DynamicPropertySource
+  static void setProperties(DynamicPropertyRegistry registry) {
+    registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+  }
 
   @Autowired
   private MongoTemplate mongoTemplate;

@@ -96,6 +96,12 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>edu.stanford.protege</groupId>
+            <artifactId>webprotege-revision-manager</artifactId>
+            <version>0.9.2</version>
+        </dependency>
+
         <!-- MinIO -->
         <dependency>
             <groupId>io.minio</groupId>
@@ -128,6 +134,7 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
+            <version>2.0.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
