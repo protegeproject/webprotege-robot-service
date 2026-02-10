@@ -1,0 +1,10 @@
+logging:
+  level:
+    org.mongodb.driver: WARN
+    org.mongodb.driver.cluster: WARN
+    org.testcontainers: WARN
+    org.testcontainers.containers: WARN
+    org.testcontainers.utility: WARN
+spring:
+  main:
+    banner-mode: "off"
