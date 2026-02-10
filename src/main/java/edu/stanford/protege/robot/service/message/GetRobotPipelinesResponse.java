@@ -11,7 +11,8 @@ import javax.annotation.Nonnull;
 
 @JsonTypeName(CHANNEL)
 public record GetRobotPipelinesResponse(@Nonnull List<RobotPipeline> pipelines)
-    implements Response {
+    implements
+      Response {
 
   public GetRobotPipelinesResponse {
     Objects.requireNonNull(pipelines, "pipelines cannot be null");

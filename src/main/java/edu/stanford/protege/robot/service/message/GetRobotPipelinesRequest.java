@@ -10,7 +10,8 @@ import javax.annotation.Nonnull;
 
 @JsonTypeName(CHANNEL)
 public record GetRobotPipelinesRequest(@Nonnull ProjectId projectId)
-    implements Request<GetRobotPipelinesResponse> {
+    implements
+      Request<GetRobotPipelinesResponse> {
 
   public static final String CHANNEL = "webprotege.robot.GetRobotPipelines";
 
