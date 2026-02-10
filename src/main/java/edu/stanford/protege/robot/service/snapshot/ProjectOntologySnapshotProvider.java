@@ -41,7 +41,7 @@ public class ProjectOntologySnapshotProvider {
     var changeHistoryFile = changeHistoryFileFactory.getChangeHistoryFile(projectId);
     if (!changeHistoryFile.exists()) {
       throw new RobotServiceRuntimeException("Change history file not found for project " + projectId
-                                             + " at " + changeHistoryFile.getAbsolutePath());
+          + " at " + changeHistoryFile.getAbsolutePath());
     }
 
     var revisionManager = loadRevisionManagerWithRetry(projectId);

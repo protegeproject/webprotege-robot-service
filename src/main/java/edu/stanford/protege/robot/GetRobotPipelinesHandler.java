@@ -11,7 +11,8 @@ import reactor.core.publisher.Mono;
 
 @WebProtegeHandler
 public class GetRobotPipelinesHandler
-    implements CommandHandler<GetRobotPipelinesRequest, GetRobotPipelinesResponse> {
+    implements
+      CommandHandler<GetRobotPipelinesRequest, GetRobotPipelinesResponse> {
 
   private final PipelineRepository pipelineRepository;
 
@@ -32,7 +33,7 @@ public class GetRobotPipelinesHandler
 
   @Override
   public Mono<GetRobotPipelinesResponse> handleRequest(GetRobotPipelinesRequest request,
-                                                       ExecutionContext executionContext) {
+      ExecutionContext executionContext) {
     var pipelines = pipelineRepository.findPipelines(request.projectId());
     return Mono.just(new GetRobotPipelinesResponse(pipelines));
   }

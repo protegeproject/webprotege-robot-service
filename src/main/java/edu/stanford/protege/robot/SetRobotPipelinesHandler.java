@@ -14,7 +14,8 @@ import reactor.core.publisher.Mono;
 
 @WebProtegeHandler
 public class SetRobotPipelinesHandler
-    implements CommandHandler<SetRobotPipelinesRequest, SetRobotPipelinesResponse> {
+    implements
+      CommandHandler<SetRobotPipelinesRequest, SetRobotPipelinesResponse> {
 
   private final PipelineRepository pipelineRepository;
 
@@ -35,7 +36,7 @@ public class SetRobotPipelinesHandler
 
   @Override
   public Mono<SetRobotPipelinesResponse> handleRequest(SetRobotPipelinesRequest request,
-                                                       ExecutionContext executionContext) {
+      ExecutionContext executionContext) {
     var projectId = request.projectId();
     var normalized = normalizeProjectId(projectId, request.pipelines());
     pipelineRepository.deletePipelines(projectId);
@@ -45,7 +46,7 @@ public class SetRobotPipelinesHandler
   }
 
   private List<RobotPipeline> normalizeProjectId(@Nonnull edu.stanford.protege.webprotege.common.ProjectId projectId,
-                                                 @Nonnull List<RobotPipeline> pipelines) {
+      @Nonnull List<RobotPipeline> pipelines) {
     return pipelines.stream()
         .map(pipeline -> new RobotPipeline(
             projectId,
