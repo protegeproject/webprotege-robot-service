@@ -23,28 +23,28 @@ import org.obolibrary.robot.Command;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "@type")
 @JsonSubTypes({
-    @JsonSubTypes.Type(RobotAnnotateCommand.class),
-    @JsonSubTypes.Type(RobotExtractCommand.class),
-    @JsonSubTypes.Type(RobotCollapseCommand.class),
-    @JsonSubTypes.Type(RobotConvertCommand.class),
-    @JsonSubTypes.Type(RobotExpandCommand.class),
-    @JsonSubTypes.Type(RobotExportCommand.class),
-    @JsonSubTypes.Type(RobotFilterCommand.class),
-    @JsonSubTypes.Type(RobotMergeCommand.class),
-    @JsonSubTypes.Type(RobotReduceCommand.class),
-    @JsonSubTypes.Type(RobotRelaxCommand.class),
-    @JsonSubTypes.Type(RobotRemoveCommand.class),
-    @JsonSubTypes.Type(RobotRepairCommand.class)})
+        @JsonSubTypes.Type(RobotAnnotateCommand.class),
+        @JsonSubTypes.Type(RobotExtractCommand.class),
+        @JsonSubTypes.Type(RobotCollapseCommand.class),
+        @JsonSubTypes.Type(RobotConvertCommand.class),
+        @JsonSubTypes.Type(RobotExpandCommand.class),
+        @JsonSubTypes.Type(RobotExportCommand.class),
+        @JsonSubTypes.Type(RobotFilterCommand.class),
+        @JsonSubTypes.Type(RobotMergeCommand.class),
+        @JsonSubTypes.Type(RobotReduceCommand.class),
+        @JsonSubTypes.Type(RobotRelaxCommand.class),
+        @JsonSubTypes.Type(RobotRemoveCommand.class),
+        @JsonSubTypes.Type(RobotRepairCommand.class)})
 public interface RobotCommand {
 
-  @JsonIgnore
-  List<String> getArgs();
+    @JsonIgnore
+    List<String> getArgs();
 
-  @JsonIgnore
-  Command getCommand();
+    @JsonIgnore
+    Command getCommand();
 
-  @JsonIgnore
-  default String[] getArgsArray() {
-    return getArgs().toArray(new String[getArgs().size()]);
-  }
+    @JsonIgnore
+    default String[] getArgsArray() {
+        return getArgs().toArray(new String[getArgs().size()]);
+    }
 }
