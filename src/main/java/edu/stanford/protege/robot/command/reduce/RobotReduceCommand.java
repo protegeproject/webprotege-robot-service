@@ -2,8 +2,8 @@ package edu.stanford.protege.robot.command.reduce;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.collect.ImmutableList;
-import edu.stanford.protege.robot.command.common.Reasoner;
 import edu.stanford.protege.robot.command.RobotCommand;
+import edu.stanford.protege.robot.command.common.Reasoner;
 import java.util.Arrays;
 import java.util.List;
 import org.obolibrary.robot.Command;
@@ -31,7 +31,8 @@ import org.obolibrary.robot.ReduceCommand;
  */
 @JsonTypeName("ReduceCommand")
 public record RobotReduceCommand(Reasoner reasoner, ReduceFlags... flags)
-    implements RobotCommand {
+    implements
+      RobotCommand {
 
   /**
    * Converts this reduce command to ROBOT command-line arguments.
