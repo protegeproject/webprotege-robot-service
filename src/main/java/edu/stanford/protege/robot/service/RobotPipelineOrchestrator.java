@@ -39,7 +39,7 @@ public class RobotPipelineOrchestrator {
       ProjectOntologySnapshotProvider snapshotProvider,
       PipelineStatusRepository pipelineStatusRepository,
       PipelineLogger pipelineLogger,
-                                     @Qualifier("robotPipelineTaskExecutor") Executor pipelineExecutor) {
+      @Qualifier("robotPipelineTaskExecutor") Executor pipelineExecutor) {
     this.executor = executor;
     this.snapshotProvider = snapshotProvider;
     this.pipelineStatusRepository = pipelineStatusRepository;

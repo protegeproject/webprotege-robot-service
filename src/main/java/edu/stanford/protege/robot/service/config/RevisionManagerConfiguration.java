@@ -12,7 +12,6 @@ import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 @Configuration
 public class RevisionManagerConfiguration {

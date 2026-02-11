@@ -19,5 +19,6 @@ class WebProtegeRobotServiceApplicationTest {
   }
 
   @Test
-  void contextLoads() {}
+  void contextLoads() {
+  }
 }
