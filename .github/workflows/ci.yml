@@ -18,4 +18,4 @@ jobs:
           java-version: '21'
           distribution: 'adopt'
       - name: Build with Maven
-        run: mvn --batch-mode package -Dtest="!*Integration*"
+        run: mvn --batch-mode verify -Dtest="!*Integration*"
