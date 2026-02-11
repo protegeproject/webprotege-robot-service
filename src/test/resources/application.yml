@@ -6,5 +6,23 @@ logging:
     org.testcontainers.containers: WARN
     org.testcontainers.utility: WARN
 spring:
+  application:
+    name: webprotege-robot-service-test
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
   main:
     banner-mode: "off"
+webprotege:
+  rabbitmq:
+    requestqueue: webprotege-robot-queue
+    responsequeue: webprotege-robot-response-queue
+    timeout: 60000
+    commands-subscribe: false
+  minio:
+    end-point: http://localhost:9000
+    access-key: test
+    secret-key: test
+    robot-output-documents-bucket-name: robot-output

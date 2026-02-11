@@ -10,8 +10,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @EnableConfigurationProperties(RobotPipelineExecutorProperties.class)
 public class RobotPipelineExecutorConfiguration {
 
-  @Bean
-  Executor robotPipelineExecutor(RobotPipelineExecutorProperties properties) {
+  @Bean(name = "robotPipelineTaskExecutor")
+  Executor robotPipelineTaskExecutor(RobotPipelineExecutorProperties properties) {
     var executor = new ThreadPoolTaskExecutor();
     executor.setCorePoolSize(properties.getCorePoolSize());
     executor.setMaxPoolSize(properties.getMaxPoolSize());
