@@ -18,11 +18,6 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 public class RevisionManagerConfiguration {
 
   @Bean
-  OWLDataFactory dataFactory() {
-    return new OWLDataFactoryImpl();
-  }
-
-  @Bean
   OntologyChangeRecordTranslator ontologyChangeRecordTranslator() {
     return new OntologyChangeRecordTranslatorImpl();
   }
