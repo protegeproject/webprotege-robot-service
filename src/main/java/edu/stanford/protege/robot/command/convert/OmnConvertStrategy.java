@@ -19,10 +19,10 @@ import java.util.List;
 @JsonTypeName("OMN")
 public record OmnConvertStrategy() implements ConvertStrategy {
 
-  public static final String FORMAT_FLAG = "--format";
+    public static final String FORMAT_FLAG = "--format";
 
-  @Override
-  public List<String> getArgs() {
-    return ImmutableList.of(FORMAT_FLAG, ConvertFormat.omn.name());
-  }
+    @Override
+    public List<String> getArgs() {
+        return ImmutableList.of(FORMAT_FLAG, ConvertFormat.omn.name());
+    }
 }

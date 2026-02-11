@@ -24,16 +24,16 @@ import java.util.List;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "@type")
 @JsonSubTypes({
-    @JsonSubTypes.Type(SlmeExtractStrategy.class),
-    @JsonSubTypes.Type(MireotExtractStrategy.class),
-    @JsonSubTypes.Type(SubsetExtractStrategy.class)})
+        @JsonSubTypes.Type(SlmeExtractStrategy.class),
+        @JsonSubTypes.Type(MireotExtractStrategy.class),
+        @JsonSubTypes.Type(SubsetExtractStrategy.class)})
 public interface ExtractStrategy {
 
-  /**
-   * Converts this extraction strategy to command-line arguments for ROBOT.
-   *
-   * @return a list of command-line arguments representing this extraction strategy
-   */
-  @JsonIgnore
-  List<String> getArgs();
+    /**
+     * Converts this extraction strategy to command-line arguments for ROBOT.
+     *
+     * @return a list of command-line arguments representing this extraction strategy
+     */
+    @JsonIgnore
+    List<String> getArgs();
 }

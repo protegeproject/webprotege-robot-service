@@ -8,10 +8,10 @@ package edu.stanford.protege.robot.command.annotate;
  */
 public interface HasType {
 
-  /**
-   * Returns the XSD datatype IRI or prefixed name.
-   *
-   * @return datatype identifier (e.g., "xsd:integer", "xsd:dateTime")
-   */
-  String type();
+    /**
+     * Returns the XSD datatype IRI or prefixed name.
+     *
+     * @return datatype identifier (e.g., "xsd:integer", "xsd:dateTime")
+     */
+    String type();
 }

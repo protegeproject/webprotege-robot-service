@@ -16,35 +16,35 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RevisionManagerConfiguration {
 
-  @Bean
-  OntologyChangeRecordTranslator ontologyChangeRecordTranslator() {
-    return new OntologyChangeRecordTranslatorImpl();
-  }
+    @Bean
+    OntologyChangeRecordTranslator ontologyChangeRecordTranslator() {
+        return new OntologyChangeRecordTranslatorImpl();
+    }
 
-  @Bean
-  ProjectDirectoryFactory projectDirectoryFactory(@Value("${webprotege.directories.data}") File dataDirectory) {
-    return new ProjectDirectoryFactory(dataDirectory);
-  }
+    @Bean
+    ProjectDirectoryFactory projectDirectoryFactory(@Value("${webprotege.directories.data}") File dataDirectory) {
+        return new ProjectDirectoryFactory(dataDirectory);
+    }
 
-  @Bean
-  ChangeHistoryFileFactory changeHistoryFileFactory(ProjectDirectoryFactory projectDirectoryFactory) {
-    return new ChangeHistoryFileFactory(projectDirectoryFactory);
-  }
+    @Bean
+    ChangeHistoryFileFactory changeHistoryFileFactory(ProjectDirectoryFactory projectDirectoryFactory) {
+        return new ChangeHistoryFileFactory(projectDirectoryFactory);
+    }
 
-  @Bean
-  RevisionStoreFactory revisionStoreFactory(ChangeHistoryFileFactory p1,
-      OWLDataFactory p2,
-      OntologyChangeRecordTranslator p3) {
-    return new RevisionStoreFactory(p1, p2, p3);
-  }
+    @Bean
+    RevisionStoreFactory revisionStoreFactory(ChangeHistoryFileFactory p1,
+            OWLDataFactory p2,
+            OntologyChangeRecordTranslator p3) {
+        return new RevisionStoreFactory(p1, p2, p3);
+    }
 
-  @Bean
-  RevisionManagerFactory revisionManagerFactory(RevisionStoreFactory revisionStoreFactory) {
-    return new RevisionManagerFactory(revisionStoreFactory);
-  }
+    @Bean
+    RevisionManagerFactory revisionManagerFactory(RevisionStoreFactory revisionStoreFactory) {
+        return new RevisionManagerFactory(revisionStoreFactory);
+    }
 
-  @Bean
-  HeadRevisionNumberFinder headRevisionNumberFinder(ChangeHistoryFileFactory changeHistoryFileFactory) {
-    return new HeadRevisionNumberFinder(changeHistoryFileFactory);
-  }
+    @Bean
+    HeadRevisionNumberFinder headRevisionNumberFinder(ChangeHistoryFileFactory changeHistoryFileFactory) {
+        return new HeadRevisionNumberFinder(changeHistoryFileFactory);
+    }
 }

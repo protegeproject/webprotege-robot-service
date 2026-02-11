@@ -18,10 +18,10 @@ import java.util.List;
 @JsonTypeName("TTL")
 public record TtlConvertStrategy() implements ConvertStrategy {
 
-  public static final String FORMAT_FLAG = "--format";
+    public static final String FORMAT_FLAG = "--format";
 
-  @Override
-  public List<String> getArgs() {
-    return ImmutableList.of(FORMAT_FLAG, ConvertFormat.ttl.name());
-  }
+    @Override
+    public List<String> getArgs() {
+        return ImmutableList.of(FORMAT_FLAG, ConvertFormat.ttl.name());
+    }
 }

@@ -15,24 +15,24 @@ import java.util.List;
  * --typed-annotation ex:count 42 xsd:integer}
  *
  * @param property
- *          the annotation property IRI or prefixed name
+ *            the annotation property IRI or prefixed name
  * @param value
- *          the annotation value
+ *            the annotation value
  * @param type
- *          the XSD datatype IRI or prefixed name
+ *            the XSD datatype IRI or prefixed name
  */
 @JsonTypeName("TypedAnnotation")
 public record TypedAnnotation(String property, String value, String type) implements Annotation, HasType {
 
-  public static final String ANNOTATION = "--typed-annotation";
+    public static final String ANNOTATION = "--typed-annotation";
 
-  @Override
-  public String getArgName() {
-    return ANNOTATION;
-  }
+    @Override
+    public String getArgName() {
+        return ANNOTATION;
+    }
 
-  @Override
-  public List<String> getArgs() {
-    return ImmutableList.of(getArgName(), property, value, type);
-  }
+    @Override
+    public List<String> getArgs() {
+        return ImmutableList.of(getArgName(), property, value, type);
+    }
 }

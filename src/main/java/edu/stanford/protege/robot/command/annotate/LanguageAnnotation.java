@@ -15,24 +15,24 @@ import java.util.List;
  * --language-annotation dc:title Exemple fr}
  *
  * @param property
- *          the annotation property IRI or prefixed name
+ *            the annotation property IRI or prefixed name
  * @param value
- *          the annotation value
+ *            the annotation value
  * @param lang
- *          the ISO 639-1 language code (e.g., "en", "fr", "de")
+ *            the ISO 639-1 language code (e.g., "en", "fr", "de")
  */
 @JsonTypeName("LanguageAnnotation")
 public record LanguageAnnotation(String property, String value, String lang) implements Annotation, HasLang {
 
-  public static final String LANGUAGE_ANNOTATION = "--language-annotation";
+    public static final String LANGUAGE_ANNOTATION = "--language-annotation";
 
-  @Override
-  public String getArgName() {
-    return LANGUAGE_ANNOTATION;
-  }
+    @Override
+    public String getArgName() {
+        return LANGUAGE_ANNOTATION;
+    }
 
-  @Override
-  public List<String> getArgs() {
-    return ImmutableList.of(getArgName(), property, value, lang);
-  }
+    @Override
+    public List<String> getArgs() {
+        return ImmutableList.of(getArgName(), property, value, lang);
+    }
 }

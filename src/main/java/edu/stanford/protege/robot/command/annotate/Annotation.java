@@ -14,41 +14,41 @@ import java.util.List;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "@type")
 @JsonSubTypes({
-    @JsonSubTypes.Type(PlainAnnotation.class),
-    @JsonSubTypes.Type(TypedAnnotation.class),
-    @JsonSubTypes.Type(LanguageAnnotation.class),
-    @JsonSubTypes.Type(LinkAnnotation.class)})
+        @JsonSubTypes.Type(PlainAnnotation.class),
+        @JsonSubTypes.Type(TypedAnnotation.class),
+        @JsonSubTypes.Type(LanguageAnnotation.class),
+        @JsonSubTypes.Type(LinkAnnotation.class)})
 public interface Annotation {
 
-  /**
-   * Returns the ROBOT CLI flag for this annotation type.
-   *
-   * @return the flag (e.g., {@code "--annotation"}, {@code "--typed-annotation"})
-   */
-  @JsonIgnore
-  String getArgName();
+    /**
+     * Returns the ROBOT CLI flag for this annotation type.
+     *
+     * @return the flag (e.g., {@code "--annotation"}, {@code "--typed-annotation"})
+     */
+    @JsonIgnore
+    String getArgName();
 
-  /**
-   * Returns the annotation property IRI or prefixed name.
-   *
-   * @return property identifier (e.g., {@code "rdfs:comment"}, {@code
-   *     "http://purl.org/dc/terms/license"})
-   */
-  String property();
+    /**
+     * Returns the annotation property IRI or prefixed name.
+     *
+     * @return property identifier (e.g., {@code "rdfs:comment"}, {@code
+     *     "http://purl.org/dc/terms/license"})
+     */
+    String property();
 
-  /**
-   * Returns the annotation value.
-   *
-   * @return lexical value of the annotation
-   */
-  String value();
+    /**
+     * Returns the annotation value.
+     *
+     * @return lexical value of the annotation
+     */
+    String value();
 
-  /**
-   * Converts this annotation to ROBOT command-line arguments.
-   *
-   * @return ordered list of CLI arguments including flag, property, value, and any additional
-   *         parameters
-   */
-  @JsonIgnore
-  List<String> getArgs();
+    /**
+     * Converts this annotation to ROBOT command-line arguments.
+     *
+     * @return ordered list of CLI arguments including flag, property, value, and any additional
+     *         parameters
+     */
+    @JsonIgnore
+    List<String> getArgs();
 }

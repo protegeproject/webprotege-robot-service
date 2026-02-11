@@ -23,65 +23,65 @@ import org.obolibrary.robot.ExpandCommand;
  * the expandTerms and noExpandTerms parameters.
  *
  * @param expandTerms
- *          list of term CURIEs or full IRIs to include in expansion (empty list means expand all)
+ *            list of term CURIEs or full IRIs to include in expansion (empty list means expand all)
  * @param noExpandTerms
- *          list of term CURIEs or full IRIs to exclude from expansion (empty list means exclude
- *          none)
+ *            list of term CURIEs or full IRIs to exclude from expansion (empty list means exclude
+ *            none)
  * @param flags
- *          optional behavior flags
+ *            optional behavior flags
  *
  * @see <a href="https://robot.obolibrary.org/expand">ROBOT Expand Documentation</a>
  */
 @JsonTypeName("ExpandCommand")
 public record RobotExpandCommand(
-    List<String> expandTerms, List<String> noExpandTerms, ExpandFlags... flags)
-    implements
-      RobotCommand {
+        List<String> expandTerms, List<String> noExpandTerms, ExpandFlags... flags)
+        implements
+            RobotCommand {
 
-  /**
-   * Converts this expand command to ROBOT command-line arguments.
-   *
-   * <p>
-   * Generates arguments in the format: {@code [--annotate-expansion-axioms true]
-   * [--expand-term TERM]... [--no-expand-term TERM]...}
-   *
-   * @return immutable list of command-line arguments for ROBOT expand
-   */
-  @Override
-  public List<String> getArgs() {
-    var args = ImmutableList.<String>builder();
+    /**
+     * Converts this expand command to ROBOT command-line arguments.
+     *
+     * <p>
+     * Generates arguments in the format: {@code [--annotate-expansion-axioms true]
+     * [--expand-term TERM]... [--no-expand-term TERM]...}
+     *
+     * @return immutable list of command-line arguments for ROBOT expand
+     */
+    @Override
+    public List<String> getArgs() {
+        var args = ImmutableList.<String>builder();
 
-    // Process flags using Arrays.asList() for varargs
-    List<ExpandFlags> flagsList = Arrays.asList(flags);
-    if (flagsList.contains(ExpandFlags.ANNOTATE_EXPANSION_AXIOMS)) {
-      args.add(ExpandFlags.ANNOTATE_EXPANSION_AXIOMS.getFlagName());
-      args.add("true");
+        // Process flags using Arrays.asList() for varargs
+        List<ExpandFlags> flagsList = Arrays.asList(flags);
+        if (flagsList.contains(ExpandFlags.ANNOTATE_EXPANSION_AXIOMS)) {
+            args.add(ExpandFlags.ANNOTATE_EXPANSION_AXIOMS.getFlagName());
+            args.add("true");
+        }
+
+        // Add expand-term flags (repeated for each term)
+        expandTerms.forEach(
+                term -> {
+                    args.add("--expand-term");
+                    args.add(term);
+                });
+
+        // Add no-expand-term flags (repeated for each term)
+        noExpandTerms.forEach(
+                term -> {
+                    args.add("--no-expand-term");
+                    args.add(term);
+                });
+
+        return args.build();
     }
 
-    // Add expand-term flags (repeated for each term)
-    expandTerms.forEach(
-        term -> {
-          args.add("--expand-term");
-          args.add(term);
-        });
-
-    // Add no-expand-term flags (repeated for each term)
-    noExpandTerms.forEach(
-        term -> {
-          args.add("--no-expand-term");
-          args.add(term);
-        });
-
-    return args.build();
-  }
-
-  /**
-   * Returns the ROBOT ExpandCommand instance for execution.
-   *
-   * @return a new ExpandCommand instance
-   */
-  @Override
-  public Command getCommand() {
-    return new ExpandCommand();
-  }
+    /**
+     * Returns the ROBOT ExpandCommand instance for execution.
+     *
+     * @return a new ExpandCommand instance
+     */
+    @Override
+    public Command getCommand() {
+        return new ExpandCommand();
+    }
 }

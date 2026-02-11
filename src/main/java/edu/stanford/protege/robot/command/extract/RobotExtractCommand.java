@@ -18,62 +18,62 @@ import org.obolibrary.robot.ExtractCommand;
  * preserving logical entailments or hierarchy structure depending on the chosen strategy.
  *
  * @param extractStrategy
- *          the extraction method strategy (SLME, MIREOT, or Subset)
+ *            the extraction method strategy (SLME, MIREOT, or Subset)
  * @param extractIntermediates
- *          how to handle intermediate classes in the hierarchy
+ *            how to handle intermediate classes in the hierarchy
  * @param handlingImports
- *          whether to include or exclude imported ontologies
+ *            whether to include or exclude imported ontologies
  * @param flags
- *          optional behavior flags
+ *            optional behavior flags
  *
  * @see <a href="https://robot.obolibrary.org/extract">ROBOT Extract Documentation</a>
  */
 @JsonTypeName("ExtractCommand")
 public record RobotExtractCommand(
-    ExtractStrategy extractStrategy,
-    @Nullable ExtractIntermediates extractIntermediates,
-    @Nullable HandlingImports handlingImports,
-    ExtractFlags... flags)
-    implements
-      RobotCommand {
+        ExtractStrategy extractStrategy,
+        @Nullable ExtractIntermediates extractIntermediates,
+        @Nullable HandlingImports handlingImports,
+        ExtractFlags... flags)
+        implements
+            RobotCommand {
 
-  /**
-   * Converts this extract command to ROBOT command-line arguments.
-   *
-   * <p>
-   * Generates arguments for intermediate handling, imports, and annotation copying options.
-   * The extraction strategy arguments are included via {@link ExtractStrategy#getArgs()}.
-   *
-   * @return immutable list of command-line arguments for ROBOT extract
-   */
-  @Override
-  public List<String> getArgs() {
-    var args = ImmutableList.<String>builder();
-    args.addAll(extractStrategy.getArgs());
-    if (extractIntermediates != null) {
-      args.add("--intermediates");
-      args.add(extractIntermediates.name());
+    /**
+     * Converts this extract command to ROBOT command-line arguments.
+     *
+     * <p>
+     * Generates arguments for intermediate handling, imports, and annotation copying options.
+     * The extraction strategy arguments are included via {@link ExtractStrategy#getArgs()}.
+     *
+     * @return immutable list of command-line arguments for ROBOT extract
+     */
+    @Override
+    public List<String> getArgs() {
+        var args = ImmutableList.<String>builder();
+        args.addAll(extractStrategy.getArgs());
+        if (extractIntermediates != null) {
+            args.add("--intermediates");
+            args.add(extractIntermediates.name());
+        }
+        if (handlingImports != null) {
+            args.add("--imports");
+            args.add(handlingImports.name());
+        }
+        // Process flags using Arrays.asList() for varargs
+        List<ExtractFlags> flagsList = Arrays.asList(flags);
+        if (flagsList.contains(ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS)) {
+            args.add(ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS.getFlagName());
+            args.add("true");
+        }
+        return args.build();
     }
-    if (handlingImports != null) {
-      args.add("--imports");
-      args.add(handlingImports.name());
-    }
-    // Process flags using Arrays.asList() for varargs
-    List<ExtractFlags> flagsList = Arrays.asList(flags);
-    if (flagsList.contains(ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS)) {
-      args.add(ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS.getFlagName());
-      args.add("true");
-    }
-    return args.build();
-  }
 
-  /**
-   * Returns the ROBOT ExtractCommand instance for execution.
-   *
-   * @return a new ExtractCommand instance
-   */
-  @Override
-  public Command getCommand() {
-    return new ExtractCommand();
-  }
+    /**
+     * Returns the ROBOT ExtractCommand instance for execution.
+     *
+     * @return a new ExtractCommand instance
+     */
+    @Override
+    public Command getCommand() {
+        return new ExtractCommand();
+    }
 }

@@ -27,20 +27,20 @@ import java.util.List;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "@type")
 @JsonSubTypes({
-    @JsonSubTypes.Type(OboConvertStrategy.class),
-    @JsonSubTypes.Type(JsonConvertStrategy.class),
-    @JsonSubTypes.Type(OfnConvertStrategy.class),
-    @JsonSubTypes.Type(OmnConvertStrategy.class),
-    @JsonSubTypes.Type(OwlConvertStrategy.class),
-    @JsonSubTypes.Type(OwxConvertStrategy.class),
-    @JsonSubTypes.Type(TtlConvertStrategy.class)})
+        @JsonSubTypes.Type(OboConvertStrategy.class),
+        @JsonSubTypes.Type(JsonConvertStrategy.class),
+        @JsonSubTypes.Type(OfnConvertStrategy.class),
+        @JsonSubTypes.Type(OmnConvertStrategy.class),
+        @JsonSubTypes.Type(OwlConvertStrategy.class),
+        @JsonSubTypes.Type(OwxConvertStrategy.class),
+        @JsonSubTypes.Type(TtlConvertStrategy.class)})
 public interface ConvertStrategy {
 
-  /**
-   * Converts this convert convertStrategy to command-line arguments for ROBOT.
-   *
-   * @return immutable list of CLI arguments for this conversion format
-   */
-  @JsonIgnore
-  List<String> getArgs();
+    /**
+     * Converts this convert convertStrategy to command-line arguments for ROBOT.
+     *
+     * @return immutable list of CLI arguments for this conversion format
+     */
+    @JsonIgnore
+    List<String> getArgs();
 }

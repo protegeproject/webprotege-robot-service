@@ -9,11 +9,11 @@ import javax.annotation.Nonnull;
  * Response message for ROBOT command execution.
  *
  * @param projectId
- *          WebProtege project unique identifier
+ *            WebProtege project unique identifier
  * @param pipelineExecutionId
- *          the unique identifier of a pipeline execution process
+ *            the unique identifier of a pipeline execution process
  */
 public record ExecuteRobotCommandsResponse(
-    @Nonnull ProjectId projectId,
-    @Nonnull PipelineExecutionId pipelineExecutionId) implements Response {
+        @Nonnull ProjectId projectId,
+        @Nonnull PipelineExecutionId pipelineExecutionId) implements Response {
 }

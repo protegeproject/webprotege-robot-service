@@ -25,62 +25,62 @@ import org.obolibrary.robot.RepairCommand;
  * When no specific repair operations are specified, all available repairs are executed.
  *
  * @param annotationProperties
- *          list of annotation property CURIEs or full IRIs to migrate when fixing invalid
- *          references (empty list means no annotation migration). By default, annotation axioms
- *          are not migrated.
+ *            list of annotation property CURIEs or full IRIs to migrate when fixing invalid
+ *            references (empty list means no annotation migration). By default, annotation axioms
+ *            are not migrated.
  * @param flags
- *          varargs array of repair flags to enable specific operations. Supported flags:
- *          {@link RepairFlags#INVALID_REFERENCES} (fix deprecated class references) and
- *          {@link RepairFlags#MERGE_AXIOM_ANNOTATIONS} (merge duplicate axiom annotations).
+ *            varargs array of repair flags to enable specific operations. Supported flags:
+ *            {@link RepairFlags#INVALID_REFERENCES} (fix deprecated class references) and
+ *            {@link RepairFlags#MERGE_AXIOM_ANNOTATIONS} (merge duplicate axiom annotations).
  *
  * @see <a href="https://robot.obolibrary.org/repair">ROBOT Repair Documentation</a>
  */
 @JsonTypeName("RepairCommand")
 public record RobotRepairCommand(List<String> annotationProperties, RepairFlags... flags)
-    implements
-      RobotCommand {
+        implements
+            RobotCommand {
 
-  /**
-   * Converts this repair command to ROBOT command-line arguments.
-   *
-   * @return immutable list of command-line arguments for ROBOT repair
-   */
-  @Override
-  public List<String> getArgs() {
-    var args = ImmutableList.<String>builder();
+    /**
+     * Converts this repair command to ROBOT command-line arguments.
+     *
+     * @return immutable list of command-line arguments for ROBOT repair
+     */
+    @Override
+    public List<String> getArgs() {
+        var args = ImmutableList.<String>builder();
 
-    // Process flags using Arrays.asList() for varargs
-    List<RepairFlags> flagsList = Arrays.asList(flags);
+        // Process flags using Arrays.asList() for varargs
+        List<RepairFlags> flagsList = Arrays.asList(flags);
 
-    // Add invalid-references flag if present
-    if (flagsList.contains(RepairFlags.INVALID_REFERENCES)) {
-      args.add(RepairFlags.INVALID_REFERENCES.getFlagName());
-      args.add("true");
+        // Add invalid-references flag if present
+        if (flagsList.contains(RepairFlags.INVALID_REFERENCES)) {
+            args.add(RepairFlags.INVALID_REFERENCES.getFlagName());
+            args.add("true");
+        }
+
+        // Add annotation properties (repeated --annotation-property flag)
+        annotationProperties.forEach(
+                property -> {
+                    args.add("--annotation-property");
+                    args.add(property);
+                });
+
+        // Add merge-axiom-annotations flag if present
+        if (flagsList.contains(RepairFlags.MERGE_AXIOM_ANNOTATIONS)) {
+            args.add(RepairFlags.MERGE_AXIOM_ANNOTATIONS.getFlagName());
+            args.add("true");
+        }
+
+        return args.build();
     }
 
-    // Add annotation properties (repeated --annotation-property flag)
-    annotationProperties.forEach(
-        property -> {
-          args.add("--annotation-property");
-          args.add(property);
-        });
-
-    // Add merge-axiom-annotations flag if present
-    if (flagsList.contains(RepairFlags.MERGE_AXIOM_ANNOTATIONS)) {
-      args.add(RepairFlags.MERGE_AXIOM_ANNOTATIONS.getFlagName());
-      args.add("true");
+    /**
+     * Returns the ROBOT RepairCommand instance for execution.
+     *
+     * @return a new RepairCommand instance
+     */
+    @Override
+    public Command getCommand() {
+        return new RepairCommand();
     }
-
-    return args.build();
-  }
-
-  /**
-   * Returns the ROBOT RepairCommand instance for execution.
-   *
-   * @return a new RepairCommand instance
-   */
-  @Override
-  public Command getCommand() {
-    return new RepairCommand();
-  }
 }

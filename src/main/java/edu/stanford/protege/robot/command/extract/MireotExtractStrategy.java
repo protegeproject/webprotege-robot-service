@@ -17,54 +17,54 @@ import java.util.List;
  * 
  * <pre>{@code
  * var strategy = new MireotExtractStrategy(
- *     List.of("GO:0008150"), // upper term (root)
- *     List.of("GO:0009987"), // lower term (boundary - descendants excluded)
- *     List.of("GO:0008152") // branch from term (all descendants included)
+ *         List.of("GO:0008150"), // upper term (root)
+ *         List.of("GO:0009987"), // lower term (boundary - descendants excluded)
+ *         List.of("GO:0008152") // branch from term (all descendants included)
  * );
  * }</pre>
  *
  * @param upperTerms
- *          optional upper boundary terms (defaults to root if empty)
+ *            optional upper boundary terms (defaults to root if empty)
  * @param lowerTerms
- *          required lower boundary terms (descendants will be excluded)
+ *            required lower boundary terms (descendants will be excluded)
  * @param branchFromTerms
- *          terms from which to extract all descendants
+ *            terms from which to extract all descendants
  *
  * @see <a href="https://robot.obolibrary.org/extract#mireot">ROBOT MIREOT Documentation</a>
  */
 @JsonTypeName("MIREOT")
 public record MireotExtractStrategy(
-    List<String> upperTerms, List<String> lowerTerms, List<String> branchFromTerms) implements ExtractStrategy {
+        List<String> upperTerms, List<String> lowerTerms, List<String> branchFromTerms) implements ExtractStrategy {
 
-  /**
-   * Converts this MIREOT strategy to ROBOT command-line arguments.
-   *
-   * <p>
-   * Generates arguments in the format:
-   * {@code --method MIREOT [--upper-term TERM]... [--lower-term TERM]... [--branch-from-term TERM]...}
-   *
-   * @return immutable list of command-line arguments for ROBOT extract
-   */
-  @Override
-  public List<String> getArgs() {
-    var args = ImmutableList.<String>builder();
-    args.add("--method");
-    args.add("MIREOT");
-    upperTerms.forEach(
-        term -> {
-          args.add("--upper-term");
-          args.add(term);
-        });
-    lowerTerms.forEach(
-        term -> {
-          args.add("--lower-term");
-          args.add(term);
-        });
-    branchFromTerms.forEach(
-        term -> {
-          args.add("--branch-from-term");
-          args.add(term);
-        });
-    return args.build();
-  }
+    /**
+     * Converts this MIREOT strategy to ROBOT command-line arguments.
+     *
+     * <p>
+     * Generates arguments in the format:
+     * {@code --method MIREOT [--upper-term TERM]... [--lower-term TERM]... [--branch-from-term TERM]...}
+     *
+     * @return immutable list of command-line arguments for ROBOT extract
+     */
+    @Override
+    public List<String> getArgs() {
+        var args = ImmutableList.<String>builder();
+        args.add("--method");
+        args.add("MIREOT");
+        upperTerms.forEach(
+                term -> {
+                    args.add("--upper-term");
+                    args.add(term);
+                });
+        lowerTerms.forEach(
+                term -> {
+                    args.add("--lower-term");
+                    args.add(term);
+                });
+        branchFromTerms.forEach(
+                term -> {
+                    args.add("--branch-from-term");
+                    args.add(term);
+                });
+        return args.build();
+    }
 }

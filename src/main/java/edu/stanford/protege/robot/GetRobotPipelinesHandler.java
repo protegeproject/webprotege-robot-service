@@ -11,30 +11,30 @@ import reactor.core.publisher.Mono;
 
 @WebProtegeHandler
 public class GetRobotPipelinesHandler
-    implements
-      CommandHandler<GetRobotPipelinesRequest, GetRobotPipelinesResponse> {
+        implements
+            CommandHandler<GetRobotPipelinesRequest, GetRobotPipelinesResponse> {
 
-  private final PipelineRepository pipelineRepository;
+    private final PipelineRepository pipelineRepository;
 
-  public GetRobotPipelinesHandler(PipelineRepository pipelineRepository) {
-    this.pipelineRepository = pipelineRepository;
-  }
+    public GetRobotPipelinesHandler(PipelineRepository pipelineRepository) {
+        this.pipelineRepository = pipelineRepository;
+    }
 
-  @Nonnull
-  @Override
-  public String getChannelName() {
-    return GetRobotPipelinesRequest.CHANNEL;
-  }
+    @Nonnull
+    @Override
+    public String getChannelName() {
+        return GetRobotPipelinesRequest.CHANNEL;
+    }
 
-  @Override
-  public Class<GetRobotPipelinesRequest> getRequestClass() {
-    return GetRobotPipelinesRequest.class;
-  }
+    @Override
+    public Class<GetRobotPipelinesRequest> getRequestClass() {
+        return GetRobotPipelinesRequest.class;
+    }
 
-  @Override
-  public Mono<GetRobotPipelinesResponse> handleRequest(GetRobotPipelinesRequest request,
-      ExecutionContext executionContext) {
-    var pipelines = pipelineRepository.findPipelines(request.projectId());
-    return Mono.just(new GetRobotPipelinesResponse(pipelines));
-  }
+    @Override
+    public Mono<GetRobotPipelinesResponse> handleRequest(GetRobotPipelinesRequest request,
+            ExecutionContext executionContext) {
+        var pipelines = pipelineRepository.findPipelines(request.projectId());
+        return Mono.just(new GetRobotPipelinesResponse(pipelines));
+    }
 }

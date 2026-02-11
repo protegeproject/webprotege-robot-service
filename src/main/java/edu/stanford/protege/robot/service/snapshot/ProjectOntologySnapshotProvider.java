@@ -20,84 +20,84 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProjectOntologySnapshotProvider {
 
-  private static final Logger logger = LoggerFactory.getLogger(ProjectOntologySnapshotProvider.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProjectOntologySnapshotProvider.class);
 
-  private static final int MAX_LOAD_ATTEMPTS = 3;
-  private static final long LOAD_RETRY_DELAY_MS = 250;
+    private static final int MAX_LOAD_ATTEMPTS = 3;
+    private static final long LOAD_RETRY_DELAY_MS = 250;
 
-  private final RevisionManagerFactory revisionManagerFactory;
-  private final HeadRevisionNumberFinder headRevisionNumberFinder;
-  private final ChangeHistoryFileFactory changeHistoryFileFactory;
+    private final RevisionManagerFactory revisionManagerFactory;
+    private final HeadRevisionNumberFinder headRevisionNumberFinder;
+    private final ChangeHistoryFileFactory changeHistoryFileFactory;
 
-  public ProjectOntologySnapshotProvider(@Nonnull RevisionManagerFactory revisionManagerFactory,
-      @Nonnull HeadRevisionNumberFinder headRevisionNumberFinder,
-      @Nonnull ChangeHistoryFileFactory changeHistoryFileFactory) {
-    this.revisionManagerFactory = revisionManagerFactory;
-    this.headRevisionNumberFinder = headRevisionNumberFinder;
-    this.changeHistoryFileFactory = changeHistoryFileFactory;
-  }
-
-  public ProjectOntologySnapshot createSnapshot(@Nonnull ProjectId projectId) {
-    var changeHistoryFile = changeHistoryFileFactory.getChangeHistoryFile(projectId);
-    if (!changeHistoryFile.exists()) {
-      throw new RobotServiceRuntimeException("Change history file not found for project " + projectId
-          + " at " + changeHistoryFile.getAbsolutePath());
+    public ProjectOntologySnapshotProvider(@Nonnull RevisionManagerFactory revisionManagerFactory,
+            @Nonnull HeadRevisionNumberFinder headRevisionNumberFinder,
+            @Nonnull ChangeHistoryFileFactory changeHistoryFileFactory) {
+        this.revisionManagerFactory = revisionManagerFactory;
+        this.headRevisionNumberFinder = headRevisionNumberFinder;
+        this.changeHistoryFileFactory = changeHistoryFileFactory;
     }
 
-    var revisionManager = loadRevisionManagerWithRetry(projectId);
-    var revisionNumber = revisionManager.getCurrentRevision();
-    var ontologyManager = revisionManager.getOntologyManagerForRevision(revisionNumber);
-    var ontology = selectOntology(ontologyManager)
-        .orElseThrow(() -> new RobotServiceRuntimeException("No ontology found after loading revisions for "
-            + projectId));
-    return new ProjectOntologySnapshot(ontology, revisionNumber.getValue());
-  }
+    public ProjectOntologySnapshot createSnapshot(@Nonnull ProjectId projectId) {
+        var changeHistoryFile = changeHistoryFileFactory.getChangeHistoryFile(projectId);
+        if (!changeHistoryFile.exists()) {
+            throw new RobotServiceRuntimeException("Change history file not found for project " + projectId
+                    + " at " + changeHistoryFile.getAbsolutePath());
+        }
 
-  private RevisionManager loadRevisionManagerWithRetry(ProjectId projectId) {
-    RevisionManager revisionManager = null;
-    RevisionNumber headRevision = null;
+        var revisionManager = loadRevisionManagerWithRetry(projectId);
+        var revisionNumber = revisionManager.getCurrentRevision();
+        var ontologyManager = revisionManager.getOntologyManagerForRevision(revisionNumber);
+        var ontology = selectOntology(ontologyManager)
+                .orElseThrow(() -> new RobotServiceRuntimeException("No ontology found after loading revisions for "
+                        + projectId));
+        return new ProjectOntologySnapshot(ontology, revisionNumber.getValue());
+    }
 
-    for (int attempt = 1; attempt <= MAX_LOAD_ATTEMPTS; attempt++) {
-      revisionManager = revisionManagerFactory.createRevisionManager(projectId);
-      var currentRevision = revisionManager.getCurrentRevision();
+    private RevisionManager loadRevisionManagerWithRetry(ProjectId projectId) {
+        RevisionManager revisionManager = null;
+        RevisionNumber headRevision = null;
 
-      try {
-        headRevision = headRevisionNumberFinder.getHeadRevisionNumber(projectId);
-      } catch (IOException e) {
-        logger.warn("{} Unable to read head revision number: {}", projectId, e.getMessage());
-      }
+        for (int attempt = 1; attempt <= MAX_LOAD_ATTEMPTS; attempt++) {
+            revisionManager = revisionManagerFactory.createRevisionManager(projectId);
+            var currentRevision = revisionManager.getCurrentRevision();
 
-      if (headRevision == null || currentRevision.compareTo(headRevision) >= 0) {
+            try {
+                headRevision = headRevisionNumberFinder.getHeadRevisionNumber(projectId);
+            } catch (IOException e) {
+                logger.warn("{} Unable to read head revision number: {}", projectId, e.getMessage());
+            }
+
+            if (headRevision == null || currentRevision.compareTo(headRevision) >= 0) {
+                return revisionManager;
+            }
+
+            logger.warn("{} Loaded revision {} but head appears to be {}. Retrying load (attempt {}/{})",
+                    projectId, currentRevision.getValue(), headRevision.getValue(), attempt, MAX_LOAD_ATTEMPTS);
+            sleepBeforeRetry();
+        }
+
+        logger.warn("{} Proceeding with revision {} (head was {}) after retries",
+                projectId,
+                revisionManager.getCurrentRevision().getValue(),
+                headRevision == null ? "unknown" : headRevision.getValue());
         return revisionManager;
-      }
-
-      logger.warn("{} Loaded revision {} but head appears to be {}. Retrying load (attempt {}/{})",
-          projectId, currentRevision.getValue(), headRevision.getValue(), attempt, MAX_LOAD_ATTEMPTS);
-      sleepBeforeRetry();
     }
 
-    logger.warn("{} Proceeding with revision {} (head was {}) after retries",
-        projectId,
-        revisionManager.getCurrentRevision().getValue(),
-        headRevision == null ? "unknown" : headRevision.getValue());
-    return revisionManager;
-  }
-
-  private void sleepBeforeRetry() {
-    try {
-      Thread.sleep(LOAD_RETRY_DELAY_MS);
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
+    private void sleepBeforeRetry() {
+        try {
+            Thread.sleep(LOAD_RETRY_DELAY_MS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
-  }
 
-  private Optional<OWLOntology> selectOntology(OWLOntologyManager ontologyManager) {
-    if (ontologyManager.getOntologies().isEmpty()) {
-      return Optional.empty();
+    private Optional<OWLOntology> selectOntology(OWLOntologyManager ontologyManager) {
+        if (ontologyManager.getOntologies().isEmpty()) {
+            return Optional.empty();
+        }
+        return ontologyManager.getOntologies().stream()
+                .sorted(Comparator.comparing(o -> o.getOntologyID().getOntologyIRI().isPresent()))
+                .findFirst();
     }
-    return ontologyManager.getOntologies().stream()
-        .sorted(Comparator.comparing(o -> o.getOntologyID().getOntologyIRI().isPresent()))
-        .findFirst();
-  }
 
 }

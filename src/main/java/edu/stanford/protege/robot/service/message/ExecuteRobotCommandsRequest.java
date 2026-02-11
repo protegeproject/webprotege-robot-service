@@ -17,24 +17,24 @@ import javax.annotation.Nonnull;
  * ontology path, output path, and a list of commands to execute sequentially.
  *
  * @param projectId
- *          WebProtege unique project identifier
+ *            WebProtege unique project identifier
  * @param pipeline
- *          the ROBOT pipeline containing the sequence of commands to execute
+ *            the ROBOT pipeline containing the sequence of commands to execute
  */
 @JsonTypeName(CHANNEL)
 public record ExecuteRobotCommandsRequest(
-    @Nonnull ProjectId projectId,
-    @Nonnull RobotPipeline pipeline) implements Request<ExecuteRobotCommandsResponse> {
+        @Nonnull ProjectId projectId,
+        @Nonnull RobotPipeline pipeline) implements Request<ExecuteRobotCommandsResponse> {
 
-  public static final String CHANNEL = "webprotege.robot.ExecuteRobotCommands";
+    public static final String CHANNEL = "webprotege.robot.ExecuteRobotCommands";
 
-  public ExecuteRobotCommandsRequest {
-    Objects.requireNonNull(projectId, "Project ID cannot be null");
-    Objects.requireNonNull(pipeline, "Pipeline cannot be null");
-  }
+    public ExecuteRobotCommandsRequest {
+        Objects.requireNonNull(projectId, "Project ID cannot be null");
+        Objects.requireNonNull(pipeline, "Pipeline cannot be null");
+    }
 
-  @Override
-  public String getChannel() {
-    return CHANNEL;
-  }
+    @Override
+    public String getChannel() {
+        return CHANNEL;
+    }
 }

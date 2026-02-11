@@ -11,16 +11,16 @@ import javax.annotation.Nonnull;
 
 @JsonTypeName(CHANNEL)
 public record SnapshotOntologyFailedEvent(
-    @Nonnull ProjectId projectId,
-    @Nonnull PipelineExecutionId executionId,
-    @Nonnull PipelineId pipelineId,
-    @Nonnull EventId eventId,
-    @Nonnull String errorMessage) implements SnapshotOntologyEvent {
+        @Nonnull ProjectId projectId,
+        @Nonnull PipelineExecutionId executionId,
+        @Nonnull PipelineId pipelineId,
+        @Nonnull EventId eventId,
+        @Nonnull String errorMessage) implements SnapshotOntologyEvent {
 
-  public static final String CHANNEL = "webprotege.events.robot.SnapshotOntologyFailed";
+    public static final String CHANNEL = "webprotege.events.robot.SnapshotOntologyFailed";
 
-  @Override
-  public String getChannel() {
-    return CHANNEL;
-  }
+    @Override
+    public String getChannel() {
+        return CHANNEL;
+    }
 }

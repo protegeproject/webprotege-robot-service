@@ -9,269 +9,269 @@ import org.obolibrary.robot.ExtractCommand;
 
 class RobotExtractCommandTest {
 
-  @Nested
-  class GetCommand {
+    @Nested
+    class GetCommand {
 
-    @Test
-    void shouldReturnExtractCommandInstance() {
-      var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(strategy, null, null);
+        @Test
+        void shouldReturnExtractCommandInstance() {
+            var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
+            var command = new RobotExtractCommand(strategy, null, null);
 
-      var result = command.getCommand();
+            var result = command.getCommand();
 
-      assertThat(result)
-          .isNotNull()
-          .isInstanceOf(ExtractCommand.class);
-    }
-  }
-
-  @Nested
-  class GetArgsWithNullOptions {
-
-    @Test
-    void shouldGenerateMinimalArgs() {
-      var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(strategy, null, null);
-
-      var args = command.getArgs();
-
-      assertThat(args)
-          .containsExactly("--method", "BOT", "--term", "GO:0008150");
-    }
-  }
-
-  @Nested
-  class GetArgsWithIntermediates {
-
-    @Test
-    void shouldIncludeIntermediatesAll() {
-      var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(strategy, ExtractIntermediates.all, null);
-
-      var args = command.getArgs();
-
-      assertThat(args)
-          .containsExactly("--method", "BOT", "--term", "GO:0008150", "--intermediates", "all");
+            assertThat(result)
+                    .isNotNull()
+                    .isInstanceOf(ExtractCommand.class);
+        }
     }
 
-    @Test
-    void shouldIncludeIntermediatesMinimal() {
-      var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(strategy, ExtractIntermediates.minimal, null);
+    @Nested
+    class GetArgsWithNullOptions {
 
-      var args = command.getArgs();
+        @Test
+        void shouldGenerateMinimalArgs() {
+            var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
+            var command = new RobotExtractCommand(strategy, null, null);
 
-      assertThat(args)
-          .containsExactly(
-              "--method", "BOT", "--term", "GO:0008150", "--intermediates", "minimal");
+            var args = command.getArgs();
+
+            assertThat(args)
+                    .containsExactly("--method", "BOT", "--term", "GO:0008150");
+        }
     }
 
-    @Test
-    void shouldIncludeIntermediatesNone() {
-      var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(strategy, ExtractIntermediates.none, null);
+    @Nested
+    class GetArgsWithIntermediates {
 
-      var args = command.getArgs();
+        @Test
+        void shouldIncludeIntermediatesAll() {
+            var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
+            var command = new RobotExtractCommand(strategy, ExtractIntermediates.all, null);
 
-      assertThat(args)
-          .containsExactly("--method", "BOT", "--term", "GO:0008150", "--intermediates", "none");
-    }
-  }
+            var args = command.getArgs();
 
-  @Nested
-  class GetArgsWithImportsHandling {
+            assertThat(args)
+                    .containsExactly("--method", "BOT", "--term", "GO:0008150", "--intermediates", "all");
+        }
 
-    @Test
-    void shouldIncludeImportsInclude() {
-      var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(strategy, null, HandlingImports.include);
+        @Test
+        void shouldIncludeIntermediatesMinimal() {
+            var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
+            var command = new RobotExtractCommand(strategy, ExtractIntermediates.minimal, null);
 
-      var args = command.getArgs();
+            var args = command.getArgs();
 
-      assertThat(args)
-          .containsExactly("--method", "BOT", "--term", "GO:0008150", "--imports", "include");
-    }
+            assertThat(args)
+                    .containsExactly(
+                            "--method", "BOT", "--term", "GO:0008150", "--intermediates", "minimal");
+        }
 
-    @Test
-    void shouldIncludeImportsExclude() {
-      var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(strategy, null, HandlingImports.exclude);
+        @Test
+        void shouldIncludeIntermediatesNone() {
+            var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
+            var command = new RobotExtractCommand(strategy, ExtractIntermediates.none, null);
 
-      var args = command.getArgs();
+            var args = command.getArgs();
 
-      assertThat(args)
-          .containsExactly("--method", "BOT", "--term", "GO:0008150", "--imports", "exclude");
-    }
-  }
-
-  @Nested
-  class GetArgsWithCopyOntologyAnnotations {
-
-    @Test
-    void shouldIncludeCopyOntologyAnnotationsWhenFlagProvided() {
-      var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(
-          strategy, null, null, ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS);
-
-      var args = command.getArgs();
-
-      assertThat(args)
-          .containsExactly(
-              "--method", "BOT", "--term", "GO:0008150", "--copy-ontology-annotations", "true");
+            assertThat(args)
+                    .containsExactly("--method", "BOT", "--term", "GO:0008150", "--intermediates", "none");
+        }
     }
 
-    @Test
-    void shouldOmitCopyOntologyAnnotationsWhenFlagNotProvided() {
-      var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(strategy, null, null);
+    @Nested
+    class GetArgsWithImportsHandling {
 
-      var args = command.getArgs();
+        @Test
+        void shouldIncludeImportsInclude() {
+            var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
+            var command = new RobotExtractCommand(strategy, null, HandlingImports.include);
 
-      assertThat(args)
-          .containsExactly("--method", "BOT", "--term", "GO:0008150");
-    }
-  }
+            var args = command.getArgs();
 
-  @Nested
-  class GetArgsWithAllOptions {
+            assertThat(args)
+                    .containsExactly("--method", "BOT", "--term", "GO:0008150", "--imports", "include");
+        }
 
-    @Test
-    void shouldIncludeAllOptionsInCorrectOrder() {
-      var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(
-          strategy,
-          ExtractIntermediates.minimal,
-          HandlingImports.include,
-          ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS);
+        @Test
+        void shouldIncludeImportsExclude() {
+            var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
+            var command = new RobotExtractCommand(strategy, null, HandlingImports.exclude);
 
-      var args = command.getArgs();
+            var args = command.getArgs();
 
-      assertThat(args)
-          .containsExactly(
-              "--method", "BOT",
-              "--term", "GO:0008150",
-              "--intermediates", "minimal",
-              "--imports", "include",
-              "--copy-ontology-annotations", "true");
+            assertThat(args)
+                    .containsExactly("--method", "BOT", "--term", "GO:0008150", "--imports", "exclude");
+        }
     }
 
-    @Test
-    void shouldWorkWithMireotStrategy() {
-      var strategy = new MireotExtractStrategy(
-          List.of("GO:0008150"),
-          List.of("GO:0009987"),
-          List.of());
-      var command = new RobotExtractCommand(
-          strategy,
-          ExtractIntermediates.all,
-          HandlingImports.exclude);
+    @Nested
+    class GetArgsWithCopyOntologyAnnotations {
 
-      var args = command.getArgs();
+        @Test
+        void shouldIncludeCopyOntologyAnnotationsWhenFlagProvided() {
+            var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
+            var command = new RobotExtractCommand(
+                    strategy, null, null, ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS);
 
-      assertThat(args)
-          .containsExactly(
-              "--method", "MIREOT",
-              "--upper-term", "GO:0008150",
-              "--lower-term", "GO:0009987",
-              "--intermediates", "all",
-              "--imports", "exclude");
+            var args = command.getArgs();
+
+            assertThat(args)
+                    .containsExactly(
+                            "--method", "BOT", "--term", "GO:0008150", "--copy-ontology-annotations", "true");
+        }
+
+        @Test
+        void shouldOmitCopyOntologyAnnotationsWhenFlagNotProvided() {
+            var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
+            var command = new RobotExtractCommand(strategy, null, null);
+
+            var args = command.getArgs();
+
+            assertThat(args)
+                    .containsExactly("--method", "BOT", "--term", "GO:0008150");
+        }
     }
 
-    @Test
-    void shouldWorkWithSubsetStrategy() {
-      var strategy = new SubsetExtractStrategy(List.of("GO:0008150", "GO:0003674"));
-      var command = new RobotExtractCommand(
-          strategy,
-          ExtractIntermediates.none,
-          HandlingImports.include,
-          ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS);
+    @Nested
+    class GetArgsWithAllOptions {
 
-      var args = command.getArgs();
+        @Test
+        void shouldIncludeAllOptionsInCorrectOrder() {
+            var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
+            var command = new RobotExtractCommand(
+                    strategy,
+                    ExtractIntermediates.minimal,
+                    HandlingImports.include,
+                    ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS);
 
-      assertThat(args)
-          .containsExactly(
-              "--method", "subset",
-              "--term", "GO:0008150",
-              "--term", "GO:0003674",
-              "--intermediates", "none",
-              "--imports", "include",
-              "--copy-ontology-annotations", "true");
+            var args = command.getArgs();
+
+            assertThat(args)
+                    .containsExactly(
+                            "--method", "BOT",
+                            "--term", "GO:0008150",
+                            "--intermediates", "minimal",
+                            "--imports", "include",
+                            "--copy-ontology-annotations", "true");
+        }
+
+        @Test
+        void shouldWorkWithMireotStrategy() {
+            var strategy = new MireotExtractStrategy(
+                    List.of("GO:0008150"),
+                    List.of("GO:0009987"),
+                    List.of());
+            var command = new RobotExtractCommand(
+                    strategy,
+                    ExtractIntermediates.all,
+                    HandlingImports.exclude);
+
+            var args = command.getArgs();
+
+            assertThat(args)
+                    .containsExactly(
+                            "--method", "MIREOT",
+                            "--upper-term", "GO:0008150",
+                            "--lower-term", "GO:0009987",
+                            "--intermediates", "all",
+                            "--imports", "exclude");
+        }
+
+        @Test
+        void shouldWorkWithSubsetStrategy() {
+            var strategy = new SubsetExtractStrategy(List.of("GO:0008150", "GO:0003674"));
+            var command = new RobotExtractCommand(
+                    strategy,
+                    ExtractIntermediates.none,
+                    HandlingImports.include,
+                    ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS);
+
+            var args = command.getArgs();
+
+            assertThat(args)
+                    .containsExactly(
+                            "--method", "subset",
+                            "--term", "GO:0008150",
+                            "--term", "GO:0003674",
+                            "--intermediates", "none",
+                            "--imports", "include",
+                            "--copy-ontology-annotations", "true");
+        }
     }
-  }
 
-  @Nested
-  class GetArgsWithPartialOptions {
+    @Nested
+    class GetArgsWithPartialOptions {
 
-    @Test
-    void shouldIncludeOnlyIntermediatesAndCopyOntologyAnnotations() {
-      var strategy = new SlmeExtractStrategy(SlmeExtractMethod.TOP, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(
-          strategy,
-          ExtractIntermediates.minimal,
-          null,
-          ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS);
+        @Test
+        void shouldIncludeOnlyIntermediatesAndCopyOntologyAnnotations() {
+            var strategy = new SlmeExtractStrategy(SlmeExtractMethod.TOP, List.of("GO:0008150"));
+            var command = new RobotExtractCommand(
+                    strategy,
+                    ExtractIntermediates.minimal,
+                    null,
+                    ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS);
 
-      var args = command.getArgs();
+            var args = command.getArgs();
 
-      assertThat(args)
-          .containsExactly(
-              "--method", "TOP",
-              "--term", "GO:0008150",
-              "--intermediates", "minimal",
-              "--copy-ontology-annotations", "true");
+            assertThat(args)
+                    .containsExactly(
+                            "--method", "TOP",
+                            "--term", "GO:0008150",
+                            "--intermediates", "minimal",
+                            "--copy-ontology-annotations", "true");
+        }
+
+        @Test
+        void shouldIncludeOnlyImports() {
+            var strategy = new SlmeExtractStrategy(SlmeExtractMethod.STAR, List.of("GO:0008150"));
+            var command = new RobotExtractCommand(
+                    strategy,
+                    null,
+                    HandlingImports.exclude);
+
+            var args = command.getArgs();
+
+            assertThat(args)
+                    .containsExactly(
+                            "--method", "STAR",
+                            "--term", "GO:0008150",
+                            "--imports", "exclude");
+        }
+
+        @Test
+        void shouldIncludeOnlyIntermediatesAndImports() {
+            var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
+            var command = new RobotExtractCommand(
+                    strategy,
+                    ExtractIntermediates.all,
+                    HandlingImports.include);
+
+            var args = command.getArgs();
+
+            assertThat(args)
+                    .containsExactly(
+                            "--method", "BOT",
+                            "--term", "GO:0008150",
+                            "--intermediates", "all",
+                            "--imports", "include");
+        }
     }
 
-    @Test
-    void shouldIncludeOnlyImports() {
-      var strategy = new SlmeExtractStrategy(SlmeExtractMethod.STAR, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(
-          strategy,
-          null,
-          HandlingImports.exclude);
+    @Nested
+    class Immutability {
 
-      var args = command.getArgs();
+        @Test
+        void shouldReturnImmutableList() {
+            var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
+            var command = new RobotExtractCommand(
+                    strategy,
+                    ExtractIntermediates.minimal,
+                    HandlingImports.include,
+                    ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS);
 
-      assertThat(args)
-          .containsExactly(
-              "--method", "STAR",
-              "--term", "GO:0008150",
-              "--imports", "exclude");
+            var args = command.getArgs();
+
+            assertThat(args).isUnmodifiable();
+        }
     }
-
-    @Test
-    void shouldIncludeOnlyIntermediatesAndImports() {
-      var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(
-          strategy,
-          ExtractIntermediates.all,
-          HandlingImports.include);
-
-      var args = command.getArgs();
-
-      assertThat(args)
-          .containsExactly(
-              "--method", "BOT",
-              "--term", "GO:0008150",
-              "--intermediates", "all",
-              "--imports", "include");
-    }
-  }
-
-  @Nested
-  class Immutability {
-
-    @Test
-    void shouldReturnImmutableList() {
-      var strategy = new SlmeExtractStrategy(SlmeExtractMethod.BOT, List.of("GO:0008150"));
-      var command = new RobotExtractCommand(
-          strategy,
-          ExtractIntermediates.minimal,
-          HandlingImports.include,
-          ExtractFlags.COPY_ONTOLOGY_ANNOTATIONS);
-
-      var args = command.getArgs();
-
-      assertThat(args).isUnmodifiable();
-    }
-  }
 }

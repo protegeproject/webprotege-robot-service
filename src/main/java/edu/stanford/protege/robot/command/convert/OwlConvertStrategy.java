@@ -18,10 +18,10 @@ import java.util.List;
 @JsonTypeName("OWL")
 public record OwlConvertStrategy() implements ConvertStrategy {
 
-  public static final String FORMAT_FLAG = "--format";
+    public static final String FORMAT_FLAG = "--format";
 
-  @Override
-  public List<String> getArgs() {
-    return ImmutableList.of(FORMAT_FLAG, ConvertFormat.owl.name());
-  }
+    @Override
+    public List<String> getArgs() {
+        return ImmutableList.of(FORMAT_FLAG, ConvertFormat.owl.name());
+    }
 }
