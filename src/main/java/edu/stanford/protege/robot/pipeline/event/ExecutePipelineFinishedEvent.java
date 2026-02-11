@@ -11,15 +11,15 @@ import javax.annotation.Nonnull;
 
 @JsonTypeName(CHANNEL)
 public record ExecutePipelineFinishedEvent(
-    @Nonnull ProjectId projectId,
-    @Nonnull PipelineExecutionId executionId,
-    @Nonnull PipelineId pipelineId,
-    @Nonnull EventId eventId) implements ExecutePipelineEvent {
+        @Nonnull ProjectId projectId,
+        @Nonnull PipelineExecutionId executionId,
+        @Nonnull PipelineId pipelineId,
+        @Nonnull EventId eventId) implements ExecutePipelineEvent {
 
-  public static final String CHANNEL = "webprotege.events.robot.ExecutePipelineFinished";
+    public static final String CHANNEL = "webprotege.events.robot.ExecutePipelineFinished";
 
-  @Override
-  public String getChannel() {
-    return CHANNEL;
-  }
+    @Override
+    public String getChannel() {
+        return CHANNEL;
+    }
 }

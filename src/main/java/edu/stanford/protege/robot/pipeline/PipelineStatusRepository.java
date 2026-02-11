@@ -20,51 +20,51 @@ import org.springframework.stereotype.Component;
 @Component
 public class PipelineStatusRepository {
 
-  private static final String COLLECTION_NAME = "RobotPipelineStatus";
-  private static final String FIELD_ID = "_id";
-  private static final String FIELD_PIPELINE_EXECUTION_ID = "executionId";
+    private static final String COLLECTION_NAME = "RobotPipelineStatus";
+    private static final String FIELD_ID = "_id";
+    private static final String FIELD_PIPELINE_EXECUTION_ID = "executionId";
 
-  private final MongoTemplate mongoTemplate;
-  private final ObjectMapper objectMapper;
+    private final MongoTemplate mongoTemplate;
+    private final ObjectMapper objectMapper;
 
-  public PipelineStatusRepository(@Nonnull MongoTemplate mongoTemplate, @Nonnull ObjectMapper objectMapper) {
-    this.mongoTemplate = Objects.requireNonNull(mongoTemplate, "MongoTemplate must not be null");
-    this.objectMapper = Objects.requireNonNull(objectMapper, "ObjectMapper must not be null");
-  }
-
-  public void saveStatus(@Nonnull PipelineStatus status) {
-    Objects.requireNonNull(status, "status cannot be null");
-
-    var document = objectMapper.convertValue(status, Document.class);
-    document.put(FIELD_ID, status.executionId().id());
-    document.remove(FIELD_PIPELINE_EXECUTION_ID);
-    mongoTemplate.save(document, COLLECTION_NAME);
-  }
-
-  public Optional<PipelineStatus> findStatus(@Nonnull PipelineExecutionId executionId) {
-    Objects.requireNonNull(executionId, "executionId cannot be null");
-
-    var query = Query.query(Criteria.where(FIELD_ID).is(executionId.id()));
-    var document = mongoTemplate.findOne(query, Document.class, COLLECTION_NAME);
-    if (document == null) {
-      return Optional.empty();
+    public PipelineStatusRepository(@Nonnull MongoTemplate mongoTemplate, @Nonnull ObjectMapper objectMapper) {
+        this.mongoTemplate = Objects.requireNonNull(mongoTemplate, "MongoTemplate must not be null");
+        this.objectMapper = Objects.requireNonNull(objectMapper, "ObjectMapper must not be null");
     }
-    return Optional.of(convertDocumentToPipelineStatus(document));
-  }
 
-  public boolean deleteStatus(@Nonnull PipelineExecutionId executionId) {
-    Objects.requireNonNull(executionId, "executionId cannot be null");
+    public void saveStatus(@Nonnull PipelineStatus status) {
+        Objects.requireNonNull(status, "status cannot be null");
 
-    var query = Query.query(Criteria.where(FIELD_ID).is(executionId.id()));
-    var result = mongoTemplate.remove(query, COLLECTION_NAME);
-    return result.getDeletedCount() > 0;
-  }
+        var document = objectMapper.convertValue(status, Document.class);
+        document.put(FIELD_ID, status.executionId().id());
+        document.remove(FIELD_PIPELINE_EXECUTION_ID);
+        mongoTemplate.save(document, COLLECTION_NAME);
+    }
 
-  /**
-   * Converts a MongoDB Document to a PipelineStatus, restoring the executionId from _id.
-   */
-  private PipelineStatus convertDocumentToPipelineStatus(Document document) {
-    document.put(FIELD_PIPELINE_EXECUTION_ID, document.get(FIELD_ID));
-    return objectMapper.convertValue(document, PipelineStatus.class);
-  }
+    public Optional<PipelineStatus> findStatus(@Nonnull PipelineExecutionId executionId) {
+        Objects.requireNonNull(executionId, "executionId cannot be null");
+
+        var query = Query.query(Criteria.where(FIELD_ID).is(executionId.id()));
+        var document = mongoTemplate.findOne(query, Document.class, COLLECTION_NAME);
+        if (document == null) {
+            return Optional.empty();
+        }
+        return Optional.of(convertDocumentToPipelineStatus(document));
+    }
+
+    public boolean deleteStatus(@Nonnull PipelineExecutionId executionId) {
+        Objects.requireNonNull(executionId, "executionId cannot be null");
+
+        var query = Query.query(Criteria.where(FIELD_ID).is(executionId.id()));
+        var result = mongoTemplate.remove(query, COLLECTION_NAME);
+        return result.getDeletedCount() > 0;
+    }
+
+    /**
+     * Converts a MongoDB Document to a PipelineStatus, restoring the executionId from _id.
+     */
+    private PipelineStatus convertDocumentToPipelineStatus(Document document) {
+        document.put(FIELD_PIPELINE_EXECUTION_ID, document.get(FIELD_ID));
+        return objectMapper.convertValue(document, PipelineStatus.class);
+    }
 }

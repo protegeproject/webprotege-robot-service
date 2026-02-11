@@ -11,24 +11,24 @@ package edu.stanford.protege.robot.command.convert;
  */
 public enum ConvertFormat {
 
-  // OBO Graphs JSON format.
-  json,
+    // OBO Graphs JSON format.
+    json,
 
-  // OBO Format (legacy text format).
-  obo,
+    // OBO Format (legacy text format).
+    obo,
 
-  // OWL Functional Syntax.
-  ofn,
+    // OWL Functional Syntax.
+    ofn,
 
-  // Manchester Syntax.
-  omn,
+    // Manchester Syntax.
+    omn,
 
-  // RDF/XML (default ROBOT format).
-  owl,
+    // RDF/XML (default ROBOT format).
+    owl,
 
-  // OWL/XML.
-  owx,
+    // OWL/XML.
+    owx,
 
-  // Turtle (Terse RDF Triple Language).
-  ttl;
+    // Turtle (Terse RDF Triple Language).
+    ttl;
 }

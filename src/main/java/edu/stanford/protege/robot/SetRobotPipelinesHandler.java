@@ -14,46 +14,46 @@ import reactor.core.publisher.Mono;
 
 @WebProtegeHandler
 public class SetRobotPipelinesHandler
-    implements
-      CommandHandler<SetRobotPipelinesRequest, SetRobotPipelinesResponse> {
+        implements
+            CommandHandler<SetRobotPipelinesRequest, SetRobotPipelinesResponse> {
 
-  private final PipelineRepository pipelineRepository;
+    private final PipelineRepository pipelineRepository;
 
-  public SetRobotPipelinesHandler(PipelineRepository pipelineRepository) {
-    this.pipelineRepository = pipelineRepository;
-  }
+    public SetRobotPipelinesHandler(PipelineRepository pipelineRepository) {
+        this.pipelineRepository = pipelineRepository;
+    }
 
-  @Nonnull
-  @Override
-  public String getChannelName() {
-    return SetRobotPipelinesRequest.CHANNEL;
-  }
+    @Nonnull
+    @Override
+    public String getChannelName() {
+        return SetRobotPipelinesRequest.CHANNEL;
+    }
 
-  @Override
-  public Class<SetRobotPipelinesRequest> getRequestClass() {
-    return SetRobotPipelinesRequest.class;
-  }
+    @Override
+    public Class<SetRobotPipelinesRequest> getRequestClass() {
+        return SetRobotPipelinesRequest.class;
+    }
 
-  @Override
-  public Mono<SetRobotPipelinesResponse> handleRequest(SetRobotPipelinesRequest request,
-      ExecutionContext executionContext) {
-    var projectId = request.projectId();
-    var normalized = normalizeProjectId(projectId, request.pipelines());
-    pipelineRepository.deletePipelines(projectId);
-    pipelineRepository.savePipelines(normalized);
-    var saved = pipelineRepository.findPipelines(projectId);
-    return Mono.just(new SetRobotPipelinesResponse(saved));
-  }
+    @Override
+    public Mono<SetRobotPipelinesResponse> handleRequest(SetRobotPipelinesRequest request,
+            ExecutionContext executionContext) {
+        var projectId = request.projectId();
+        var normalized = normalizeProjectId(projectId, request.pipelines());
+        pipelineRepository.deletePipelines(projectId);
+        pipelineRepository.savePipelines(normalized);
+        var saved = pipelineRepository.findPipelines(projectId);
+        return Mono.just(new SetRobotPipelinesResponse(saved));
+    }
 
-  private List<RobotPipeline> normalizeProjectId(@Nonnull edu.stanford.protege.webprotege.common.ProjectId projectId,
-      @Nonnull List<RobotPipeline> pipelines) {
-    return pipelines.stream()
-        .map(pipeline -> new RobotPipeline(
-            projectId,
-            pipeline.pipelineId(),
-            pipeline.label(),
-            pipeline.description(),
-            pipeline.stages()))
-        .collect(Collectors.toList());
-  }
+    private List<RobotPipeline> normalizeProjectId(@Nonnull edu.stanford.protege.webprotege.common.ProjectId projectId,
+            @Nonnull List<RobotPipeline> pipelines) {
+        return pipelines.stream()
+                .map(pipeline -> new RobotPipeline(
+                        projectId,
+                        pipeline.pipelineId(),
+                        pipeline.label(),
+                        pipeline.description(),
+                        pipeline.stages()))
+                .collect(Collectors.toList());
+    }
 }

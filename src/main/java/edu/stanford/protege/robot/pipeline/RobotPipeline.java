@@ -7,15 +7,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public record RobotPipeline(
-    @Nonnull ProjectId projectId,
-    @Nonnull PipelineId pipelineId,
-    @Nullable String label,
-    @Nullable String description,
-    @Nonnull List<RobotPipelineStage> stages) {
+        @Nonnull ProjectId projectId,
+        @Nonnull PipelineId pipelineId,
+        @Nullable String label,
+        @Nullable String description,
+        @Nonnull List<RobotPipelineStage> stages) {
 
-  public RobotPipeline {
-    Objects.requireNonNull(projectId, "projectId should not be null");
-    Objects.requireNonNull(pipelineId, "pipelineId should not be null");
-    Objects.requireNonNull(stages, "stages should not be null");
-  }
+    public RobotPipeline {
+        Objects.requireNonNull(projectId, "projectId should not be null");
+        Objects.requireNonNull(pipelineId, "pipelineId should not be null");
+        Objects.requireNonNull(stages, "stages should not be null");
+    }
 }

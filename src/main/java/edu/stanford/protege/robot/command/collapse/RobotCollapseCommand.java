@@ -33,59 +33,60 @@ import org.obolibrary.robot.Command;
  * </ul>
  *
  * @param threshold
- *          minimum subclass count to preserve intermediate classes (optional, defaults to 2 if
- *          null). Must be greater than 2 if specified.
+ *            minimum subclass count to preserve intermediate classes (optional, defaults to 2 if
+ *            null). Must be greater than 2 if specified.
  * @param preciousTerms
- *          list of term CURIEs or full IRIs to protect from removal (empty list means no protected
- *          terms)
+ *            list of term CURIEs or full IRIs to protect from removal (empty list means no
+ *            protected
+ *            terms)
  *
  * @see <a href="https://robot.obolibrary.org/collapse">ROBOT Collapse Documentation</a>
  */
 @JsonTypeName("CollapseCommand")
 public record RobotCollapseCommand(@Nullable Integer threshold, List<String> preciousTerms)
-    implements
-      RobotCommand {
+        implements
+            RobotCommand {
 
-  /**
-   * Converts this collapse command to ROBOT command-line arguments.
-   *
-   * <p>
-   * Generates arguments in the format: {@code [--threshold N] [--precious TERM]...}
-   *
-   * <p>
-   * The threshold parameter is optional and will be omitted if null (allowing ROBOT to use its
-   * default value of 2). Precious terms are added as repeated {@code --precious} flags, one for
-   * each term in the list.
-   *
-   * @return immutable list of command-line arguments for ROBOT collapse
-   */
-  @Override
-  public List<String> getArgs() {
-    var args = ImmutableList.<String>builder();
+    /**
+     * Converts this collapse command to ROBOT command-line arguments.
+     *
+     * <p>
+     * Generates arguments in the format: {@code [--threshold N] [--precious TERM]...}
+     *
+     * <p>
+     * The threshold parameter is optional and will be omitted if null (allowing ROBOT to use its
+     * default value of 2). Precious terms are added as repeated {@code --precious} flags, one for
+     * each term in the list.
+     *
+     * @return immutable list of command-line arguments for ROBOT collapse
+     */
+    @Override
+    public List<String> getArgs() {
+        var args = ImmutableList.<String>builder();
 
-    // Add threshold if specified
-    if (threshold != null) {
-      args.add("--threshold");
-      args.add(String.valueOf(threshold));
+        // Add threshold if specified
+        if (threshold != null) {
+            args.add("--threshold");
+            args.add(String.valueOf(threshold));
+        }
+
+        // Add precious terms (repeated --precious flag)
+        preciousTerms.forEach(
+                term -> {
+                    args.add("--precious");
+                    args.add(term);
+                });
+
+        return args.build();
     }
 
-    // Add precious terms (repeated --precious flag)
-    preciousTerms.forEach(
-        term -> {
-          args.add("--precious");
-          args.add(term);
-        });
-
-    return args.build();
-  }
-
-  /**
-   * Returns the ROBOT CollapseCommand instance for execution.
-   *
-   * @return a new CollapseCommand instance
-   */
-  @Override
-  public Command getCommand() {
-    return new CollapseCommand();
-  }
+    /**
+     * Returns the ROBOT CollapseCommand instance for execution.
+     *
+     * @return a new CollapseCommand instance
+     */
+    @Override
+    public Command getCommand() {
+        return new CollapseCommand();
+    }
 }

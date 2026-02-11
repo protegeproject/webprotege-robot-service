@@ -17,46 +17,46 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 @TestConfiguration
 public class TestMongoConfiguration {
 
-  /**
-   * Configure MongoDB custom conversions.
-   */
-  @Bean
-  public MongoCustomConversions mongoCustomConversions() {
-    return new MongoCustomConversions(java.util.Collections.emptyList());
-  }
+    /**
+     * Configure MongoDB custom conversions.
+     */
+    @Bean
+    public MongoCustomConversions mongoCustomConversions() {
+        return new MongoCustomConversions(java.util.Collections.emptyList());
+    }
 
-  /**
-   * Configure MappingMongoConverter with dot replacement for map keys.
-   * MongoDB doesn't allow dots in document field names, so we replace them with a Unicode character.
-   *
-   * @param mongoDbFactory
-   *          MongoDB database factory
-   * @param mongoMappingContext
-   *          MongoDB mapping context
-   * @param mongoCustomConversions
-   *          MongoDB custom conversions
-   * @return configured MappingMongoConverter
-   */
-  @Bean
-  public MappingMongoConverter mappingMongoConverter(
-      MongoDatabaseFactory mongoDbFactory,
-      MongoMappingContext mongoMappingContext,
-      MongoCustomConversions mongoCustomConversions) {
+    /**
+     * Configure MappingMongoConverter with dot replacement for map keys.
+     * MongoDB doesn't allow dots in document field names, so we replace them with a Unicode character.
+     *
+     * @param mongoDbFactory
+     *            MongoDB database factory
+     * @param mongoMappingContext
+     *            MongoDB mapping context
+     * @param mongoCustomConversions
+     *            MongoDB custom conversions
+     * @return configured MappingMongoConverter
+     */
+    @Bean
+    public MappingMongoConverter mappingMongoConverter(
+            MongoDatabaseFactory mongoDbFactory,
+            MongoMappingContext mongoMappingContext,
+            MongoCustomConversions mongoCustomConversions) {
 
-    DbRefResolver dbRefResolver = new DefaultDbRefResolver(mongoDbFactory);
-    MappingMongoConverter converter = new MappingMongoConverter(dbRefResolver, mongoMappingContext);
+        DbRefResolver dbRefResolver = new DefaultDbRefResolver(mongoDbFactory);
+        MappingMongoConverter converter = new MappingMongoConverter(dbRefResolver, mongoMappingContext);
 
-    // Configure custom conversions
-    converter.setCustomConversions(mongoCustomConversions);
+        // Configure custom conversions
+        converter.setCustomConversions(mongoCustomConversions);
 
-    // Remove the _class field from documents
-    converter.setTypeMapper(new DefaultMongoTypeMapper(null));
+        // Remove the _class field from documents
+        converter.setTypeMapper(new DefaultMongoTypeMapper(null));
 
-    // Enable map key dot replacement - replace dots with a safe Unicode character
-    converter.setMapKeyDotReplacement("_DOT_");
+        // Enable map key dot replacement - replace dots with a safe Unicode character
+        converter.setMapKeyDotReplacement("_DOT_");
 
-    converter.afterPropertiesSet();
+        converter.afterPropertiesSet();
 
-    return converter;
-  }
+        return converter;
+    }
 }

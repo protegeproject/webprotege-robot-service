@@ -18,10 +18,10 @@ import java.util.List;
 @JsonTypeName("OFN")
 public record OfnConvertStrategy() implements ConvertStrategy {
 
-  public static final String FORMAT_FLAG = "--format";
+    public static final String FORMAT_FLAG = "--format";
 
-  @Override
-  public List<String> getArgs() {
-    return ImmutableList.of(FORMAT_FLAG, ConvertFormat.ofn.name());
-  }
+    @Override
+    public List<String> getArgs() {
+        return ImmutableList.of(FORMAT_FLAG, ConvertFormat.ofn.name());
+    }
 }

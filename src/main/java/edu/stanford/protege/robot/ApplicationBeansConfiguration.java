@@ -12,25 +12,25 @@ import org.springframework.context.annotation.Import;
 @Import(WebProtegeIpcApplication.class)
 public class ApplicationBeansConfiguration {
 
-  @Bean
-  ExecuteRobotCommandsHandler createExecuteRobotCommandsHandler(RobotPipelineOrchestrator orchestrator) {
-    return new ExecuteRobotCommandsHandler(orchestrator);
-  }
+    @Bean
+    ExecuteRobotCommandsHandler createExecuteRobotCommandsHandler(RobotPipelineOrchestrator orchestrator) {
+        return new ExecuteRobotCommandsHandler(orchestrator);
+    }
 
-  @Bean
-  GetRobotPipelinesHandler createGetRobotPipelinesHandler(
-      edu.stanford.protege.robot.pipeline.PipelineRepository pipelineRepository) {
-    return new GetRobotPipelinesHandler(pipelineRepository);
-  }
+    @Bean
+    GetRobotPipelinesHandler createGetRobotPipelinesHandler(
+            edu.stanford.protege.robot.pipeline.PipelineRepository pipelineRepository) {
+        return new GetRobotPipelinesHandler(pipelineRepository);
+    }
 
-  @Bean
-  SetRobotPipelinesHandler createSetRobotPipelinesHandler(
-      edu.stanford.protege.robot.pipeline.PipelineRepository pipelineRepository) {
-    return new SetRobotPipelinesHandler(pipelineRepository);
-  }
+    @Bean
+    SetRobotPipelinesHandler createSetRobotPipelinesHandler(
+            edu.stanford.protege.robot.pipeline.PipelineRepository pipelineRepository) {
+        return new SetRobotPipelinesHandler(pipelineRepository);
+    }
 
-  @Bean
-  PipelineLogger pipelineLogger(EventDispatcher eventDispatcher) {
-    return new PipelineLogger(eventDispatcher);
-  }
+    @Bean
+    PipelineLogger pipelineLogger(EventDispatcher eventDispatcher) {
+        return new PipelineLogger(eventDispatcher);
+    }
 }

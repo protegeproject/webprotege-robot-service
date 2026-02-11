@@ -12,579 +12,579 @@ import org.obolibrary.robot.RemoveCommand;
 
 class RobotRemoveCommandTest {
 
-  @Nested
-  class GetCommand {
+    @Nested
+    class GetCommand {
 
-    @Test
-    void shouldReturnRemoveCommandInstance() {
-      var command = new RobotRemoveCommand(
-          null,
-          List.of("GO:0008150"),
-          null,
-          null,
-          null,
-          null,
-          null);
+        @Test
+        void shouldReturnRemoveCommandInstance() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    List.of("GO:0008150"),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null);
 
-      var result = command.getCommand();
+            var result = command.getCommand();
 
-      assertThat(result).isNotNull().isInstanceOf(RemoveCommand.class);
-    }
-  }
-
-  @Nested
-  class GetArgsWithTerms {
-
-    @Test
-    void shouldGenerateArgsForSingleTerm() {
-      var command = new RobotRemoveCommand(
-          null,
-          List.of("GO:0008150"),
-          null,
-          null,
-          null,
-          null,
-          null);
-
-      var args = command.getArgs();
-
-      assertThat(args).containsExactly("--term", "GO:0008150");
+            assertThat(result).isNotNull().isInstanceOf(RemoveCommand.class);
+        }
     }
 
-    @Test
-    void shouldGenerateArgsForMultipleTerms() {
-      var command = new RobotRemoveCommand(
-          null,
-          List.of("GO:0008150", "GO:0003674", "GO:0005575"),
-          null,
-          null,
-          null,
-          null,
-          null);
+    @Nested
+    class GetArgsWithTerms {
 
-      var args = command.getArgs();
+        @Test
+        void shouldGenerateArgsForSingleTerm() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    List.of("GO:0008150"),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null);
 
-      assertThat(args)
-          .containsExactly(
-              "--term", "GO:0008150", "--term", "GO:0003674", "--term", "GO:0005575");
-    }
-  }
+            var args = command.getArgs();
 
-  @Nested
-  class GetArgsWithExcludeAndIncludeTerms {
+            assertThat(args).containsExactly("--term", "GO:0008150");
+        }
 
-    @Test
-    void shouldGenerateArgsForExcludeTerms() {
-      var command = new RobotRemoveCommand(
-          null,
-          List.of("GO:0008150"),
-          List.of("GO:0003674"),
-          null,
-          null,
-          null,
-          null);
+        @Test
+        void shouldGenerateArgsForMultipleTerms() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    List.of("GO:0008150", "GO:0003674", "GO:0005575"),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null);
 
-      var args = command.getArgs();
+            var args = command.getArgs();
 
-      assertThat(args).containsExactly("--term", "GO:0008150", "--exclude-term", "GO:0003674");
-    }
-
-    @Test
-    void shouldGenerateArgsForIncludeTerms() {
-      var command = new RobotRemoveCommand(
-          null,
-          List.of("GO:0008150"),
-          null,
-          List.of("GO:0005575"),
-          null,
-          null,
-          null);
-
-      var args = command.getArgs();
-
-      assertThat(args).containsExactly("--term", "GO:0008150", "--include-term", "GO:0005575");
+            assertThat(args)
+                    .containsExactly(
+                            "--term", "GO:0008150", "--term", "GO:0003674", "--term", "GO:0005575");
+        }
     }
 
-    @Test
-    void shouldGenerateArgsForMultipleExcludeAndIncludeTerms() {
-      var command = new RobotRemoveCommand(
-          null,
-          List.of("GO:0008150"),
-          List.of("GO:0003674", "GO:0005623"),
-          List.of("GO:0005575", "GO:0009987"),
-          null,
-          null,
-          null);
+    @Nested
+    class GetArgsWithExcludeAndIncludeTerms {
 
-      var args = command.getArgs();
+        @Test
+        void shouldGenerateArgsForExcludeTerms() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    List.of("GO:0008150"),
+                    List.of("GO:0003674"),
+                    null,
+                    null,
+                    null,
+                    null);
 
-      assertThat(args)
-          .containsExactly(
-              "--term", "GO:0008150",
-              "--exclude-term", "GO:0003674",
-              "--exclude-term", "GO:0005623",
-              "--include-term", "GO:0005575",
-              "--include-term", "GO:0009987");
-    }
-  }
+            var args = command.getArgs();
 
-  @Nested
-  class GetArgsWithSelectors {
+            assertThat(args).containsExactly("--term", "GO:0008150", "--exclude-term", "GO:0003674");
+        }
 
-    @Test
-    void shouldGenerateArgsForSingleSelector() {
-      var command = new RobotRemoveCommand(
-          null,
-          List.of("GO:0008150"),
-          null,
-          null,
-          List.of("self"),
-          null,
-          null);
+        @Test
+        void shouldGenerateArgsForIncludeTerms() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    List.of("GO:0008150"),
+                    null,
+                    List.of("GO:0005575"),
+                    null,
+                    null,
+                    null);
 
-      var args = command.getArgs();
+            var args = command.getArgs();
 
-      assertThat(args).containsExactly("--term", "GO:0008150", "--select", "self");
-    }
+            assertThat(args).containsExactly("--term", "GO:0008150", "--include-term", "GO:0005575");
+        }
 
-    @Test
-    void shouldGenerateArgsForMultipleSelectors() {
-      var command = new RobotRemoveCommand(
-          null,
-          List.of("GO:0008150"),
-          null,
-          null,
-          List.of("self", "descendants"),
-          null,
-          null);
+        @Test
+        void shouldGenerateArgsForMultipleExcludeAndIncludeTerms() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    List.of("GO:0008150"),
+                    List.of("GO:0003674", "GO:0005623"),
+                    List.of("GO:0005575", "GO:0009987"),
+                    null,
+                    null,
+                    null);
 
-      var args = command.getArgs();
+            var args = command.getArgs();
 
-      assertThat(args)
-          .containsExactly(
-              "--term", "GO:0008150", "--select", "self", "--select", "descendants");
+            assertThat(args)
+                    .containsExactly(
+                            "--term", "GO:0008150",
+                            "--exclude-term", "GO:0003674",
+                            "--exclude-term", "GO:0005623",
+                            "--include-term", "GO:0005575",
+                            "--include-term", "GO:0009987");
+        }
     }
 
-    @Test
-    void shouldSupportEnumSelectors() {
-      var command = new RobotRemoveCommand(
-          null,
-          List.of("GO:0008150"),
-          null,
-          null,
-          List.of(Selector.self.name(), Selector.descendants.name()),
-          null,
-          null);
+    @Nested
+    class GetArgsWithSelectors {
 
-      var args = command.getArgs();
+        @Test
+        void shouldGenerateArgsForSingleSelector() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    List.of("GO:0008150"),
+                    null,
+                    null,
+                    List.of("self"),
+                    null,
+                    null);
 
-      assertThat(args)
-          .containsExactly(
-              "--term", "GO:0008150", "--select", "self", "--select", "descendants");
+            var args = command.getArgs();
+
+            assertThat(args).containsExactly("--term", "GO:0008150", "--select", "self");
+        }
+
+        @Test
+        void shouldGenerateArgsForMultipleSelectors() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    List.of("GO:0008150"),
+                    null,
+                    null,
+                    List.of("self", "descendants"),
+                    null,
+                    null);
+
+            var args = command.getArgs();
+
+            assertThat(args)
+                    .containsExactly(
+                            "--term", "GO:0008150", "--select", "self", "--select", "descendants");
+        }
+
+        @Test
+        void shouldSupportEnumSelectors() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    List.of("GO:0008150"),
+                    null,
+                    null,
+                    List.of(Selector.self.name(), Selector.descendants.name()),
+                    null,
+                    null);
+
+            var args = command.getArgs();
+
+            assertThat(args)
+                    .containsExactly(
+                            "--term", "GO:0008150", "--select", "self", "--select", "descendants");
+        }
+
+        @Test
+        void shouldSupportCustomPatternSelectors() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    null,
+                    null,
+                    null,
+                    List.of("owl:deprecated='true'^^xsd:boolean"),
+                    null,
+                    null);
+
+            var args = command.getArgs();
+
+            assertThat(args).containsExactly("--select", "owl:deprecated='true'^^xsd:boolean");
+        }
+
+        @Test
+        void shouldSupportIRIPatternSelectors() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    null,
+                    null,
+                    null,
+                    List.of("<http://purl.obolibrary.org/obo/BFO_*>"),
+                    null,
+                    null);
+
+            var args = command.getArgs();
+
+            assertThat(args).containsExactly("--select", "<http://purl.obolibrary.org/obo/BFO_*>");
+        }
     }
 
-    @Test
-    void shouldSupportCustomPatternSelectors() {
-      var command = new RobotRemoveCommand(
-          null,
-          null,
-          null,
-          null,
-          List.of("owl:deprecated='true'^^xsd:boolean"),
-          null,
-          null);
+    @Nested
+    class GetArgsWithAxiomTypes {
 
-      var args = command.getArgs();
+        @Test
+        void shouldGenerateArgsForSingleAxiomType() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    List.of("GO:0008150"),
+                    null,
+                    null,
+                    null,
+                    List.of("subclass"),
+                    null);
 
-      assertThat(args).containsExactly("--select", "owl:deprecated='true'^^xsd:boolean");
+            var args = command.getArgs();
+
+            assertThat(args).containsExactly("--term", "GO:0008150", "--axioms", "subclass");
+        }
+
+        @Test
+        void shouldGenerateArgsForMultipleAxiomTypes() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    List.of("GO:0008150"),
+                    null,
+                    null,
+                    null,
+                    List.of("subclass", "equivalent"),
+                    null);
+
+            var args = command.getArgs();
+
+            assertThat(args)
+                    .containsExactly(
+                            "--term", "GO:0008150", "--axioms", "subclass", "--axioms", "equivalent");
+        }
+
+        @Test
+        void shouldSupportEnumAxiomTypes() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    List.of(AxiomType.structural_tautologies.name()),
+                    null);
+
+            var args = command.getArgs();
+
+            assertThat(args).containsExactly("--axioms", "structural_tautologies");
+        }
+
+        @Test
+        void shouldSupportAllAxiomTypesShortcut() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    List.of("GO:0008150"),
+                    null,
+                    null,
+                    null,
+                    List.of(AxiomType.all.name()),
+                    null);
+
+            var args = command.getArgs();
+
+            assertThat(args).containsExactly("--term", "GO:0008150", "--axioms", "all");
+        }
     }
 
-    @Test
-    void shouldSupportIRIPatternSelectors() {
-      var command = new RobotRemoveCommand(
-          null,
-          null,
-          null,
-          null,
-          List.of("<http://purl.obolibrary.org/obo/BFO_*>"),
-          null,
-          null);
+    @Nested
+    class GetArgsWithNonDefaultFlags {
 
-      var args = command.getArgs();
+        @Test
+        void shouldIncludeSignatureFlag() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    List.of("GO:0008150"),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    CommandFlags.SIGNATURE);
 
-      assertThat(args).containsExactly("--select", "<http://purl.obolibrary.org/obo/BFO_*>");
-    }
-  }
+            var args = command.getArgs();
 
-  @Nested
-  class GetArgsWithAxiomTypes {
+            assertThat(args).containsExactly("--term", "GO:0008150", "--signature", "true");
+        }
 
-    @Test
-    void shouldGenerateArgsForSingleAxiomType() {
-      var command = new RobotRemoveCommand(
-          null,
-          List.of("GO:0008150"),
-          null,
-          null,
-          null,
-          List.of("subclass"),
-          null);
+        @Test
+        void shouldIncludeNoTrimFlag() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    List.of("GO:0008150"),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    CommandFlags.NO_TRIM);
 
-      var args = command.getArgs();
+            var args = command.getArgs();
 
-      assertThat(args).containsExactly("--term", "GO:0008150", "--axioms", "subclass");
-    }
+            assertThat(args).containsExactly("--term", "GO:0008150", "--trim", "false");
+        }
 
-    @Test
-    void shouldGenerateArgsForMultipleAxiomTypes() {
-      var command = new RobotRemoveCommand(
-          null,
-          List.of("GO:0008150"),
-          null,
-          null,
-          null,
-          List.of("subclass", "equivalent"),
-          null);
+        @Test
+        void shouldIncludeNoPreserveStructureFlag() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    List.of("GO:0008150"),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    CommandFlags.NO_PRESERVE_STRUCTURE);
 
-      var args = command.getArgs();
+            var args = command.getArgs();
 
-      assertThat(args)
-          .containsExactly(
-              "--term", "GO:0008150", "--axioms", "subclass", "--axioms", "equivalent");
-    }
+            assertThat(args).containsExactly("--term", "GO:0008150", "--preserve-structure", "false");
+        }
 
-    @Test
-    void shouldSupportEnumAxiomTypes() {
-      var command = new RobotRemoveCommand(
-          null,
-          null,
-          null,
-          null,
-          null,
-          List.of(AxiomType.structural_tautologies.name()),
-          null);
+        @Test
+        void shouldIncludeAllowPunningFlag() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    List.of("GO:0008150"),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    CommandFlags.ALLOW_PUNNING);
 
-      var args = command.getArgs();
+            var args = command.getArgs();
 
-      assertThat(args).containsExactly("--axioms", "structural_tautologies");
-    }
+            assertThat(args).containsExactly("--term", "GO:0008150", "--allow-punning", "true");
+        }
 
-    @Test
-    void shouldSupportAllAxiomTypesShortcut() {
-      var command = new RobotRemoveCommand(
-          null,
-          List.of("GO:0008150"),
-          null,
-          null,
-          null,
-          List.of(AxiomType.all.name()),
-          null);
+        @Test
+        void shouldCombineMultipleNonDefaultFlags() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    List.of("GO:0008150"),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    CommandFlags.SIGNATURE,
+                    CommandFlags.NO_TRIM,
+                    CommandFlags.NO_PRESERVE_STRUCTURE);
 
-      var args = command.getArgs();
+            var args = command.getArgs();
 
-      assertThat(args).containsExactly("--term", "GO:0008150", "--axioms", "all");
-    }
-  }
-
-  @Nested
-  class GetArgsWithNonDefaultFlags {
-
-    @Test
-    void shouldIncludeSignatureFlag() {
-      var command = new RobotRemoveCommand(
-          null,
-          List.of("GO:0008150"),
-          null,
-          null,
-          null,
-          null,
-          null,
-          CommandFlags.SIGNATURE);
-
-      var args = command.getArgs();
-
-      assertThat(args).containsExactly("--term", "GO:0008150", "--signature", "true");
+            assertThat(args)
+                    .containsExactly(
+                            "--term", "GO:0008150",
+                            "--signature", "true",
+                            "--trim", "false",
+                            "--preserve-structure", "false");
+        }
     }
 
-    @Test
-    void shouldIncludeNoTrimFlag() {
-      var command = new RobotRemoveCommand(
-          null,
-          List.of("GO:0008150"),
-          null,
-          null,
-          null,
-          null,
-          null,
-          CommandFlags.NO_TRIM);
+    @Nested
+    class GetArgsWithBaseIri {
 
-      var args = command.getArgs();
+        @Test
+        void shouldIncludeBaseIri() {
+            var command = new RobotRemoveCommand(
+                    "http://purl.obolibrary.org/obo/",
+                    null,
+                    null,
+                    null,
+                    null,
+                    List.of("internal"),
+                    null);
 
-      assertThat(args).containsExactly("--term", "GO:0008150", "--trim", "false");
+            var args = command.getArgs();
+
+            assertThat(args)
+                    .containsExactly("--base-iri", "http://purl.obolibrary.org/obo/", "--axioms", "internal");
+        }
+
+        @Test
+        void shouldSupportExternalAxiomTypeWithBaseIri() {
+            var command = new RobotRemoveCommand(
+                    "http://example.org/ontology#",
+                    null,
+                    null,
+                    null,
+                    null,
+                    List.of(AxiomType.external.name()),
+                    null);
+
+            var args = command.getArgs();
+
+            assertThat(args)
+                    .containsExactly("--base-iri", "http://example.org/ontology#", "--axioms", "external");
+        }
     }
 
-    @Test
-    void shouldIncludeNoPreserveStructureFlag() {
-      var command = new RobotRemoveCommand(
-          null,
-          List.of("GO:0008150"),
-          null,
-          null,
-          null,
-          null,
-          null,
-          CommandFlags.NO_PRESERVE_STRUCTURE);
+    @Nested
+    class GetArgsWithDropAxiomAnnotations {
 
-      var args = command.getArgs();
+        @Test
+        void shouldIncludeSingleDropAxiomAnnotation() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    List.of("GO:0008150"),
+                    null,
+                    null,
+                    null,
+                    null,
+                    List.of("rdfs:comment"));
 
-      assertThat(args).containsExactly("--term", "GO:0008150", "--preserve-structure", "false");
+            var args = command.getArgs();
+
+            assertThat(args)
+                    .containsExactly("--term", "GO:0008150", "--drop-axiom-annotations", "rdfs:comment");
+        }
+
+        @Test
+        void shouldIncludeMultipleDropAxiomAnnotations() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    List.of("GO:0008150"),
+                    null,
+                    null,
+                    null,
+                    null,
+                    List.of("rdfs:comment", "dc:source"));
+
+            var args = command.getArgs();
+
+            assertThat(args)
+                    .containsExactly(
+                            "--term", "GO:0008150",
+                            "--drop-axiom-annotations", "rdfs:comment",
+                            "--drop-axiom-annotations", "dc:source");
+        }
     }
 
-    @Test
-    void shouldIncludeAllowPunningFlag() {
-      var command = new RobotRemoveCommand(
-          null,
-          List.of("GO:0008150"),
-          null,
-          null,
-          null,
-          null,
-          null,
-          CommandFlags.ALLOW_PUNNING);
+    @Nested
+    class GetArgsWithComplexScenarios {
 
-      var args = command.getArgs();
+        @Test
+        void shouldGenerateArgsForCompleteCommand() {
+            var command = new RobotRemoveCommand(
+                    "http://purl.obolibrary.org/obo/", List.of("GO:0008150", "GO:0003674"),
+                    List.of("GO:0005575"),
+                    List.of("GO:0009987"),
+                    List.of("self", "descendants"),
+                    List.of("subclass", "equivalent"),
+                    List.of("rdfs:comment"),
+                    CommandFlags.SIGNATURE,
+                    CommandFlags.NO_TRIM,
+                    CommandFlags.NO_PRESERVE_STRUCTURE,
+                    CommandFlags.ALLOW_PUNNING);
 
-      assertThat(args).containsExactly("--term", "GO:0008150", "--allow-punning", "true");
+            var args = command.getArgs();
+
+            assertThat(args)
+                    .containsExactly(
+                            "--base-iri", "http://purl.obolibrary.org/obo/",
+                            "--term", "GO:0008150",
+                            "--term", "GO:0003674",
+                            "--exclude-term", "GO:0005575",
+                            "--include-term", "GO:0009987",
+                            "--select", "self",
+                            "--select", "descendants",
+                            "--axioms", "subclass",
+                            "--axioms", "equivalent",
+                            "--drop-axiom-annotations", "rdfs:comment",
+                            "--signature", "true",
+                            "--trim", "false",
+                            "--preserve-structure", "false",
+                            "--allow-punning", "true");
+        }
+
+        @Test
+        void shouldHandleRemovingDeprecatedClassesExample() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    null,
+                    null,
+                    null,
+                    List.of("owl:deprecated='true'^^xsd:boolean"),
+                    null,
+                    null);
+
+            var args = command.getArgs();
+
+            assertThat(args).containsExactly("--select", "owl:deprecated='true'^^xsd:boolean");
+        }
+
+        @Test
+        void shouldHandleRemovingByNamespacePattern() {
+            var command = new RobotRemoveCommand(
+                    null,
+                    null,
+                    null,
+                    null,
+                    List.of("<http://purl.obolibrary.org/obo/BFO_*>"),
+                    null,
+                    null,
+                    CommandFlags.SIGNATURE);
+
+            var args = command.getArgs();
+
+            assertThat(args)
+                    .containsExactly(
+                            "--select", "<http://purl.obolibrary.org/obo/BFO_*>", "--signature", "true");
+        }
     }
 
-    @Test
-    void shouldCombineMultipleNonDefaultFlags() {
-      var command = new RobotRemoveCommand(
-          null,
-          List.of("GO:0008150"),
-          null,
-          null,
-          null,
-          null,
-          null,
-          CommandFlags.SIGNATURE,
-          CommandFlags.NO_TRIM,
-          CommandFlags.NO_PRESERVE_STRUCTURE);
+    @Nested
+    class GetArgsWithNullOptions {
 
-      var args = command.getArgs();
+        @Test
+        void shouldGenerateMinimalArgsWithOnlyTerms() {
+            var command = new RobotRemoveCommand(null, List.of("GO:0008150"), null, null, null, null, null);
 
-      assertThat(args)
-          .containsExactly(
-              "--term", "GO:0008150",
-              "--signature", "true",
-              "--trim", "false",
-              "--preserve-structure", "false");
-    }
-  }
+            var args = command.getArgs();
 
-  @Nested
-  class GetArgsWithBaseIri {
+            assertThat(args).containsExactly("--term", "GO:0008150");
+        }
 
-    @Test
-    void shouldIncludeBaseIri() {
-      var command = new RobotRemoveCommand(
-          "http://purl.obolibrary.org/obo/",
-          null,
-          null,
-          null,
-          null,
-          List.of("internal"),
-          null);
+        @Test
+        void shouldHandleAllNullOptions() {
+            var command = new RobotRemoveCommand(null, null, null, null, null, null, null);
 
-      var args = command.getArgs();
+            var args = command.getArgs();
 
-      assertThat(args)
-          .containsExactly("--base-iri", "http://purl.obolibrary.org/obo/", "--axioms", "internal");
+            assertThat(args).isEmpty();
+        }
+
+        @Test
+        void shouldIgnoreEmptyLists() {
+            var command = new RobotRemoveCommand(
+                    null, List.of(), List.of(), List.of(), List.of(), List.of(), List.of());
+
+            var args = command.getArgs();
+
+            assertThat(args).isEmpty();
+        }
     }
 
-    @Test
-    void shouldSupportExternalAxiomTypeWithBaseIri() {
-      var command = new RobotRemoveCommand(
-          "http://example.org/ontology#",
-          null,
-          null,
-          null,
-          null,
-          List.of(AxiomType.external.name()),
-          null);
+    @Nested
+    class Immutability {
 
-      var args = command.getArgs();
+        @Test
+        void shouldReturnImmutableList() {
+            var command = new RobotRemoveCommand(
+                    null, List.of("GO:0008150"),
+                    null,
+                    null,
+                    List.of("self", "descendants"),
+                    List.of("subclass"),
+                    null,
+                    CommandFlags.SIGNATURE,
+                    CommandFlags.NO_TRIM,
+                    CommandFlags.NO_PRESERVE_STRUCTURE);
 
-      assertThat(args)
-          .containsExactly("--base-iri", "http://example.org/ontology#", "--axioms", "external");
+            var args = command.getArgs();
+
+            assertThat(args).isUnmodifiable();
+        }
     }
-  }
-
-  @Nested
-  class GetArgsWithDropAxiomAnnotations {
-
-    @Test
-    void shouldIncludeSingleDropAxiomAnnotation() {
-      var command = new RobotRemoveCommand(
-          null,
-          List.of("GO:0008150"),
-          null,
-          null,
-          null,
-          null,
-          List.of("rdfs:comment"));
-
-      var args = command.getArgs();
-
-      assertThat(args)
-          .containsExactly("--term", "GO:0008150", "--drop-axiom-annotations", "rdfs:comment");
-    }
-
-    @Test
-    void shouldIncludeMultipleDropAxiomAnnotations() {
-      var command = new RobotRemoveCommand(
-          null,
-          List.of("GO:0008150"),
-          null,
-          null,
-          null,
-          null,
-          List.of("rdfs:comment", "dc:source"));
-
-      var args = command.getArgs();
-
-      assertThat(args)
-          .containsExactly(
-              "--term", "GO:0008150",
-              "--drop-axiom-annotations", "rdfs:comment",
-              "--drop-axiom-annotations", "dc:source");
-    }
-  }
-
-  @Nested
-  class GetArgsWithComplexScenarios {
-
-    @Test
-    void shouldGenerateArgsForCompleteCommand() {
-      var command = new RobotRemoveCommand(
-          "http://purl.obolibrary.org/obo/", List.of("GO:0008150", "GO:0003674"),
-          List.of("GO:0005575"),
-          List.of("GO:0009987"),
-          List.of("self", "descendants"),
-          List.of("subclass", "equivalent"),
-          List.of("rdfs:comment"),
-          CommandFlags.SIGNATURE,
-          CommandFlags.NO_TRIM,
-          CommandFlags.NO_PRESERVE_STRUCTURE,
-          CommandFlags.ALLOW_PUNNING);
-
-      var args = command.getArgs();
-
-      assertThat(args)
-          .containsExactly(
-              "--base-iri", "http://purl.obolibrary.org/obo/",
-              "--term", "GO:0008150",
-              "--term", "GO:0003674",
-              "--exclude-term", "GO:0005575",
-              "--include-term", "GO:0009987",
-              "--select", "self",
-              "--select", "descendants",
-              "--axioms", "subclass",
-              "--axioms", "equivalent",
-              "--drop-axiom-annotations", "rdfs:comment",
-              "--signature", "true",
-              "--trim", "false",
-              "--preserve-structure", "false",
-              "--allow-punning", "true");
-    }
-
-    @Test
-    void shouldHandleRemovingDeprecatedClassesExample() {
-      var command = new RobotRemoveCommand(
-          null,
-          null,
-          null,
-          null,
-          List.of("owl:deprecated='true'^^xsd:boolean"),
-          null,
-          null);
-
-      var args = command.getArgs();
-
-      assertThat(args).containsExactly("--select", "owl:deprecated='true'^^xsd:boolean");
-    }
-
-    @Test
-    void shouldHandleRemovingByNamespacePattern() {
-      var command = new RobotRemoveCommand(
-          null,
-          null,
-          null,
-          null,
-          List.of("<http://purl.obolibrary.org/obo/BFO_*>"),
-          null,
-          null,
-          CommandFlags.SIGNATURE);
-
-      var args = command.getArgs();
-
-      assertThat(args)
-          .containsExactly(
-              "--select", "<http://purl.obolibrary.org/obo/BFO_*>", "--signature", "true");
-    }
-  }
-
-  @Nested
-  class GetArgsWithNullOptions {
-
-    @Test
-    void shouldGenerateMinimalArgsWithOnlyTerms() {
-      var command = new RobotRemoveCommand(null, List.of("GO:0008150"), null, null, null, null, null);
-
-      var args = command.getArgs();
-
-      assertThat(args).containsExactly("--term", "GO:0008150");
-    }
-
-    @Test
-    void shouldHandleAllNullOptions() {
-      var command = new RobotRemoveCommand(null, null, null, null, null, null, null);
-
-      var args = command.getArgs();
-
-      assertThat(args).isEmpty();
-    }
-
-    @Test
-    void shouldIgnoreEmptyLists() {
-      var command = new RobotRemoveCommand(
-          null, List.of(), List.of(), List.of(), List.of(), List.of(), List.of());
-
-      var args = command.getArgs();
-
-      assertThat(args).isEmpty();
-    }
-  }
-
-  @Nested
-  class Immutability {
-
-    @Test
-    void shouldReturnImmutableList() {
-      var command = new RobotRemoveCommand(
-          null, List.of("GO:0008150"),
-          null,
-          null,
-          List.of("self", "descendants"),
-          List.of("subclass"),
-          null,
-          CommandFlags.SIGNATURE,
-          CommandFlags.NO_TRIM,
-          CommandFlags.NO_PRESERVE_STRUCTURE);
-
-      var args = command.getArgs();
-
-      assertThat(args).isUnmodifiable();
-    }
-  }
 }

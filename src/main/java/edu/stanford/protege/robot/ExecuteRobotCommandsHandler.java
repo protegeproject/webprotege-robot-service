@@ -14,40 +14,40 @@ import reactor.core.publisher.Mono;
 
 @WebProtegeHandler
 public class ExecuteRobotCommandsHandler
-    implements
-      CommandHandler<ExecuteRobotCommandsRequest, ExecuteRobotCommandsResponse> {
+        implements
+            CommandHandler<ExecuteRobotCommandsRequest, ExecuteRobotCommandsResponse> {
 
-  private static final Logger logger = LoggerFactory.getLogger(ExecuteRobotCommandsHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(ExecuteRobotCommandsHandler.class);
 
-  private final RobotPipelineOrchestrator orchestrator;
+    private final RobotPipelineOrchestrator orchestrator;
 
-  public ExecuteRobotCommandsHandler(RobotPipelineOrchestrator orchestrator) {
-    this.orchestrator = orchestrator;
-  }
-
-  @Nonnull
-  @Override
-  public String getChannelName() {
-    return ExecuteRobotCommandsRequest.CHANNEL;
-  }
-
-  @Override
-  public Class<ExecuteRobotCommandsRequest> getRequestClass() {
-    return ExecuteRobotCommandsRequest.class;
-  }
-
-  @Override
-  public Mono<ExecuteRobotCommandsResponse> handleRequest(ExecuteRobotCommandsRequest request,
-      ExecutionContext executionContext) {
-
-    var projectId = request.projectId();
-    var pipeline = request.pipeline();
-    try {
-      var executionId = orchestrator.executeAsync(projectId, pipeline);
-      return Mono.just(new ExecuteRobotCommandsResponse(projectId, executionId));
-    } catch (Exception e) {
-      logger.info("{} Error executing command request: {}", projectId, e.getMessage(), e);
-      throw new RobotServiceRuntimeException("Error executing command request: " + e.getMessage(), e);
+    public ExecuteRobotCommandsHandler(RobotPipelineOrchestrator orchestrator) {
+        this.orchestrator = orchestrator;
     }
-  }
+
+    @Nonnull
+    @Override
+    public String getChannelName() {
+        return ExecuteRobotCommandsRequest.CHANNEL;
+    }
+
+    @Override
+    public Class<ExecuteRobotCommandsRequest> getRequestClass() {
+        return ExecuteRobotCommandsRequest.class;
+    }
+
+    @Override
+    public Mono<ExecuteRobotCommandsResponse> handleRequest(ExecuteRobotCommandsRequest request,
+            ExecutionContext executionContext) {
+
+        var projectId = request.projectId();
+        var pipeline = request.pipeline();
+        try {
+            var executionId = orchestrator.executeAsync(projectId, pipeline);
+            return Mono.just(new ExecuteRobotCommandsResponse(projectId, executionId));
+        } catch (Exception e) {
+            logger.info("{} Error executing command request: {}", projectId, e.getMessage(), e);
+            throw new RobotServiceRuntimeException("Error executing command request: " + e.getMessage(), e);
+        }
+    }
 }

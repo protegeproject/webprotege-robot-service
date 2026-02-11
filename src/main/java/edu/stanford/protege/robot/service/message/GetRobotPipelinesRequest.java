@@ -10,17 +10,17 @@ import javax.annotation.Nonnull;
 
 @JsonTypeName(CHANNEL)
 public record GetRobotPipelinesRequest(@Nonnull ProjectId projectId)
-    implements
-      Request<GetRobotPipelinesResponse> {
+        implements
+            Request<GetRobotPipelinesResponse> {
 
-  public static final String CHANNEL = "webprotege.robot.GetRobotPipelines";
+    public static final String CHANNEL = "webprotege.robot.GetRobotPipelines";
 
-  public GetRobotPipelinesRequest {
-    Objects.requireNonNull(projectId, "Project ID cannot be null");
-  }
+    public GetRobotPipelinesRequest {
+        Objects.requireNonNull(projectId, "Project ID cannot be null");
+    }
 
-  @Override
-  public String getChannel() {
-    return CHANNEL;
-  }
+    @Override
+    public String getChannel() {
+        return CHANNEL;
+    }
 }

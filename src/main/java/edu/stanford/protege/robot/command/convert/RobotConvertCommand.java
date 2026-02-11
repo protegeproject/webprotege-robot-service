@@ -29,35 +29,36 @@ import org.obolibrary.robot.ConvertCommand;
  * </ul>
  *
  * @param convertStrategy
- *          the conversion convertStrategy specifying the target format and format-specific options
+ *            the conversion convertStrategy specifying the target format and format-specific
+ *            options
  *
  * @see <a href="https://robot.obolibrary.org/convert">ROBOT Convert Documentation</a>
  */
 @JsonTypeName("ConvertCommand")
 public record RobotConvertCommand(ConvertStrategy convertStrategy) implements RobotCommand {
 
-  /**
-   * Converts this convert command to ROBOT command-line arguments.
-   *
-   * <p>
-   * Delegates argument generation to the configured convertStrategy, which produces format-specific
-   * flags
-   * and options.
-   *
-   * @return immutable list of command-line arguments for ROBOT convert
-   */
-  @Override
-  public List<String> getArgs() {
-    return convertStrategy.getArgs();
-  }
+    /**
+     * Converts this convert command to ROBOT command-line arguments.
+     *
+     * <p>
+     * Delegates argument generation to the configured convertStrategy, which produces format-specific
+     * flags
+     * and options.
+     *
+     * @return immutable list of command-line arguments for ROBOT convert
+     */
+    @Override
+    public List<String> getArgs() {
+        return convertStrategy.getArgs();
+    }
 
-  /**
-   * Returns the ROBOT ConvertCommand instance for execution.
-   *
-   * @return a new ConvertCommand instance
-   */
-  @Override
-  public Command getCommand() {
-    return new ConvertCommand();
-  }
+    /**
+     * Returns the ROBOT ConvertCommand instance for execution.
+     *
+     * @return a new ConvertCommand instance
+     */
+    @Override
+    public Command getCommand() {
+        return new ConvertCommand();
+    }
 }

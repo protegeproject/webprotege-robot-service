@@ -15,7 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class WebProtegeRobotServiceApplication {
 
-  public static void main(String[] args) {
-    SpringApplication.run(WebProtegeRobotServiceApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(WebProtegeRobotServiceApplication.class, args);
+    }
 }

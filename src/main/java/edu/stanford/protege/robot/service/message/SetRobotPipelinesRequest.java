@@ -12,19 +12,19 @@ import javax.annotation.Nonnull;
 
 @JsonTypeName(CHANNEL)
 public record SetRobotPipelinesRequest(@Nonnull ProjectId projectId,
-    @Nonnull List<RobotPipeline> pipelines)
-    implements
-      Request<SetRobotPipelinesResponse> {
+        @Nonnull List<RobotPipeline> pipelines)
+        implements
+            Request<SetRobotPipelinesResponse> {
 
-  public static final String CHANNEL = "webprotege.robot.SetRobotPipelines";
+    public static final String CHANNEL = "webprotege.robot.SetRobotPipelines";
 
-  public SetRobotPipelinesRequest {
-    Objects.requireNonNull(projectId, "Project ID cannot be null");
-    Objects.requireNonNull(pipelines, "pipelines cannot be null");
-  }
+    public SetRobotPipelinesRequest {
+        Objects.requireNonNull(projectId, "Project ID cannot be null");
+        Objects.requireNonNull(pipelines, "pipelines cannot be null");
+    }
 
-  @Override
-  public String getChannel() {
-    return CHANNEL;
-  }
+    @Override
+    public String getChannel() {
+        return CHANNEL;
+    }
 }

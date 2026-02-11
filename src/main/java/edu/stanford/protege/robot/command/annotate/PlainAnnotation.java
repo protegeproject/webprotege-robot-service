@@ -15,22 +15,22 @@ import java.util.List;
  * --annotation rdfs:comment "This is a comment"}
  *
  * @param property
- *          the annotation property IRI or prefixed name
+ *            the annotation property IRI or prefixed name
  * @param value
- *          the annotation value
+ *            the annotation value
  */
 @JsonTypeName("PlainAnnotation")
 public record PlainAnnotation(String property, String value) implements Annotation {
 
-  public static final String ANNOTATION = "--annotation";
+    public static final String ANNOTATION = "--annotation";
 
-  @Override
-  public String getArgName() {
-    return ANNOTATION;
-  }
+    @Override
+    public String getArgName() {
+        return ANNOTATION;
+    }
 
-  @Override
-  public List<String> getArgs() {
-    return ImmutableList.of(getArgName(), property, value);
-  }
+    @Override
+    public List<String> getArgs() {
+        return ImmutableList.of(getArgName(), property, value);
+    }
 }

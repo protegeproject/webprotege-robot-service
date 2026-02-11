@@ -10,15 +10,15 @@ import org.springframework.test.context.DynamicPropertySource;
 @SpringBootTest
 class WebProtegeRobotServiceApplicationTest {
 
-  @TempDir
-  static Path tempDir;
+    @TempDir
+    static Path tempDir;
 
-  @DynamicPropertySource
-  static void registerProperties(DynamicPropertyRegistry registry) {
-    registry.add("webprotege.directories.data", () -> tempDir.toString());
-  }
+    @DynamicPropertySource
+    static void registerProperties(DynamicPropertyRegistry registry) {
+        registry.add("webprotege.directories.data", () -> tempDir.toString());
+    }
 
-  @Test
-  void contextLoads() {
-  }
+    @Test
+    void contextLoads() {
+    }
 }

@@ -11,10 +11,10 @@ import javax.annotation.Nonnull;
 
 @JsonTypeName(CHANNEL)
 public record SetRobotPipelinesResponse(@Nonnull List<RobotPipeline> pipelines)
-    implements
-      Response {
+        implements
+            Response {
 
-  public SetRobotPipelinesResponse {
-    Objects.requireNonNull(pipelines, "pipelines cannot be null");
-  }
+    public SetRobotPipelinesResponse {
+        Objects.requireNonNull(pipelines, "pipelines cannot be null");
+    }
 }

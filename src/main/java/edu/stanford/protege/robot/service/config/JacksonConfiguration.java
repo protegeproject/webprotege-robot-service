@@ -13,15 +13,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class JacksonConfiguration {
 
-  /**
-   * Creates a Jackson module with mix-in annotations for OWL API types.
-   *
-   * @return Jackson module configured with OWL API mix-ins
-   */
-  @Bean
-  public Module robotJacksonModule() {
-    SimpleModule module = new SimpleModule("RobotCommandModule");
-    module.setMixInAnnotation(IRI.class, IRIMixin.class);
-    return module;
-  }
+    /**
+     * Creates a Jackson module with mix-in annotations for OWL API types.
+     *
+     * @return Jackson module configured with OWL API mix-ins
+     */
+    @Bean
+    public Module robotJacksonModule() {
+        SimpleModule module = new SimpleModule("RobotCommandModule");
+        module.setMixInAnnotation(IRI.class, IRIMixin.class);
+        return module;
+    }
 }

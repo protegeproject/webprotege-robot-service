@@ -8,10 +8,10 @@ package edu.stanford.protege.robot.command.annotate;
  */
 public interface HasLang {
 
-  /**
-   * Returns the ISO 639-1 language code.
-   *
-   * @return language code (e.g., "en", "fr", "de")
-   */
-  String lang();
+    /**
+     * Returns the ISO 639-1 language code.
+     *
+     * @return language code (e.g., "en", "fr", "de")
+     */
+    String lang();
 }

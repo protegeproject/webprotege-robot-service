@@ -11,25 +11,25 @@ import javax.annotation.Nonnull;
  */
 public record PipelineExecutionId(String id) implements ValueObject {
 
-  @JsonCreator
-  @Nonnull
-  public static PipelineExecutionId valueOf(String id) {
-    return new PipelineExecutionId(UUID.fromString(id).toString());
-  }
+    @JsonCreator
+    @Nonnull
+    public static PipelineExecutionId valueOf(String id) {
+        return new PipelineExecutionId(UUID.fromString(id).toString());
+    }
 
-  @Nonnull
-  public static PipelineExecutionId generate() {
-    return valueOf(UUID.randomUUID().toString());
-  }
+    @Nonnull
+    public static PipelineExecutionId generate() {
+        return valueOf(UUID.randomUUID().toString());
+    }
 
-  @JsonValue
-  @Override
-  public String id() {
-    return id;
-  }
+    @JsonValue
+    @Override
+    public String id() {
+        return id;
+    }
 
-  @Override
-  public String value() {
-    return id;
-  }
+    @Override
+    public String value() {
+        return id;
+    }
 }

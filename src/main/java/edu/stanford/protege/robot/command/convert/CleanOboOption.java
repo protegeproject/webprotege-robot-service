@@ -15,73 +15,73 @@ package edu.stanford.protege.robot.command.convert;
  */
 public enum CleanOboOption {
 
-  /**
-   * Remove additional labels beyond the primary rdfs:label.
-   */
-  drop_extra_labels("drop-extra-labels"),
+    /**
+     * Remove additional labels beyond the primary rdfs:label.
+     */
+    drop_extra_labels("drop-extra-labels"),
 
-  /**
-   * Remove additional definitions beyond the primary IAO:0000115 definition.
-   */
-  drop_extra_definitions("drop-extra-definitions"),
+    /**
+     * Remove additional definitions beyond the primary IAO:0000115 definition.
+     */
+    drop_extra_definitions("drop-extra-definitions"),
 
-  /**
-   * Remove additional comments beyond the primary rdfs:comment.
-   */
-  drop_extra_comments("drop-extra-comments"),
+    /**
+     * Remove additional comments beyond the primary rdfs:comment.
+     */
+    drop_extra_comments("drop-extra-comments"),
 
-  /**
-   * Merge multiple comments into a single comment annotation.
-   */
-  merge_comments("merge-comments"),
+    /**
+     * Merge multiple comments into a single comment annotation.
+     */
+    merge_comments("merge-comments"),
 
-  /**
-   * Remove axioms that cannot be faithfully represented in OBO format.
-   */
-  drop_untranslatable_axioms("drop-untranslatable-axioms"),
+    /**
+     * Remove axioms that cannot be faithfully represented in OBO format.
+     */
+    drop_untranslatable_axioms("drop-untranslatable-axioms"),
 
-  /**
-   * Remove General Class Inclusion (GCI) axioms.
-   */
-  drop_gci_axioms("drop-gci-axioms"),
+    /**
+     * Remove General Class Inclusion (GCI) axioms.
+     */
+    drop_gci_axioms("drop-gci-axioms"),
 
-  /**
-   * Alias for strict OBO conversion.
-   *
-   * <p>
-   * Expands to: drop-extra-labels, drop-extra-definitions, drop-extra-comments,
-   * drop-untranslatable-axioms, drop-gci-axioms.
-   *
-   * <p>
-   * Use this for the most conservative OBO output that strictly adheres to format constraints.
-   */
-  strict("strict"),
+    /**
+     * Alias for strict OBO conversion.
+     *
+     * <p>
+     * Expands to: drop-extra-labels, drop-extra-definitions, drop-extra-comments,
+     * drop-untranslatable-axioms, drop-gci-axioms.
+     *
+     * <p>
+     * Use this for the most conservative OBO output that strictly adheres to format constraints.
+     */
+    strict("strict"),
 
-  /**
-   * Alias for simple OBO conversion.
-   *
-   * <p>
-   * Expands to: drop-extra-labels, drop-extra-definitions, drop-extra-comments,
-   * drop-untranslatable-axioms, merge-comments.
-   *
-   * <p>
-   * Use this for a balanced approach that preserves comments while ensuring OBO validity.
-   */
-  simple("simple"),
-  ;
+    /**
+     * Alias for simple OBO conversion.
+     *
+     * <p>
+     * Expands to: drop-extra-labels, drop-extra-definitions, drop-extra-comments,
+     * drop-untranslatable-axioms, merge-comments.
+     *
+     * <p>
+     * Use this for a balanced approach that preserves comments while ensuring OBO validity.
+     */
+    simple("simple"),
+    ;
 
-  private final String keyword;
+    private final String keyword;
 
-  CleanOboOption(String keyword) {
-    this.keyword = keyword;
-  }
+    CleanOboOption(String keyword) {
+        this.keyword = keyword;
+    }
 
-  /**
-   * Returns the ROBOT clean-obo keyword.
-   *
-   * @return the keyword string (e.g., {@code "drop-extra-labels"})
-   */
-  public String getKeyword() {
-    return keyword;
-  }
+    /**
+     * Returns the ROBOT clean-obo keyword.
+     *
+     * @return the keyword string (e.g., {@code "drop-extra-labels"})
+     */
+    public String getKeyword() {
+        return keyword;
+    }
 }

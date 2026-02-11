@@ -12,21 +12,21 @@ package edu.stanford.protege.robot.command.extract;
  */
 public enum HandlingImports {
 
-  /**
-   * Include imported ontologies in the extraction process.
-   *
-   * <p>
-   * This is the default behavior and ensures that terms from imported ontologies are
-   * available during extraction, which may be necessary if seed terms reference imported classes.
-   */
-  include,
+    /**
+     * Include imported ontologies in the extraction process.
+     *
+     * <p>
+     * This is the default behavior and ensures that terms from imported ontologies are
+     * available during extraction, which may be necessary if seed terms reference imported classes.
+     */
+    include,
 
-  /**
-   * Exclude imported ontologies and process only the asserted content of the main ontology.
-   *
-   * <p>
-   * This option restricts extraction to only the terms and axioms explicitly asserted in the
-   * main ontology, ignoring any imported content.
-   */
-  exclude,
+    /**
+     * Exclude imported ontologies and process only the asserted content of the main ontology.
+     *
+     * <p>
+     * This option restricts extraction to only the terms and axioms explicitly asserted in the
+     * main ontology, ignoring any imported content.
+     */
+    exclude,
 }
