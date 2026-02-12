@@ -10,6 +10,7 @@ import edu.stanford.protege.robot.command.expand.RobotExpandCommand;
 import edu.stanford.protege.robot.command.export.RobotExportCommand;
 import edu.stanford.protege.robot.command.extract.RobotExtractCommand;
 import edu.stanford.protege.robot.command.filter.RobotFilterCommand;
+import edu.stanford.protege.robot.command.materialize.RobotMaterializeCommand;
 import edu.stanford.protege.robot.command.merge.RobotMergeCommand;
 import edu.stanford.protege.robot.command.reduce.RobotReduceCommand;
 import edu.stanford.protege.robot.command.relax.RobotRelaxCommand;
@@ -32,6 +33,7 @@ import org.obolibrary.robot.Command;
         @JsonSubTypes.Type(RobotFilterCommand.class),
         @JsonSubTypes.Type(RobotMergeCommand.class),
         @JsonSubTypes.Type(RobotReduceCommand.class),
+        @JsonSubTypes.Type(RobotMaterializeCommand.class),
         @JsonSubTypes.Type(RobotRelaxCommand.class),
         @JsonSubTypes.Type(RobotRemoveCommand.class),
         @JsonSubTypes.Type(RobotRepairCommand.class)})
